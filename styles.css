@@ -409,7 +409,7 @@ body::before {
     left: 0;
     right: 0;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(15px);
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     padding: 2rem;
     z-index: 2;
@@ -423,7 +423,7 @@ body::before {
 
 .tiypn-card:hover .tiypn-content {
     background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(25px);
+    backdrop-filter: blur(15px);
 }
 
 .tiypn-content h3 {
