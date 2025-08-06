@@ -7,6 +7,439 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* macOS Tahoe 26 Dark Theme with Glass Morphism */
+        :root {
+            --tahoe-bg: #0a0a0a;
+            --tahoe-surface: rgba(255, 255, 255, 0.05);
+            --tahoe-surface-hover: rgba(255, 255, 255, 0.1);
+            --tahoe-primary: #007aff;
+            --tahoe-primary-hover: #0056cc;
+            --tahoe-secondary: #5856d6;
+            --tahoe-success: #34c759;
+            --tahoe-warning: #ff9500;
+            --tahoe-danger: #ff3b30;
+            --tahoe-text-primary: #ffffff;
+            --tahoe-text-secondary: #a1a1a6;
+            --tahoe-text-tertiary: #6e6e73;
+            --tahoe-border: rgba(255, 255, 255, 0.1);
+            --tahoe-border-hover: rgba(255, 255, 255, 0.2);
+            --tahoe-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --tahoe-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --tahoe-shadow-xl: 0 12px 60px rgba(0, 0, 0, 0.5);
+            --tahoe-radius: 12px;
+            --tahoe-radius-lg: 20px;
+            --tahoe-radius-xl: 28px;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            background: var(--tahoe-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--tahoe-text-primary);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(88, 86, 214, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(52, 199, 89, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .navbar {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--tahoe-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .nav-logo a {
+            color: var(--tahoe-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-link {
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--tahoe-text-primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .project-content {
+            padding: 120px 0 60px;
+        }
+        
+        .project-gallery {
+            margin-bottom: 4rem;
+        }
+        
+        .gallery-main {
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-image-container {
+            position: relative;
+            border-radius: var(--tahoe-radius-lg);
+            overflow: hidden;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .gallery-image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .fullscreen-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .gallery-caption-main {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .gallery-caption-main h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .gallery-caption-main p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .gallery-navigation {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .gallery-nav-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--tahoe-text-primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-nav-btn:hover {
+            background: var(--glass-bg);
+            border-color: var(--tahoe-primary);
+            transform: scale(1.1);
+        }
+        
+        .gallery-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .gallery-thumbnails {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+        
+        .thumbnail-item {
+            flex-shrink: 0;
+            width: 120px;
+            height: 80px;
+            border-radius: var(--tahoe-radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            opacity: 0.7;
+        }
+        
+        .thumbnail-item:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .thumbnail-item.active {
+            border-color: var(--tahoe-primary);
+            opacity: 1;
+        }
+        
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .thumbnail-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .project-info {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--tahoe-radius-lg);
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--tahoe-shadow);
+        }
+        
+        .project-info h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--tahoe-text-primary);
+        }
+        
+        .project-info p {
+            font-size: 1.1rem;
+            color: var(--tahoe-text-secondary);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+        
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .tag {
+            background: var(--glass-bg);
+            color: var(--tahoe-text-primary);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        .instagram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: var(--tahoe-radius);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .instagram-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--tahoe-shadow-lg);
+        }
+        
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .fullscreen-container {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        
+        .fullscreen-image {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: var(--tahoe-radius);
+        }
+        
+        .fullscreen-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .fullscreen-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .footer {
+            background: var(--glass-bg);
+            border-top: 1px solid var(--glass-border);
+            padding: 60px 0 20px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        
+        .footer-logo h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--tahoe-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-logo p {
+            color: var(--tahoe-text-secondary);
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--tahoe-primary);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .footer-social a {
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer-social a:hover {
+            color: var(--tahoe-primary);
+            border-color: var(--tahoe-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--tahoe-shadow);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px 0;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--tahoe-text-tertiary);
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -21,37 +454,8 @@
                 <li><a href="index.html#about" class="nav-link">About</a></li>
                 <li><a href="index.html#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
         </div>
     </nav>
-
-    <!-- Project Header -->
-    <section class="project-header">
-        <div class="container">
-            <div class="project-header-content">
-                <h1>TIYPN FW24 Collection</h1>
-                <p>Comprehensive creative direction and execution for TIYPN's Fall/Winter 2024 collection</p>
-                <div class="project-meta">
-                    <span class="meta-item">
-                        <i class="fas fa-calendar"></i>
-                        <span>2024</span>
-                    </span>
-                    <span class="meta-item">
-                        <i class="fas fa-tag"></i>
-                        <span>Fashion Photography</span>
-                    </span>
-                    <span class="meta-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Los Angeles, CA</span>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Project Content -->
     <section class="project-content">
@@ -92,8 +496,8 @@
                         <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/5_fa62e31d-7432-43d0-a968-d207beb51201.png?v=1728073127" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
                             <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/5_fa62e31d-7432-43d0-a968-d207beb51201.png?v=1728073127&width=200" alt="Detail Shot" loading="lazy">
                         </div>
-                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_1eb8d7d7-2dfc-41b5-9fef-dee45bc11510.png?v=1728073065" data-title="Product Development" data-description="Showcasing the development process">
-                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_1eb8d7d7-2dfc-41b5-9fef-dee45bc11510.png?v=1728073065&width=200" alt="Product Development" loading="lazy">
+                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_1eb8d7d7-2dfc-41b5-9fef-dee45bc11510.png?v=1728073065" data-title="Brand Shot" data-description="Emphasizing brand identity and style">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_1eb8d7d7-2dfc-41b5-9fef-dee45bc11510.png?v=1728073065&width=200" alt="Brand Shot" loading="lazy">
                         </div>
                     </div>
                     
@@ -105,13 +509,14 @@
             
             <div class="project-info">
                 <h2>TIYPN FW24 Collection</h2>
-                <p>I led the entire creative process for TIYPN's Fall/Winter 2024 collection, taking full creative direction from concept development to final execution. This comprehensive project involved photography, creative direction, product development, styling coordination, and post-production editing. The shoot captured the brand's unique aesthetic while showcasing the innovative designs and quality craftsmanship of the FW24 collection. Every aspect of the creative process was carefully orchestrated to tell the TIYPN story and bring the collection to life through compelling visual storytelling.</p>
+                <p>I led the entire collection photoshoot for TIYPN's Fall/Winter 2024 collection, taking full creative direction from concept development to final execution. This comprehensive project involved photography, creative direction, product development, styling, and post-production editing. The shoot captured the brand's surf and skate aesthetic while showcasing the innovative designs and quality craftsmanship of the FW24 collection. Every aspect of the creative process was carefully orchestrated to tell the TIYPN story and bring the collection to life through compelling visual storytelling.</p>
                 
                 <div class="project-tags">
                     <span class="tag">Photography</span>
                     <span class="tag">Creative Direction</span>
                     <span class="tag">Product Development</span>
                     <span class="tag">Styling</span>
+                    <span class="tag">Brand Storytelling</span>
                     <span class="tag">Post-Production</span>
                 </div>
                 
@@ -148,10 +553,15 @@
                     <a href="index.html#contact">Contact</a>
                 </div>
                 <div class="footer-social">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://instagram.com/antonkupin" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/antonkupin" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/antonkupin" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -162,84 +572,122 @@
 
     <script>
         // Gallery functionality
-        const thumbnails = document.querySelectorAll('.thumbnail-item');
         const mainImage = document.getElementById('main-gallery-image');
         const mainTitle = document.getElementById('main-gallery-title');
         const mainDescription = document.getElementById('main-gallery-description');
+        const thumbnails = document.querySelectorAll('.thumbnail-item');
         const prevBtn = document.getElementById('gallery-prev');
         const nextBtn = document.getElementById('gallery-next');
         const fullscreenBtn = document.getElementById('fullscreen-btn');
         const fullscreenOverlay = document.getElementById('fullscreen-overlay');
         const fullscreenImage = document.getElementById('fullscreen-image');
         const fullscreenClose = document.getElementById('fullscreen-close');
-
+        
         let currentIndex = 0;
-
-        function updateMainImage(index) {
-            const thumbnail = thumbnails[index];
-            const img = thumbnail.querySelector('img');
-            const title = thumbnail.dataset.title;
-            const description = thumbnail.dataset.description;
-
-            mainImage.src = thumbnail.dataset.src;
-            mainTitle.textContent = title;
-            mainDescription.textContent = description;
-
-            // Update active thumbnail
-            thumbnails.forEach(t => t.classList.remove('active'));
-            thumbnail.classList.add('active');
-
-            currentIndex = index;
-        }
-
+        
+        // Thumbnail click functionality
         thumbnails.forEach((thumbnail, index) => {
             thumbnail.addEventListener('click', () => {
-                updateMainImage(index);
+                currentIndex = index;
+                updateGallery();
             });
         });
-
+        
+        // Previous button
         prevBtn.addEventListener('click', () => {
-            const newIndex = currentIndex > 0 ? currentIndex - 1 : thumbnails.length - 1;
-            updateMainImage(newIndex);
+            currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+            updateGallery();
         });
-
+        
+        // Next button
         nextBtn.addEventListener('click', () => {
-            const newIndex = currentIndex < thumbnails.length - 1 ? currentIndex + 1 : 0;
-            updateMainImage(newIndex);
+            currentIndex = (currentIndex + 1) % thumbnails.length;
+            updateGallery();
         });
-
+        
         // Fullscreen functionality
         fullscreenBtn.addEventListener('click', () => {
             fullscreenImage.src = mainImage.src;
+            fullscreenImage.alt = mainImage.alt;
             fullscreenOverlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
-
+        
         fullscreenClose.addEventListener('click', () => {
             fullscreenOverlay.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
-
+        
+        // Close fullscreen when clicking outside
         fullscreenOverlay.addEventListener('click', (e) => {
             if (e.target === fullscreenOverlay) {
                 fullscreenOverlay.style.display = 'none';
                 document.body.style.overflow = 'auto';
             }
         });
-
-        // Mobile menu functionality
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (fullscreenOverlay.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    fullscreenClose.click();
+                }
+            } else {
+                if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'f' || e.key === 'F') {
+                    fullscreenBtn.click();
+                }
+            }
         });
-
-        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }));
+        
+        function updateGallery() {
+            const activeThumbnail = thumbnails[currentIndex];
+            
+            // Update main image
+            mainImage.src = activeThumbnail.dataset.src;
+            mainImage.alt = activeThumbnail.querySelector('img').alt;
+            
+            // Update title and description
+            mainTitle.textContent = activeThumbnail.dataset.title;
+            mainDescription.textContent = activeThumbnail.dataset.description;
+            
+            // Update thumbnails
+            thumbnails.forEach((thumbnail, index) => {
+                thumbnail.classList.toggle('active', index === currentIndex);
+            });
+            
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === thumbnails.length - 1;
+        }
+        
+        // Initialize gallery
+        updateGallery();
+        
+        // Add lazy loading for thumbnails
+        function lazyLoadThumbnails() {
+            const thumbnails = document.querySelectorAll('.thumbnail-item img');
+            thumbnails.forEach(img => {
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+            });
+        }
+        
+        // Load thumbnails progressively
+        setTimeout(lazyLoadThumbnails, 100);
+        
+        // Progressive loading for lazy images
+        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+        lazyImages.forEach(img => {
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+        });
     </script>
 </body>
 </html> 
