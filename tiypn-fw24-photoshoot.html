@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIYPN FW24 - Anton Kupin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">AKUPIN</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html#home" class="nav-link">Home</a></li>
+                <li><a href="index.html#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project Header -->
+    <section class="project-header">
+        <div class="container">
+            <div class="project-header-content">
+                <h1>TIYPN FW24 Collection</h1>
+                <p>Comprehensive creative direction and execution for TIYPN's Fall/Winter 2024 collection</p>
+                <div class="project-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>2024</span>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>Fashion Photography</span>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Los Angeles, CA</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Content -->
+    <section class="project-content">
+        <div class="container">
+            <div class="project-gallery">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--tahoe-text-primary); font-weight: 600;">Photoshoot Gallery</h2>
+                
+                <!-- Main Gallery Image -->
+                <div class="gallery-main">
+                    <div class="gallery-image-container">
+                        <img id="main-gallery-image" src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/6.png?v=1728073755" alt="TIYPN FW24 - Collection Detail">
+                        <button class="fullscreen-btn" id="fullscreen-btn">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <div class="gallery-caption-main">
+                            <h3 id="main-gallery-title">Collection Detail</h3>
+                            <p id="main-gallery-description">Showcasing fabric textures and design elements</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Navigation -->
+                <div class="gallery-navigation">
+                    <button class="gallery-nav-btn" id="gallery-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <div class="gallery-thumbnails">
+                        <div class="thumbnail-item active" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/6.png?v=1728073755" data-title="Collection Detail" data-description="Showcasing fabric textures and design elements">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/6.png?v=1728073755&width=200" alt="Collection Detail" loading="lazy">
+                        </div>
+                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_e92dc5ee-7d3c-45e2-9d89-ccf248340e95.png?v=1728077336" data-title="Model Shot" data-description="Highlighting the fit and silhouette">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_e92dc5ee-7d3c-45e2-9d89-ccf248340e95.png?v=1728077336&width=200" alt="Model Shot" loading="lazy">
+                        </div>
+                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_056bc9c0-f073-43f6-8f9b-6bf24ec565ed.png?v=1728073336" data-title="Lifestyle Shot" data-description="Capturing the brand's lifestyle aesthetic">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_056bc9c0-f073-43f6-8f9b-6bf24ec565ed.png?v=1728073336&width=200" alt="Lifestyle Shot" loading="lazy">
+                        </div>
+                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/5_fa62e31d-7432-43d0-a968-d207beb51201.png?v=1728073127" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/5_fa62e31d-7432-43d0-a968-d207beb51201.png?v=1728073127&width=200" alt="Detail Shot" loading="lazy">
+                        </div>
+                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_1eb8d7d7-2dfc-41b5-9fef-dee45bc11510.png?v=1728073065" data-title="Product Development" data-description="Showcasing the development process">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_1eb8d7d7-2dfc-41b5-9fef-dee45bc11510.png?v=1728073065&width=200" alt="Product Development" loading="lazy">
+                        </div>
+                    </div>
+                    
+                    <button class="gallery-nav-btn" id="gallery-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="project-info">
+                <h2>TIYPN FW24 Collection</h2>
+                <p>I led the entire creative process for TIYPN's Fall/Winter 2024 collection, taking full creative direction from concept development to final execution. This comprehensive project involved photography, creative direction, product development, styling coordination, and post-production editing. The shoot captured the brand's unique aesthetic while showcasing the innovative designs and quality craftsmanship of the FW24 collection. Every aspect of the creative process was carefully orchestrated to tell the TIYPN story and bring the collection to life through compelling visual storytelling.</p>
+                
+                <div class="project-tags">
+                    <span class="tag">Photography</span>
+                    <span class="tag">Creative Direction</span>
+                    <span class="tag">Product Development</span>
+                    <span class="tag">Styling</span>
+                    <span class="tag">Post-Production</span>
+                </div>
+                
+                <a href="https://www.instagram.com/p/DL-nvZsxUsV/?img_index=1" target="_blank" class="instagram-link">
+                    <i class="fab fa-instagram"></i>
+                    View on Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fullscreen Overlay -->
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <div class="fullscreen-container">
+            <img id="fullscreen-image" src="" alt="" class="fullscreen-image">
+            <button class="fullscreen-close" id="fullscreen-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>AKUPIN</h3>
+                    <p>Creative Developer & Brand Tools Specialist</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html#home">Home</a>
+                    <a href="index.html#portfolio">Portfolio</a>
+                    <a href="index.html#about">About</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Anton Kupin. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Gallery functionality
+        const thumbnails = document.querySelectorAll('.thumbnail-item');
+        const mainImage = document.getElementById('main-gallery-image');
+        const mainTitle = document.getElementById('main-gallery-title');
+        const mainDescription = document.getElementById('main-gallery-description');
+        const prevBtn = document.getElementById('gallery-prev');
+        const nextBtn = document.getElementById('gallery-next');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const fullscreenOverlay = document.getElementById('fullscreen-overlay');
+        const fullscreenImage = document.getElementById('fullscreen-image');
+        const fullscreenClose = document.getElementById('fullscreen-close');
+
+        let currentIndex = 0;
+
+        function updateMainImage(index) {
+            const thumbnail = thumbnails[index];
+            const img = thumbnail.querySelector('img');
+            const title = thumbnail.dataset.title;
+            const description = thumbnail.dataset.description;
+
+            mainImage.src = thumbnail.dataset.src;
+            mainTitle.textContent = title;
+            mainDescription.textContent = description;
+
+            // Update active thumbnail
+            thumbnails.forEach(t => t.classList.remove('active'));
+            thumbnail.classList.add('active');
+
+            currentIndex = index;
+        }
+
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                updateMainImage(index);
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            const newIndex = currentIndex > 0 ? currentIndex - 1 : thumbnails.length - 1;
+            updateMainImage(newIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const newIndex = currentIndex < thumbnails.length - 1 ? currentIndex + 1 : 0;
+            updateMainImage(newIndex);
+        });
+
+        // Fullscreen functionality
+        fullscreenBtn.addEventListener('click', () => {
+            fullscreenImage.src = mainImage.src;
+            fullscreenOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        fullscreenClose.addEventListener('click', () => {
+            fullscreenOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        fullscreenOverlay.addEventListener('click', (e) => {
+            if (e.target === fullscreenOverlay) {
+                fullscreenOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Mobile menu functionality
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+    </script>
+</body>
+</html> 
