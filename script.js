@@ -63,6 +63,23 @@ window.addEventListener('scroll', () => {
         navbar.style.boxShadow = 'none';
         navbar.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
     }
+    
+    // Hero section opacity effect
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        const heroBottom = hero.offsetTop + hero.offsetHeight;
+        const scrollPosition = window.pageYOffset + window.innerHeight;
+        const distanceFromBottom = heroBottom - scrollPosition;
+        const maxDistance = hero.offsetHeight;
+        
+        // Calculate opacity based on scroll position
+        let opacity = 1;
+        if (distanceFromBottom < maxDistance) {
+            opacity = Math.max(0, distanceFromBottom / maxDistance);
+        }
+        
+        hero.style.opacity = opacity;
+    }
 });
 
 // Intersection Observer for Animations
