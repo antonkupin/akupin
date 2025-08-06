@@ -287,6 +287,15 @@ body {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
+.portfolio-card[onclick] {
+    transition: all 0.3s ease;
+}
+
+.portfolio-card[onclick]:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
 .portfolio-image {
     position: relative;
     height: 250px;
