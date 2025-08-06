@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiypn Summer/Spring 25 Photoshoot - Anton Kupin</title>
+    <title>TIYPN SS25 - Anton Kupin</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -384,9 +384,28 @@
         .gallery-thumbnails {
             display: flex;
             gap: 1rem;
-            overflow-x: hidden;
+            overflow-x: auto;
             padding: 1rem 0;
             max-width: 600px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--tahoe-primary) transparent;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar-thumb {
+            background: var(--tahoe-primary);
+            border-radius: 3px;
+        }
+        
+        .gallery-thumbnails::-webkit-scrollbar-thumb:hover {
+            background: var(--tahoe-primary-hover);
         }
         
         .thumbnail-item {
@@ -548,13 +567,13 @@
                 <!-- Main Gallery Image -->
                 <div class="gallery-main">
                     <div class="gallery-image-container">
-                        <img id="main-gallery-image" src="assets/tiypn-photoshoot-preview.png" alt="Tiypn Photoshoot - Cover Image">
+                        <img id="main-gallery-image" src="assets/surf and skate front.png" alt="TIYPN SS25 - Surf & Skate Front">
                         <button class="fullscreen-btn" id="fullscreen-btn">
                             <i class="fas fa-expand"></i>
                         </button>
                         <div class="gallery-caption-main">
-                            <h3 id="main-gallery-title">Cover Image</h3>
-                            <p id="main-gallery-description">Main promotional shot for the collection</p>
+                            <h3 id="main-gallery-title">Surf & Skate Front</h3>
+                            <p id="main-gallery-description">Front view showcasing the surf and skate aesthetic</p>
                         </div>
                     </div>
                 </div>
@@ -566,8 +585,8 @@
                     </button>
                     
                     <div class="gallery-thumbnails">
-                        <div class="thumbnail-item active" data-src="assets/tiypn-photoshoot-preview.png" data-title="Cover Image" data-description="Main promotional shot for the collection">
-                            <img src="assets/tiypn-photoshoot-preview.png" alt="Cover Image">
+                        <div class="thumbnail-item active" data-src="assets/surf and skate front.png" data-title="Surf & Skate Front" data-description="Front view showcasing the surf and skate aesthetic">
+                            <img src="assets/surf and skate front.png" alt="Surf & Skate Front">
                         </div>
                         <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-1.png" data-title="Collection Detail" data-description="Showcasing fabric textures and design elements">
                             <img src="assets/tiypn-photoshoot-1.png" alt="Collection Detail">
@@ -581,6 +600,39 @@
                         <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-4.png" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
                             <img src="assets/tiypn-photoshoot-4.png" alt="Detail Shot">
                         </div>
+                        <div class="thumbnail-item" data-src="assets/surf and skate front.png" data-title="Surf & Skate Front" data-description="Front view showcasing the surf and skate aesthetic">
+                            <img src="assets/surf and skate front.png" alt="Surf & Skate Front">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/surf and skate back.png" data-title="Surf & Skate Back" data-description="Back view highlighting design details">
+                            <img src="assets/surf and skate back.png" alt="Surf & Skate Back">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/detail shot.png" data-title="Detail Shot" data-description="Close-up detail showcasing craftsmanship">
+                            <img src="assets/detail shot.png" alt="Detail Shot">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo long sleeve front.png" data-title="Camo Long Sleeve Front" data-description="Front view of camo long sleeve design">
+                            <img src="assets/camo long sleeve front.png" alt="Camo Long Sleeve Front">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo long sleeve back.png" data-title="Camo Long Sleeve Back" data-description="Back view of camo long sleeve design">
+                            <img src="assets/camo long sleeve back.png" alt="Camo Long Sleeve Back">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo close up.png" data-title="Camo Close Up" data-description="Detailed close-up of camo fabric texture">
+                            <img src="assets/camo close up.png" alt="Camo Close Up">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo close up 2.png" data-title="Camo Close Up 2" data-description="Additional detailed view of camo design">
+                            <img src="assets/camo close up 2.png" alt="Camo Close Up 2">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo front.png" data-title="Camo Pants Front" data-description="Front view of camo pants design">
+                            <img src="assets/camo front.png" alt="Camo Pants Front">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo back.png" data-title="Camo Pants Back" data-description="Back view of camo pants design">
+                            <img src="assets/camo back.png" alt="Camo Pants Back">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/close up.png" data-title="Camo Pants Close Up" data-description="Detailed close-up of camo pants fabric">
+                            <img src="assets/close up.png" alt="Camo Pants Close Up">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/camo close up  2.png" data-title="Camo Pants Close Up 2" data-description="Additional detailed view of camo pants">
+                            <img src="assets/camo close up  2.png" alt="Camo Pants Close Up 2">
+                        </div>
                     </div>
                     
                     <button class="gallery-nav-btn" id="gallery-next">
@@ -590,8 +642,8 @@
             </div>
             
             <div class="project-info">
-                <h2>Project Overview</h2>
-                <p>This photoshoot captures the essence of Tiypn's summer/spring 2025 collection, featuring innovative designs and creative storytelling. The project involved creative direction, photography, and post-production to create compelling visual content that showcases the brand's vision and aesthetic.</p>
+                <h2>TIYPN SS25 Collection</h2>
+                <p>I led the entire collection photoshoot for TIYPN's Spring/Summer 2025 collection, taking full creative direction from concept development to final execution. This comprehensive project involved location scouting, model casting, styling coordination, photography, and post-production editing. The shoot captured the brand's surf and skate aesthetic while showcasing the innovative designs and quality craftsmanship of the SS25 collection, including surf & skate pieces, camo long sleeves, and camo pants. Every aspect of the creative process was carefully orchestrated to tell the TIYPN story and bring the collection to life through compelling visual storytelling.</p>
                 
                 <div class="project-tags">
                     <span class="tag">Photography</span>
