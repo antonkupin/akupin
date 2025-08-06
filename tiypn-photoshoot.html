@@ -8,36 +8,144 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-
+        /* macOS Tahoe 26 Theme */
+        :root {
+            --tahoe-bg: #f5f5f7;
+            --tahoe-surface: #ffffff;
+            --tahoe-primary: #007aff;
+            --tahoe-secondary: #5856d6;
+            --tahoe-success: #34c759;
+            --tahoe-warning: #ff9500;
+            --tahoe-danger: #ff3b30;
+            --tahoe-text-primary: #1d1d1f;
+            --tahoe-text-secondary: #86868b;
+            --tahoe-border: #d2d2d7;
+            --tahoe-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --tahoe-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --tahoe-radius: 12px;
+            --tahoe-radius-lg: 20px;
+        }
+        
+        body {
+            background: var(--tahoe-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--tahoe-text-primary);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--tahoe-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .nav-logo a {
+            color: var(--tahoe-text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-link {
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--tahoe-primary);
+        }
         
         .project-content {
-            padding: 80px 0;
-            background: white;
+            padding: 40px 0;
+            background: transparent;
         }
         
         .project-info {
             max-width: 800px;
             margin: 0 auto 60px;
             text-align: center;
+            background: var(--tahoe-surface);
+            padding: 40px;
+            border-radius: var(--tahoe-radius-lg);
+            box-shadow: var(--tahoe-shadow);
+            border: 1px solid var(--tahoe-border);
         }
         
         .project-info h2 {
             font-size: 2rem;
-            color: #1e293b;
+            color: var(--tahoe-text-primary);
             margin-bottom: 1rem;
+            font-weight: 600;
         }
         
         .project-info p {
-            color: #64748b;
+            color: var(--tahoe-text-secondary);
             line-height: 1.7;
             margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
         
         .project-tags {
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .tag {
+            background: var(--tahoe-primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .instagram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--tahoe-primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: var(--tahoe-radius);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: var(--tahoe-shadow);
+        }
+        
+        .instagram-link:hover {
+            background: #0056cc;
+            transform: translateY(-1px);
+            box-shadow: var(--tahoe-shadow-lg);
         }
         
         .project-gallery {
@@ -55,14 +163,17 @@
         
         .gallery-item {
             position: relative;
-            border-radius: 12px;
+            border-radius: var(--tahoe-radius);
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            box-shadow: var(--tahoe-shadow);
+            transition: all 0.3s ease;
+            background: var(--tahoe-surface);
+            border: 1px solid var(--tahoe-border);
         }
         
         .gallery-item:hover {
             transform: translateY(-5px);
+            box-shadow: var(--tahoe-shadow-lg);
         }
         
         .gallery-item img {
@@ -88,24 +199,6 @@
             transform: translateY(0);
         }
         
-        .instagram-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #e4405f;
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .instagram-link:hover {
-            background: #c13584;
-            transform: translateY(-2px);
-        }
-        
         /* Gallery Navigation Styles */
         .gallery-main {
             margin-bottom: 2rem;
@@ -115,9 +208,11 @@
             position: relative;
             max-width: 800px;
             margin: 0 auto;
-            border-radius: 12px;
+            border-radius: var(--tahoe-radius-lg);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--tahoe-shadow-lg);
+            background: var(--tahoe-surface);
+            border: 1px solid var(--tahoe-border);
         }
         
         .fullscreen-btn {
@@ -137,6 +232,7 @@
             align-items: center;
             justify-content: center;
             z-index: 10;
+            backdrop-filter: blur(10px);
         }
         
         .fullscreen-btn:hover {
@@ -192,6 +288,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px);
         }
         
         .fullscreen-close:hover {
@@ -220,7 +317,7 @@
         }
         
         .gallery-nav-btn {
-            background: #2563eb;
+            background: var(--tahoe-primary);
             color: white;
             border: none;
             width: 50px;
@@ -232,15 +329,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: var(--tahoe-shadow);
         }
         
         .gallery-nav-btn:hover {
-            background: #1d4ed8;
+            background: #0056cc;
             transform: scale(1.1);
+            box-shadow: var(--tahoe-shadow-lg);
         }
         
         .gallery-nav-btn:disabled {
-            background: #94a3b8;
+            background: var(--tahoe-text-secondary);
             cursor: not-allowed;
             transform: none;
         }
@@ -257,20 +356,23 @@
             flex-shrink: 0;
             width: 80px;
             height: 80px;
-            border-radius: 8px;
+            border-radius: var(--tahoe-radius);
             overflow: hidden;
             cursor: pointer;
             border: 3px solid transparent;
             transition: all 0.3s ease;
+            background: var(--tahoe-surface);
+            box-shadow: var(--tahoe-shadow);
         }
         
         .thumbnail-item.active {
-            border-color: #2563eb;
+            border-color: var(--tahoe-primary);
             transform: scale(1.05);
+            box-shadow: var(--tahoe-shadow-lg);
         }
         
         .thumbnail-item:hover {
-            border-color: #2563eb;
+            border-color: var(--tahoe-primary);
             transform: scale(1.05);
         }
         
@@ -278,6 +380,72 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        
+        .footer {
+            background: var(--tahoe-surface);
+            border-top: 1px solid var(--tahoe-border);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo h3 {
+            color: var(--tahoe-text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-logo p {
+            color: var(--tahoe-text-secondary);
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--tahoe-primary);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .footer-social a {
+            color: var(--tahoe-text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-social a:hover {
+            color: var(--tahoe-primary);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px 0;
+            border-top: 1px solid var(--tahoe-border);
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--tahoe-text-secondary);
         }
         
         @media (max-width: 768px) {
@@ -298,6 +466,10 @@
             #main-gallery-image {
                 height: 300px;
             }
+            
+            .nav-menu {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -317,13 +489,11 @@
         </div>
     </nav>
 
-
-
     <!-- Project Content -->
     <section class="project-content">
         <div class="container">
             <div class="project-gallery">
-                <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">Photoshoot Gallery</h2>
+                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--tahoe-text-primary); font-weight: 600;">Photoshoot Gallery</h2>
                 
                 <!-- Main Gallery Image -->
                 <div class="gallery-main">
