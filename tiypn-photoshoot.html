@@ -142,13 +142,133 @@
             transform: translateY(-2px);
         }
         
+        /* Gallery Navigation Styles */
+        .gallery-main {
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-image-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        #main-gallery-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .gallery-caption-main {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 30px;
+        }
+        
+        .gallery-caption-main h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+        
+        .gallery-caption-main p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .gallery-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-nav-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-nav-btn:hover {
+            background: #1d4ed8;
+            transform: scale(1.1);
+        }
+        
+        .gallery-nav-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .gallery-thumbnails {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            max-width: 600px;
+        }
+        
+        .thumbnail-item {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail-item.active {
+            border-color: #2563eb;
+            transform: scale(1.05);
+        }
+        
+        .thumbnail-item:hover {
+            border-color: #2563eb;
+            transform: scale(1.05);
+        }
+        
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
         @media (max-width: 768px) {
             .project-hero h1 {
                 font-size: 2rem;
             }
             
-            .gallery-grid {
-                grid-template-columns: 1fr;
+            .gallery-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .gallery-thumbnails {
+                max-width: 100%;
+                justify-content: center;
+            }
+            
+            #main-gallery-image {
+                height: 300px;
             }
         }
     </style>
@@ -205,46 +325,44 @@
             <div class="project-gallery">
                 <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">Photoshoot Gallery</h2>
                 
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="assets/tiypn-photoshoot-preview.png" alt="Tiypn Photoshoot - Cover Image">
-                        <div class="gallery-caption">
-                            <h3>Cover Image</h3>
-                            <p>Main promotional shot for the collection</p>
+                <!-- Main Gallery Image -->
+                <div class="gallery-main">
+                    <div class="gallery-image-container">
+                        <img id="main-gallery-image" src="assets/tiypn-photoshoot-preview.png" alt="Tiypn Photoshoot - Cover Image">
+                        <div class="gallery-caption-main">
+                            <h3 id="main-gallery-title">Cover Image</h3>
+                            <p id="main-gallery-description">Main promotional shot for the collection</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Navigation -->
+                <div class="gallery-navigation">
+                    <button class="gallery-nav-btn" id="gallery-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <div class="gallery-thumbnails">
+                        <div class="thumbnail-item active" data-src="assets/tiypn-photoshoot-preview.png" data-title="Cover Image" data-description="Main promotional shot for the collection">
+                            <img src="assets/tiypn-photoshoot-preview.png" alt="Cover Image">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-1.png" data-title="Collection Detail" data-description="Showcasing fabric textures and design elements">
+                            <img src="assets/tiypn-photoshoot-1.png" alt="Collection Detail">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-2.png" data-title="Model Shot" data-description="Highlighting the fit and silhouette">
+                            <img src="assets/tiypn-photoshoot-2.png" alt="Model Shot">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-3.png" data-title="Lifestyle Shot" data-description="Capturing the brand's lifestyle aesthetic">
+                            <img src="assets/tiypn-photoshoot-3.png" alt="Lifestyle Shot">
+                        </div>
+                        <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-4.png" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
+                            <img src="assets/tiypn-photoshoot-4.png" alt="Detail Shot">
                         </div>
                     </div>
                     
-                    <div class="gallery-item">
-                        <img src="assets/tiypn-photoshoot-1.png" alt="Tiypn Photoshoot - Image 1">
-                        <div class="gallery-caption">
-                            <h3>Collection Detail</h3>
-                            <p>Showcasing fabric textures and design elements</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gallery-item">
-                        <img src="assets/tiypn-photoshoot-2.png" alt="Tiypn Photoshoot - Image 2">
-                        <div class="gallery-caption">
-                            <h3>Model Shot</h3>
-                            <p>Highlighting the fit and silhouette</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gallery-item">
-                        <img src="assets/tiypn-photoshoot-3.png" alt="Tiypn Photoshoot - Image 3">
-                        <div class="gallery-caption">
-                            <h3>Lifestyle Shot</h3>
-                            <p>Capturing the brand's lifestyle aesthetic</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gallery-item">
-                        <img src="assets/tiypn-photoshoot-4.png" alt="Tiypn Photoshoot - Image 4">
-                        <div class="gallery-caption">
-                            <h3>Detail Shot</h3>
-                            <p>Focusing on craftsmanship and quality</p>
-                        </div>
-                    </div>
+                    <button class="gallery-nav-btn" id="gallery-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -277,6 +395,69 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Gallery Navigation Functionality
+        const mainImage = document.getElementById('main-gallery-image');
+        const mainTitle = document.getElementById('main-gallery-title');
+        const mainDescription = document.getElementById('main-gallery-description');
+        const thumbnails = document.querySelectorAll('.thumbnail-item');
+        const prevBtn = document.getElementById('gallery-prev');
+        const nextBtn = document.getElementById('gallery-next');
+        
+        let currentIndex = 0;
+        
+        // Thumbnail click functionality
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                currentIndex = index;
+                updateGallery();
+            });
+        });
+        
+        // Previous button
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+            updateGallery();
+        });
+        
+        // Next button
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % thumbnails.length;
+            updateGallery();
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+            } else if (e.key === 'ArrowRight') {
+                nextBtn.click();
+            }
+        });
+        
+        function updateGallery() {
+            const activeThumbnail = thumbnails[currentIndex];
+            
+            // Update main image
+            mainImage.src = activeThumbnail.dataset.src;
+            mainImage.alt = activeThumbnail.querySelector('img').alt;
+            
+            // Update caption
+            mainTitle.textContent = activeThumbnail.dataset.title;
+            mainDescription.textContent = activeThumbnail.dataset.description;
+            
+            // Update thumbnails
+            thumbnails.forEach((thumbnail, index) => {
+                thumbnail.classList.toggle('active', index === currentIndex);
+            });
+            
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === thumbnails.length - 1;
+        }
+        
+        // Initialize gallery
+        updateGallery();
+    </script>
 </body>
 </html> 
