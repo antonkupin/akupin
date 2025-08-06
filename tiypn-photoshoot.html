@@ -9,21 +9,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .project-hero {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            color: white;
-            padding: 120px 0 80px;
+            background: white;
+            color: #1e293b;
+            padding: 40px 0;
             text-align: center;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .project-hero h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            color: #1e293b;
         }
         
         .project-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            color: #64748b;
             max-width: 600px;
             margin: 0 auto 2rem;
         }
@@ -32,18 +34,18 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: white;
+            color: #2563eb;
             text-decoration: none;
             font-weight: 500;
             padding: 12px 24px;
-            border: 2px solid white;
+            border: 2px solid #2563eb;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
         
         .back-button:hover {
-            background: white;
-            color: #ff9a9e;
+            background: #2563eb;
+            color: white;
         }
         
         .project-content {
@@ -185,8 +187,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: rgba(0, 0, 0, 0.95);
             display: none;
             justify-content: center;
@@ -196,13 +198,19 @@
         
         .fullscreen-container {
             position: relative;
-            max-width: 95vw;
-            max-height: 95vh;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
         
         .fullscreen-image {
             max-width: 100%;
             max-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: contain;
         }
         
@@ -362,24 +370,6 @@
     <!-- Project Content -->
     <section class="project-content">
         <div class="container">
-            <div class="project-info">
-                <h2>Project Overview</h2>
-                <p>This photoshoot captures the essence of Tiypn's summer/spring 2025 collection, featuring innovative designs and creative storytelling. The project involved creative direction, photography, and post-production to create compelling visual content that showcases the brand's vision and aesthetic.</p>
-                
-                <div class="project-tags">
-                    <span class="tag">Photography</span>
-                    <span class="tag">Creative Direction</span>
-                    <span class="tag">Fashion</span>
-                    <span class="tag">Brand Storytelling</span>
-                    <span class="tag">Post-Production</span>
-                </div>
-                
-                <a href="https://www.instagram.com/p/DL-nvZsxUsV/?img_index=1" target="_blank" class="instagram-link">
-                    <i class="fab fa-instagram"></i>
-                    View on Instagram
-                </a>
-            </div>
-
             <div class="project-gallery">
                 <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">Photoshoot Gallery</h2>
                 
@@ -425,6 +415,24 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
+            </div>
+            
+            <div class="project-info">
+                <h2>Project Overview</h2>
+                <p>This photoshoot captures the essence of Tiypn's summer/spring 2025 collection, featuring innovative designs and creative storytelling. The project involved creative direction, photography, and post-production to create compelling visual content that showcases the brand's vision and aesthetic.</p>
+                
+                <div class="project-tags">
+                    <span class="tag">Photography</span>
+                    <span class="tag">Creative Direction</span>
+                    <span class="tag">Fashion</span>
+                    <span class="tag">Brand Storytelling</span>
+                    <span class="tag">Post-Production</span>
+                </div>
+                
+                <a href="https://www.instagram.com/p/DL-nvZsxUsV/?img_index=1" target="_blank" class="instagram-link">
+                    <i class="fab fa-instagram"></i>
+                    View on Instagram
+                </a>
             </div>
         </div>
     </section>
