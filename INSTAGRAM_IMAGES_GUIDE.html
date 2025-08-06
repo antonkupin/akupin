@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Add Instagram Images to Portfolio</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .step {
+            background: #f8fafc;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+        }
+        .code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📸 How to Add Instagram Images to Your Portfolio</h1>
+    
+    <div class="step">
+        <h2>Step 1: Download Images from Instagram</h2>
+        <p>Since I can't directly pull images from Instagram, here are the manual steps:</p>
+        <ul>
+            <li>Go to your <a href="https://www.instagram.com/p/DL-nvZsxUsV/?img_index=1" target="_blank">Instagram post</a></li>
+            <li>Right-click on each image and select "Save image as..."</li>
+            <li>Save them with descriptive names like <code>tiypn-photoshoot-1.jpg</code></li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>Step 2: Add Images to Your Portfolio</h2>
+        <p>Place the downloaded images in your <code>assets/</code> folder:</p>
+        <div class="code">
+            akupin/assets/
+            ├── tiypn-photoshoot-1.jpg
+            ├── tiypn-photoshoot-2.jpg
+            ├── tiypn-photoshoot-3.jpg
+            └── tiypn-photoshoot-preview.jpg
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 3: Update the HTML</h2>
+        <p>Replace the SVG placeholder with your actual images:</p>
+        <div class="code">
+&lt;div class="portfolio-image"&gt;
+    &lt;img src="assets/tiypn-photoshoot-preview.jpg" alt="Tiypn Summer/Spring 25 Photoshoot"&gt;
+    &lt;div class="portfolio-overlay"&gt;
+        &lt;div class="portfolio-links"&gt;
+            &lt;a href="https://www.instagram.com/p/DL-nvZsxUsV/?img_index=1" class="portfolio-link" target="_blank"&gt;
+                &lt;i class="fas fa-instagram"&gt;&lt;/i&gt;
+            &lt;/a&gt;
+            &lt;a href="#" class="portfolio-link"&gt;
+                &lt;i class="fas fa-external-link-alt"&gt;&lt;/i&gt;
+            &lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 4: Create an Image Gallery (Optional)</h2>
+        <p>For multiple images, you can create a gallery modal:</p>
+        <div class="code">
+&lt;div class="portfolio-gallery"&gt;
+    &lt;img src="assets/tiypn-photoshoot-1.jpg" alt="Tiypn Photoshoot 1"&gt;
+    &lt;img src="assets/tiypn-photoshoot-2.jpg" alt="Tiypn Photoshoot 2"&gt;
+    &lt;img src="assets/tiypn-photoshoot-3.jpg" alt="Tiypn Photoshoot 3"&gt;
+&lt;/div&gt;
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 5: Optimize Images</h2>
+        <p>Before uploading, optimize your images:</p>
+        <ul>
+            <li>Resize to <span class="highlight">400x250px</span> for portfolio previews</li>
+            <li>Use JPG format for photos, PNG for graphics</li>
+            <li>Keep file sizes under 200KB for fast loading</li>
+            <li>Use tools like TinyPNG or ImageOptim</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>Step 6: Commit and Push</h2>
+        <p>After adding your images, commit them to GitHub:</p>
+        <div class="code">
+git add assets/tiypn-photoshoot-*.jpg
+git commit -m "Add Tiypn photoshoot images"
+git push origin main
+        </div>
+    </div>
+
+    <h3>🎯 Quick Tips:</h3>
+    <ul>
+        <li>Use consistent naming conventions for your images</li>
+        <li>Include alt text for accessibility</li>
+        <li>Test your portfolio on different devices</li>
+        <li>Consider adding a lightbox effect for image viewing</li>
+    </ul>
+
+    <p><strong>Note:</strong> The current SVG placeholder will work until you add the real images. The Instagram link is already connected and will take visitors to your actual post!</p>
+</body>
+</html> 
