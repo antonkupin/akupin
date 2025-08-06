@@ -436,6 +436,34 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        
+        /* Optimized loading for thumbnails */
+        .thumbnail-item img {
+            transition: opacity 0.3s ease;
+            will-change: opacity;
+        }
+        
+        /* Loading placeholder for thumbnails */
+        .thumbnail-item img:not([src]) {
+            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        /* Progressive loading animation */
+        .thumbnail-item img[loading="lazy"] {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .thumbnail-item img[loading="lazy"].loaded {
+            opacity: 1;
         }
         
         .footer {
@@ -586,52 +614,52 @@
                     
                     <div class="gallery-thumbnails">
                         <div class="thumbnail-item active" data-src="assets/surf and skate front.png" data-title="Surf & Skate Front" data-description="Front view showcasing the surf and skate aesthetic">
-                            <img src="assets/surf and skate front.png" alt="Surf & Skate Front">
+                            <img src="assets/surf and skate front.png" alt="Surf & Skate Front" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-1.png" data-title="Collection Detail" data-description="Showcasing fabric textures and design elements">
-                            <img src="assets/tiypn-photoshoot-1.png" alt="Collection Detail">
+                            <img src="assets/tiypn-photoshoot-1.png" alt="Collection Detail" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-2.png" data-title="Model Shot" data-description="Highlighting the fit and silhouette">
-                            <img src="assets/tiypn-photoshoot-2.png" alt="Model Shot">
+                            <img src="assets/tiypn-photoshoot-2.png" alt="Model Shot" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-3.png" data-title="Lifestyle Shot" data-description="Capturing the brand's lifestyle aesthetic">
-                            <img src="assets/tiypn-photoshoot-3.png" alt="Lifestyle Shot">
+                            <img src="assets/tiypn-photoshoot-3.png" alt="Lifestyle Shot" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/tiypn-photoshoot-4.png" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
-                            <img src="assets/tiypn-photoshoot-4.png" alt="Detail Shot">
+                            <img src="assets/tiypn-photoshoot-4.png" alt="Detail Shot" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/surf and skate front.png" data-title="Surf & Skate Front" data-description="Front view showcasing the surf and skate aesthetic">
-                            <img src="assets/surf and skate front.png" alt="Surf & Skate Front">
+                            <img src="assets/surf and skate front.png" alt="Surf & Skate Front" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/surf and skate back.png" data-title="Surf & Skate Back" data-description="Back view highlighting design details">
-                            <img src="assets/surf and skate back.png" alt="Surf & Skate Back">
+                            <img src="assets/surf and skate back.png" alt="Surf & Skate Back" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/detail shot.png" data-title="Detail Shot" data-description="Close-up detail showcasing craftsmanship">
-                            <img src="assets/detail shot.png" alt="Detail Shot">
+                            <img src="assets/detail shot.png" alt="Detail Shot" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo long sleeve front.png" data-title="Camo Long Sleeve Front" data-description="Front view of camo long sleeve design">
-                            <img src="assets/camo long sleeve front.png" alt="Camo Long Sleeve Front">
+                            <img src="assets/camo long sleeve front.png" alt="Camo Long Sleeve Front" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo long sleeve back.png" data-title="Camo Long Sleeve Back" data-description="Back view of camo long sleeve design">
-                            <img src="assets/camo long sleeve back.png" alt="Camo Long Sleeve Back">
+                            <img src="assets/camo long sleeve back.png" alt="Camo Long Sleeve Back" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo close up.png" data-title="Camo Close Up" data-description="Detailed close-up of camo fabric texture">
-                            <img src="assets/camo close up.png" alt="Camo Close Up">
+                            <img src="assets/camo close up.png" alt="Camo Close Up" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo close up 2.png" data-title="Camo Close Up 2" data-description="Additional detailed view of camo design">
-                            <img src="assets/camo close up 2.png" alt="Camo Close Up 2">
+                            <img src="assets/camo close up 2.png" alt="Camo Close Up 2" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo front.png" data-title="Camo Pants Front" data-description="Front view of camo pants design">
-                            <img src="assets/camo front.png" alt="Camo Pants Front">
+                            <img src="assets/camo front.png" alt="Camo Pants Front" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo back.png" data-title="Camo Pants Back" data-description="Back view of camo pants design">
-                            <img src="assets/camo back.png" alt="Camo Pants Back">
+                            <img src="assets/camo back.png" alt="Camo Pants Back" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/close up.png" data-title="Camo Pants Close Up" data-description="Detailed close-up of camo pants fabric">
-                            <img src="assets/close up.png" alt="Camo Pants Close Up">
+                            <img src="assets/close up.png" alt="Camo Pants Close Up" loading="lazy">
                         </div>
                         <div class="thumbnail-item" data-src="assets/camo close up  2.png" data-title="Camo Pants Close Up 2" data-description="Additional detailed view of camo pants">
-                            <img src="assets/camo close up  2.png" alt="Camo Pants Close Up 2">
+                            <img src="assets/camo close up  2.png" alt="Camo Pants Close Up 2" loading="lazy">
                         </div>
                     </div>
                     
@@ -788,6 +816,28 @@
         
         // Initialize gallery
         updateGallery();
+        
+        // Add lazy loading for thumbnails
+        function lazyLoadThumbnails() {
+            const thumbnails = document.querySelectorAll('.thumbnail-item img');
+            thumbnails.forEach(img => {
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+            });
+        }
+        
+        // Load thumbnails progressively
+        setTimeout(lazyLoadThumbnails, 100);
+        
+        // Progressive loading for lazy images
+        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+        lazyImages.forEach(img => {
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+        });
     </script>
 </body>
 </html> 
