@@ -1,0 +1,1734 @@
+<html lang="en"><head>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Size Chart Creator</title>
+  <style>
+    /* Import Inter font (macOS system font) */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    /* Define CSS Custom Properties for Theming */
+    :root {
+        --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        --background-color: transparent;
+        --gradient-1: rgba(0, 0, 0, 0.6);
+        --gradient-2: rgba(0, 0, 0, 0.4);
+        --text-color: #fff;
+        --header-bg: rgba(26, 26, 26, 0.75);
+        --header-border: rgba(255, 255, 255, 0.18);
+        --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+        --nav-drawer-border: rgba(255, 255, 255, 0.18);
+        --nav-link-hover: rgba(255, 255, 255, 0.1);
+        --overlay-bg: rgba(0, 0, 0, 0.5);
+        --form-bg: rgba(255, 255, 255, 0.15);
+        --input-bg: rgba(255, 255, 255, 0.15);
+        --input-border: rgba(255, 255, 255, 0.3);
+        --input-focus: #007AFF;
+        --input-focus-shadow: rgba(0, 122, 255, 0.3);
+        --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+        --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+        --button-shadow: rgba(0, 122, 255, 0.3);
+        --clear-btn-bg: rgba(255, 97, 87, 0.8);
+        --clear-btn-hover: rgba(255, 97, 87, 1);
+        --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+        --export-btn-bg: rgba(255, 255, 255, 0.2);
+        --export-btn-hover: rgba(255, 255, 255, 0.3);
+        --export-btn-border: rgba(255, 255, 255, 0.2);
+        --export-btn-shadow: rgba(255, 255, 255, 0.1);
+        --remove-btn-border: #ff6157;
+        --remove-btn-color: #ff6157;
+        --edit-btn-border: #007AFF;
+        --edit-btn-color: #007AFF;
+        --remove-btn-hover-bg: #ff6157;
+        --edit-btn-hover-bg: #007AFF;
+        --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+        --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+        --product-card-bg: rgba(255, 255, 255, 0.15);
+        --table-bg: rgba(255, 255, 255, 0.15);
+        --table-header-bg: rgba(255, 255, 255, 0.1);
+        --table-border: rgba(255, 255, 255, 0.2);
+        --table-cell-border: rgba(255, 255, 255, 0.1);
+        --table-hover: rgba(0, 122, 255, 0.1);
+        --table-footer-bg: rgba(0, 122, 255, 0.1);
+        --summary-table-bg: rgba(255, 255, 255, 0.15);
+        --highlight-profit: #34C759;
+        --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+        --highlight-profit-border: rgba(52, 199, 89, 0.2);
+        --storage-status-bg: rgba(255, 255, 255, 0.15);
+        --storage-status-success: #34C759;
+        --storage-status-success-border: rgba(52, 199, 89, 0.2);
+        --storage-status-error: #ff6157;
+        --storage-status-error-border: rgba(255, 97, 87, 0.2);
+        --file-upload-bg: #007AFF;
+        --file-upload-border: #0056CC;
+    }
+
+    /* General Reset and Base Styles */
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: url('https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1370927.jpg?v=1752025416&width=1920') center center/cover no-repeat fixed;
+        min-height: 100vh;
+        color: #ffffff;
+        overflow-x: hidden;
+        position: relative;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Dark overlay for better readability */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Main content wrapper */
+    main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 80px 24px 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Glass-Themed Header */
+    .hamb-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 44px;
+        background: var(--header-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1.5px solid var(--header-border);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+    }
+    .hamb-header-container {
+        max-width: 1200px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .hamb-header-left {
+      flex: 1 1 0;
+      display: flex;
+      align-items: center;
+      min-width: 44px;
+    }
+    .hamb-header-center {
+      flex: 2 1 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hamb-header-right {
+      flex: 1 1 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-width: 120px;
+    }
+    .hamb-logo {
+        color: var(--text-color);
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .hamb-hamburger {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 8px;
+        transition: opacity 0.3s ease;
+    }
+
+    .hamb-hamburger:hover,
+    .hamb-hamburger:focus {
+        opacity: 0.7;
+        outline: none;
+    }
+    /* Glass-Themed Navigation Drawer */
+    .hamb-nav-drawer {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 300px;
+        height: 100%;
+        background: var(--nav-drawer-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-right: 1.5px solid var(--nav-drawer-border);
+        box-shadow: 2px 0 24px rgba(31,38,135,0.12);
+        padding: 16px;
+        transition: left 0.3s ease;
+        z-index: 10019;
+    }
+
+    .hamb-nav-drawer.active {
+        left: 0;
+    }
+
+    .hamb-nav-list {
+        list-style: none;
+        padding: 60px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hamb-nav-list li {
+        border-bottom: 1px solid var(--nav-drawer-border);
+        padding-bottom: 12px;
+    }
+
+    .hamb-nav-list li a {
+        display: block;
+        padding: 8px;
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+    }
+
+    .hamb-nav-list li a:hover {
+        background: var(--nav-link-hover);
+    }
+   
+   /* Submenu styles */
+   .hamb-nav-submenu {
+       list-style: none;
+       padding-left: 20px;
+       margin-top: 8px;
+       display: none;
+       border-left: 1px solid rgba(255, 255, 255, 0.18);
+       margin-left: 8px;
+   }
+   
+   .hamb-nav-submenu.active {
+       display: block;
+   }
+   
+   .hamb-nav-submenu li {
+       border-bottom: none;
+       padding-bottom: 0;
+       margin-bottom: 8px;
+   }
+   
+   .hamb-nav-submenu li a {
+       font-size: 0.9rem;
+       padding: 6px 8px;
+       opacity: 0.9;
+       font-weight: 300;
+   }
+   
+   .hamb-nav-item-with-submenu > a {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       cursor: pointer;
+   }
+   
+   .hamb-nav-submenu-toggle {
+       background: none;
+       border: none;
+       color: var(--text-color);
+       cursor: pointer;
+       padding: 4px;
+       font-size: 12px;
+       transition: transform 0.3s ease;
+       pointer-events: none;
+   }
+   
+   .hamb-nav-submenu-toggle.active {
+       transform: rotate(90deg);
+   }
+   
+   .hamb-nav-footer {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     padding: 16px;
+     border-top: 1.5px solid rgba(255, 255, 255, 0.18);
+     background: rgba(30, 30, 30, 0.25);
+     text-align: right;
+   }
+   
+   .hamb-nav-account-link {
+     display: inline-block;
+     color: var(--text-color);
+     text-decoration: none;
+     font-weight: 500;
+     font-size: 1rem;
+     text-align: right;
+     padding: 8px;
+     border-radius: 6px;
+     transition: background 0.3s ease;
+   }
+   
+   .hamb-nav-account-link:hover {
+     background: rgba(255, 255, 255, 0.1);
+   }
+   
+   .timezone-display {
+     color: #fff;
+     font-size: 1rem;
+     font-weight: 400;
+     border-radius: 8px;
+     padding: 4px 12px;
+     margin-left: 12px;
+     letter-spacing: 0.5px;
+     user-select: text;
+     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+   }
+   
+   .hamb-header-left {
+     flex: 1 1 0;
+     display: flex;
+     align-items: center;
+     min-width: 44px;
+   }
+   
+   .hamb-header-center {
+     flex: 2 1 0;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+   }
+   
+   .hamb-header-right {
+     flex: 1 1 0;
+     display: flex;
+     justify-content: flex-end;
+     align-items: center;
+     min-width: 120px;
+   }
+    .hamb-overlay {
+      display: none !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      z-index: 9999 !important;
+    }
+    .hamb-overlay.active {
+      display: block !important;
+    }
+    .hamb-close-btn {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    transition: opacity 0.3s ease !important;
+    color: #ff6157 !important;
+    background: #ff6157 !important;
+    border-radius: 50%;
+    cursor: pointer;
+}
+    .hamb-close-btn:hover {
+      opacity: 0.7 !important;
+      box-shadow: none !important;
+    }
+    .hamb-button {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 10px 20px;
+      background: #007aff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .hamb-button:hover,
+    .hamb-button:focus {
+      background: #005bb5;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 95, 163, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 32px;
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: 40px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+        font-size: 24px;
+        color: var(--text-color);
+        padding-bottom: 12px;
+        margin-top: 56px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+ label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+    input, select {
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #007AFF;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+    }
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .measurement-group input {
+      padding-right: 40px;
+    }
+    .unit-suffix {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+    button {
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+    }
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    button:hover::before {
+      left: 100%;
+    }
+    button:hover,
+    button:focus {
+      background: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+      outline: none;
+    }
+    button:active {
+      transform: translateY(0);
+    }
+        /* Glass-Themed Form */
+    form {
+        border: none;
+        padding: 24px;
+        border-radius: 18px;
+        background: var(--form-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255,255,255,0.25);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        transition: all 0.3s ease;
+    }
+
+    form:hover,
+    form:focus-within {
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+        transform: translateY(-2px);
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: var(--text-color);
+        letter-spacing: 0.2px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    select {
+        width: 100%;
+        padding: 16px 20px;
+        margin-bottom: 18px;
+        font-size: 16px;
+        border: 1px solid var(--input-border);
+        border-radius: 12px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-family: inherit;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="file"]:focus,
+    select:focus {
+        outline: none;
+        border-color: var(--input-focus);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    }
+
+    input[type="text"]::placeholder,
+    input[type="number"]::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Glass-Themed Buttons */
+    .hamb-button {
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 16px 24px;
+        background: var(--button-bg);
+        backdrop-filter: blur(10px);
+        color: var(--text-color);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 16px var(--button-shadow);
+    }
+
+    .hamb-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .hamb-button:hover::before {
+        left: 100%;
+    }
+
+    .hamb-button:hover,
+    .hamb-button:focus {
+        background: var(--button-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px var(--button-shadow);
+        outline: none;
+    }
+
+    .hamb-button:active {
+        transform: translateY(0);
+    }
+
+    .remove-btn {
+        background: none;
+        border: 1px solid var(--remove-btn-border);
+        color: var(--remove-btn-color);
+        font-weight: 600;
+        padding: 6px 10px;
+        font-size: 13px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-left: 8px;
+    }
+
+    .remove-btn:hover,
+    .remove-btn:focus {
+        background: var(--remove-btn-hover-bg);
+        color: var(--text-color);
+        box-shadow: 0 0 0 3px var(--remove-btn-hover-shadow);
+    }
+
+    /* Size Chart Specific Styles */
+    .sc-form-section {
+        border: 1.5px solid rgba(255,255,255,0.18);
+        padding: 24px;
+        border-radius: 18px;
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .sc-form-section:hover,
+    .sc-form-section:focus-within {
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+        transform: translateY(-2px);
+    }
+
+    .sc-top-row {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .sc-top-group {
+        flex: 1 1 160px;
+        min-width: 140px;
+    }
+
+    .measurements-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .measurement-group {
+        flex: 1 1 200px;
+        min-width: 200px;
+        max-width: 32%;
+        padding: 16px;
+        background: rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .measurement-group:hover {
+        background: rgba(0,0,0,0.4);
+        transform: translateY(-1px);
+    }
+
+    .measurement-group div {
+        flex: 1;
+        position: relative;
+    }
+
+    .collapsible-wrapper {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .collapsible-toggle {
+        background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+        color: #fff;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 16px 24px;
+        text-align: left;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+    }
+
+    .collapsible-toggle:hover,
+    .collapsible-toggle:focus {
+        background: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+        outline: none;
+        box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+        transform: translateY(-1px);
+    }
+
+    .collapsible-toggle.open::before {
+        content: "▼ ";
+    }
+
+    .collapsible-toggle::before {
+        content: "▶ ";
+    }
+
+    .collapsible-content {
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255,255,255,0.18);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        transition: all 0.3s ease, max-height 0.3s ease;
+        max-height: 0;
+        overflow: hidden;
+    }
+
+    .collapsible-content.open {
+        max-height: 1000px;
+        padding: 20px 24px;
+    }
+
+    .collapsible-content:hover,
+    .collapsible-content:focus-within {
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+    }
+
+    .add-inputs-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .add-inputs-row .input-group {
+        flex: 1 1 160px;
+        min-width: 140px;
+        padding: 0;
+        background: none;
+    }
+
+    .add-inputs-row .input-group:hover {
+        background: none;
+    }
+
+    .add-inputs-row button {
+        flex-shrink: 0;
+        margin-bottom: 0;
+    }
+
+    #incrementsContainer .input-group {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 16px;
+        background: rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.3s ease;
+    }
+
+    #incrementsContainer .input-group:hover {
+        background: rgba(0,0,0,0.4);
+        transform: translateY(-1px);
+    }
+
+    #incrementsContainer .input-group label {
+        width: 140px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    #incrementsContainer .input-group input {
+        width: 120px;
+    }
+
+    #presetImage {
+        max-width: 300px;
+        margin: 30px auto 0;
+        display: block;
+        border: 1.5px solid rgba(255,255,255,0.18);
+        border-radius: 18px;
+        background: rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    #chartExportWrapper {
+        padding: 24px;
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.18);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        margin-top: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .sc-status-message {
+        margin-top: 12px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        display: none;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .sc-status-message.success {
+        background: rgba(52, 199, 89, 0.15);
+        color: #34C759;
+        border: 1px solid rgba(52, 199, 89, 0.2);
+    }
+
+    .sc-status-message.error {
+        background: rgba(255, 97, 87, 0.15);
+        color: #ff6157;
+        border: 1px solid rgba(255, 97, 87, 0.2);
+    }
+
+    .unit-suffix {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        pointer-events: none;
+    }
+
+    .measurement-group input {
+        padding-right: 40px;
+    }
+
+    small {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 11px;
+        display: block;
+        margin-top: 4px;
+        margin-bottom: 6px;
+        font-weight: 500;
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Glass-Themed Tables */
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 30px;
+        font-variant-numeric: tabular-nums;
+        background: var(--table-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.25);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        overflow: hidden;
+    }
+
+    thead th {
+        padding: 12px;
+        font-size: 13px;
+        text-align: center;
+        font-weight: 600;
+        border-bottom: 1px solid var(--table-border);
+        background: var(--table-header-bg);
+        color: var(--text-color);
+    }
+
+    tbody td {
+        padding: 12px;
+        font-size: 13px;
+        text-align: center;
+        font-weight: 400;
+        border: 1px solid var(--table-cell-border);
+        color: var(--text-color);
+        vertical-align: middle;
+    }
+
+        tbody tr:hover {
+        background: var(--table-hover);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 700px) {
+        .sc-top-row, .add-inputs-row, .measurements-container {
+            flex-direction: column;
+        }
+        .sc-top-group, .add-inputs-row .input-group, .measurement-group {
+            min-width: auto;
+            width: 100%;
+            max-width: none;
+            flex: 1 1 0px;
+        }
+        .measurement-group {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .remove-btn {
+            align-self: flex-start;
+        }
+        button {
+            width: 100%;
+        }
+        #incrementsContainer .input-group {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #incrementsContainer .input-group label,
+        #incrementsContainer .input-group input {
+            width: 100%;
+        }
+    }
+
+    .collapsible-wrapper {
+        margin-bottom: 20px;
+    }
+    .collapsible-toggle:hover,
+    .collapsible-toggle:focus {
+        background: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+        outline: none;
+        box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+        transform: translateY(-1px);
+    }
+
+    .collapsible-toggle.open::before {
+        content: "▼ ";
+    }
+
+    .collapsible-toggle::before {
+        content: "▶ ";
+    }
+
+    .collapsible-content {
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255,255,255,0.18);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        transition: all 0.3s ease, max-height 0.3s ease;
+        max-height: 0;
+        overflow: hidden;
+    }
+
+    .collapsible-content.open {
+        max-height: 1000px;
+        padding: 20px 24px;
+    }
+
+    .collapsible-content:hover,
+    .collapsible-content:focus-within {
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+    }
+
+    .add-category-section {
+        margin-top: 20px;
+    }
+
+    .add-inputs-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .add-inputs-row .input-group {
+        flex: 1 1 160px;
+        min-width: 140px;
+        padding: 0;
+        background: none;
+    }
+
+    .add-inputs-row .input-group:hover {
+        background: none;
+    }
+
+    .add-inputs-row button {
+        flex-shrink: 0;
+        margin-bottom: 0;
+    }
+
+    #incrementsContainer .input-group {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 16px;
+        background: rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.3s ease;
+    }
+
+    #incrementsContainer .input-group:hover {
+        background: rgba(0,0,0,0.4);
+        transform: translateY(-1px);
+    }
+
+    #incrementsContainer .input-group label {
+        width: 140px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    #incrementsContainer .input-group input {
+        width: 120px;
+    }
+
+    #presetImage {
+        max-width: 300px;
+        margin: 30px auto 0;
+        display: block;
+        border: 1.5px solid rgba(255,255,255,0.18);
+        border-radius: 18px;
+        background: rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    #chartExportWrapper {
+        padding: 24px;
+        background: rgba(30,30,30,0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.18);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        margin-top: 30px;
+        transition: all 0.3s ease;
+    }
+
+    small {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 11px;
+        display: block;
+        margin-top: 4px;
+        margin-bottom: 6px;
+        font-weight: 500;
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+       <!-- Header and Navigation -->
+        <body> <!-- Apple-styled Header and Navigation -->
+  <header class="hamb-header">
+    <div class="hamb-header-container">
+      <div class="hamb-header-left">
+        <button class="hamb-hamburger" id="hamburger">☰</button>
+      </div>
+      <div class="hamb-header-center">
+        <a href="#" class="hamb-logo">Brand Tools</a>
+      </div>
+      <div class="hamb-header-right">
+        <span id="timezoneDisplay" class="timezone-display">08:08 PM (MDT)</span>
+      </div>
+    </div>
+  </header>
+  <nav class="hamb-nav-drawer" id="navDrawer">
+    <button class="hamb-close-btn" id="closeBtn"></button>
+    <ul class="hamb-nav-list" id="navList">
+      <li><a href="homepage.html">Home</a></li>
+      <li class="hamb-nav-item-with-submenu">
+        <a href="#" onclick="toggleSubmenu(this.querySelector('.hamb-nav-submenu-toggle'))">
+          Apps
+          <button class="hamb-nav-submenu-toggle">▶</button>
+        </a>
+        <ul class="hamb-nav-submenu">
+          <li><a href="drop-projection-generator.html">Drop Projection Calculator</a></li>
+          <li><a href="size-chart-generator.html">Size Chart Generator</a></li>
+          <li><a href="clothing-mockup-generator.html">Clothing Mockup Generator</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Help</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="hamb-nav-footer">
+      <a href="/account" class="hamb-nav-account-link">My Account</a>
+    </div>
+  </nav>
+  <div class="hamb-overlay" id="overlay"></div>
+
+
+
+
+    <main>
+    <h1>Size Chart Creator</h1>
+
+    <div class="sc-form-section" aria-label="Size Chart Settings">
+      <div class="sc-top-row">
+        <div class="sc-top-group">
+        <label for="presetSelect">Choose a Preset</label>
+        <select id="presetSelect" onchange="loadPreset()">
+          <option value="">-- Select Preset --</option>
+          <option value="shirt">Shirt</option>
+          <option value="pants">Pants</option>
+          <option value="jacket">Jacket</option>
+          <option value="zipup">Zip-Up</option>
+          <option value="shorts">Shorts</option>
+          <option value="longsleeve">Long Sleeve T-Shirt</option>
+        </select>
+              </div>
+        <div class="sc-top-group">
+          <label for="baseSize">Base Size</label>
+          <select id="baseSize">
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option selected="">L</option>
+            <option>XL</option>
+            <option>XXL</option>
+          </select>
+        </div>
+        <div class="sc-top-group">
+          <label for="unit">Unit</label>
+          <select id="unit" onchange="updateUnitLabels()">
+            <option value="inches" selected="">Inches</option>
+            <option value="cm">Centimeters</option>
+          </select>
+        </div>
+      </div>
+      <div id="statusMessage" class="sc-status-message success" style="display: none;">Measurement removed successfully!</div>
+    </div>
+
+    <div class="sc-form-section" aria-label="Measurement Inputs">
+    <h2>Measurements</h2>
+    <div class="measurements-container" id="measurementsContainer"><div class="measurement-group">
+          <div>
+            <label class="category-label">chest</label>
+            <small>Measure around the fullest part of the chest.</small>
+            <div style="position: relative;">
+              <input type="number" id="chest" placeholder="chest" value="40" min="0" step="0.1" required="">
+              <span class="unit-suffix">in</span>
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeCategory('chest')" aria-label="Remove chest">Remove</button>
+        </div><div class="measurement-group">
+          <div>
+            <label class="category-label">length</label>
+            <small>Measure from top shoulder to hem.</small>
+            <div style="position: relative;">
+              <input type="number" id="length" placeholder="length" value="40" min="0" step="0.1" required="">
+              <span class="unit-suffix">in</span>
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeCategory('length')" aria-label="Remove length">Remove</button>
+        </div><div class="measurement-group">
+          <div>
+            <label class="category-label">shoulder</label>
+            <small>Measure from one shoulder to the other.</small>
+            <div style="position: relative;">
+              <input type="number" id="shoulder" placeholder="shoulder" value="40" min="0" step="0.1" required="">
+              <span class="unit-suffix">in</span>
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeCategory('shoulder')" aria-label="Remove shoulder">Remove</button>
+        </div></div>
+  </div>
+
+
+
+      <div class="sc-form-section" aria-label="Add New Measurement">
+      <h2>Add Measurement</h2>
+      <div class="add-inputs-row">
+        <div class="input-group">
+          <label for="newCategory">Measurement Name</label>
+          <input type="text" id="newCategory" placeholder="e.g., sleeve">
+        </div>
+        <div class="input-group">
+          <label for="newSubtitle">Measurement Description</label>
+          <input type="text" id="newSubtitle" placeholder="e.g., Measure from shoulder to wrist">
+        </div>
+        <button onclick="addCategory()">Add</button>
+      </div>
+    </div>
+  <div class="collapsible-wrapper">
+      <button class="collapsible-toggle" onclick="toggleIncrements()">Custom Increments per Size Step</button>
+      <div id="incrementsSection" class="collapsible-content">
+        <div id="incrementsContainer"><div class="input-group">
+          <label for="increment-chest">chest</label>
+          <input type="number" id="increment-chest" value="2" step="0.1" min="0">
+        </div><div class="input-group">
+          <label for="increment-length">length</label>
+          <input type="number" id="increment-length" value="1" step="0.1" min="0">
+        </div><div class="input-group">
+          <label for="increment-shoulder">shoulder</label>
+          <input type="number" id="increment-shoulder" value="1" step="0.1" min="0">
+        </div></div>
+      </div>
+    </div>
+      <div class="sc-form-section" aria-label="Actions">
+      <div class="sc-top-row">
+        <button onclick="generateChart()">Generate Size Chart</button>
+        <button onclick="exportChartAndImageAsPNG()">Export Chart + Image as PNG</button>
+      </div>
+    </div>
+
+  <div id="chartExportWrapper" style="display: none; opacity: 0;" aria-live="polite">
+    <table id="sizeChart">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <img id="presetImage" alt="Preset example" style="opacity: 0; display: none;" src="https://example.com/shirt.png">
+  </div>
+  </main>
+
+  <script>
+    const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+    const CM_PER_INCH = 2.54;
+
+    let categories = ['chest', 'length', 'shoulder'];
+    let subtitles = {
+      chest: "Measure around the fullest part of the chest.",
+      length: "Measure from the top shoulder to the hem.",
+      shoulder: "Measure from one shoulder edge to the other."
+    };
+    let customIncrements = {
+      chest: 2,
+      length: 1,
+      shoulder: 1
+    };
+    let measurementValues = {
+      chest: 40,
+      length: 40,
+      shoulder: 40
+    };
+
+    function saveToLocalStorage() {
+      const state = {
+        preset: document.getElementById('presetSelect').value,
+        baseSize: document.getElementById('baseSize').value,
+        unit: document.getElementById('unit').value,
+        categories: categories,
+        subtitles: subtitles,
+        customIncrements: customIncrements,
+        measurementValues: measurementValues
+      };
+      localStorage.setItem('sizeChartState', JSON.stringify(state));
+    }
+
+    function loadFromLocalStorage() {
+      const savedState = localStorage.getItem('sizeChartState');
+      if (savedState) {
+        const state = JSON.parse(savedState);
+        document.getElementById('presetSelect').value = state.preset || '';
+        document.getElementById('baseSize').value = state.baseSize || 'L';
+        document.getElementById('unit').value = state.unit || 'inches';
+        categories = state.categories || categories;
+        subtitles = state.subtitles || subtitles;
+        customIncrements = state.customIncrements || customIncrements;
+        measurementValues = state.measurementValues || measurementValues;
+        renderMeasurementInputs();
+        renderIncrementInputs();
+        updateUnitLabels();
+      }
+    }
+
+    function showStatusMessage(message, isError = false) {
+      const statusDiv = document.getElementById('statusMessage');
+      statusDiv.textContent = message;
+      statusDiv.className = `sc-status-message ${isError ? 'error' : 'success'}`;
+      statusDiv.style.display = 'block';
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    function updateUnitLabels() {
+      const unit = document.getElementById('unit').value;
+      const unitLabel = unit === 'cm' ? 'cm' : 'in';
+      document.querySelectorAll('.unit-suffix').forEach(label => {
+        label.textContent = unitLabel;
+      });
+      saveToLocalStorage();
+    }
+
+    function renderMeasurementInputs() {
+      const container = document.getElementById('measurementsContainer');
+      container.innerHTML = '';
+
+      categories.forEach(cat => {
+        const subtitle = subtitles[cat] || "Enter base measurement for this size.";
+        const div = document.createElement('div');
+        div.className = 'measurement-group';
+        div.innerHTML = `
+          <div>
+            <label class="category-label">${cat}</label>
+            <small>${subtitle}</small>
+            <div style="position: relative;">
+              <input type="number" id="${cat}" placeholder="${cat}" value="${measurementValues[cat] || 40}" min="0" step="0.1" required>
+              <span class="unit-suffix">in</span>
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeCategory('${cat}')" aria-label="Remove ${cat}">Remove</button>
+        `;
+        container.appendChild(div);
+        const input = document.getElementById(cat);
+        input.addEventListener('input', () => {
+          measurementValues[cat] = parseFloat(input.value) || 40;
+          saveToLocalStorage();
+        });
+      });
+
+      updateUnitLabels();
+    }
+
+    function renderIncrementInputs() {
+      const container = document.getElementById('incrementsContainer');
+      container.innerHTML = '';
+
+      categories.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'input-group';
+        div.innerHTML = `
+          <label for="increment-${cat}">${cat}</label>
+          <input type="number" id="increment-${cat}" value="${customIncrements[cat] || 1}" step="0.1" min="0">
+        `;
+        container.appendChild(div);
+        const input = document.getElementById(`increment-${cat}`);
+        input.addEventListener('input', () => {
+          customIncrements[cat] = parseFloat(input.value) || 1;
+          saveToLocalStorage();
+        });
+      });
+    }
+
+    function addCategory() {
+      const newCat = document.getElementById('newCategory').value.trim().toLowerCase();
+      const newSubtitle = document.getElementById('newSubtitle').value.trim();
+
+      if (!newCat) {
+        showStatusMessage('Please enter a measurement name.', true);
+        return;
+      }
+      if (categories.includes(newCat)) {
+        showStatusMessage('This measurement name already exists.', true);
+        return;
+      }
+
+      categories.push(newCat);
+      subtitles[newCat] = newSubtitle || "Enter base measurement for this size.";
+      customIncrements[newCat] = 1;
+      measurementValues[newCat] = 40;
+      renderMeasurementInputs();
+      renderIncrementInputs();
+      document.getElementById('newCategory').value = '';
+      document.getElementById('newSubtitle').value = '';
+      showStatusMessage('Measurement added successfully!');
+      saveToLocalStorage();
+    }
+
+    function removeCategory(cat) {
+      categories = categories.filter(c => c !== cat);
+      delete subtitles[cat];
+      delete customIncrements[cat];
+      delete measurementValues[cat];
+      renderMeasurementInputs();
+      renderIncrementInputs();
+      showStatusMessage('Measurement removed successfully!');
+      saveToLocalStorage();
+    }
+
+    function capitalizeWords(str) {
+      return str.replace(/\b\w/g, c => c.toUpperCase()).replace(/_/g, ' ');
+    }
+
+    function generateChart() {
+      const baseSize = document.getElementById('baseSize').value;
+      const baseIndex = sizes.indexOf(baseSize);
+      const unit = document.getElementById('unit').value;
+      const isCM = unit === 'cm';
+
+      const baseValues = {};
+      let valid = true;
+      categories.forEach(cat => {
+        const val = parseFloat(document.getElementById(cat).value);
+        if (isNaN(val) || val <= 0) {
+          showStatusMessage(`Please enter a valid measurement for ${cat}.`, true);
+          valid = false;
+          return;
+        }
+        baseValues[cat] = isCM ? val / CM_PER_INCH : val;
+      });
+
+      if (!valid) return;
+
+      const thead = document.getElementById('tableHead');
+      const tbody = document.getElementById('tableBody');
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+
+      let headerRow = '<tr><th>Measurement</th>';
+      sizes.forEach(size => {
+        headerRow += `<th>${size}</th>`;
+      });
+      headerRow += '</tr>';
+      thead.innerHTML = headerRow;
+
+      const letterPrefix = i => String.fromCharCode(65 + i);
+
+      categories.forEach((cat, index) => {
+        const incrementInput = document.getElementById(`increment-${cat}`);
+        const increment = parseFloat(incrementInput?.value) || 0;
+
+        let row = `<tr><td>${letterPrefix(index)}. ${capitalizeWords(cat)} ${unit === 'cm' ? '(cm)' : '(in)'}</td>`;
+
+        sizes.forEach((size, sizeIndex) => {
+          const diff = sizeIndex - baseIndex;
+          const value = baseValues[cat] + (increment * diff);
+          const displayValue = isCM ? value * CM_PER_INCH : value;
+          row += `<td>${displayValue.toFixed(1)}</td>`;
+        });
+
+        row += '</tr>';
+        tbody.innerHTML += row;
+      });
+
+      const wrapper = document.getElementById('chartExportWrapper');
+      const img = document.getElementById('presetImage');
+      wrapper.style.display = 'block';
+      wrapper.style.opacity = '1';
+      if (img.src && !img.src.includes('blank')) {
+        img.style.display = 'block';
+        img.style.opacity = '1';
+      }
+      showStatusMessage('Size chart generated successfully!');
+    }
+
+    function toggleIncrements() {
+      const section = document.getElementById('incrementsSection');
+      const button = document.querySelector('.collapsible-toggle');
+
+      if (section.classList.contains('open')) {
+        section.classList.remove('open');
+        button.classList.remove('open');
+      } else {
+        section.classList.add('open');
+        button.classList.add('open');
+      }
+    }
+
+    const presets = {
+      shirt: {
+        categories: ['chest', 'length', 'shoulder', 'sleeve'],
+        subtitles: {
+          chest: "Measure around the fullest part of the chest.",
+          length: "Measure from top shoulder to hem.",
+          shoulder: "Measure from one shoulder to the other.",
+          sleeve: "Measure from shoulder seam to wrist."
+        },
+        increments: {
+          chest: 2,
+          length: 1,
+          shoulder: 1,
+          sleeve: 1
+        },
+        image: "https://example.com/shirt.png"
+      },
+      pants: {
+        categories: ['waist', 'hip', 'inseam', 'length'],
+        subtitles: {
+          waist: "Measure around the waistline.",
+          hip: "Measure at the widest part of the hips.",
+          inseam: "Measure from crotch to ankle.",
+          length: "Total length from waist to ankle."
+        },
+        increments: {
+          waist: 2,
+          hip: 2,
+          inseam: 1,
+          length: 1
+        },
+        image: "https://example.com/pants.png"
+      },
+      jacket: {
+        categories: ['chest', 'length', 'shoulder', 'sleeve'],
+        subtitles: {
+          chest: "Chest width under armpits.",
+          length: "Back length from neck to hem.",
+          shoulder: "Shoulder width across.",
+          sleeve: "Sleeve from shoulder to cuff."
+        },
+        increments: {
+          chest: 2,
+          length: 1.5,
+          shoulder: 1,
+          sleeve: 1
+        },
+        image: "https://example.com/jacket.png"
+      },
+      zipup: {
+        categories: ['chest', 'length', 'sleeve', 'zip_length'],
+        subtitles: {
+          chest: "Measure under armpits around chest.",
+          length: "Measure full length front.",
+          sleeve: "Sleeve from shoulder to cuff.",
+          zip_length: "Length of zipper on front."
+        },
+        increments: {
+          chest: 2,
+          length: 1,
+          sleeve: 1,
+          zip_length: 1
+        },
+        image: "https://example.com/zipup.png"
+      },
+      shorts: {
+        categories: ['waist', 'hip', 'length', 'leg_opening'],
+        subtitles: {
+          waist: "Measure around waistband.",
+          hip: "Widest point of hips.",
+          length: "From waistband to hem.",
+          leg_opening: "Width of short leg opening."
+        },
+        increments: {
+          waist: 2,
+          hip: 2,
+          length: 1,
+          leg_opening: 1
+        },
+        image: "https://example.com/shorts.png"
+      },
+      longsleeve: {
+        categories: [
+          'chest',
+          'length',
+          'shoulder width',
+          '1/2 waist ribbing',
+          '1/2 sleeve width',
+          'hem length',
+          'collar length',
+          'bicep',
+          'long sleeve'
+        ],
+        subtitles: {
+          'chest': "Measure around the chest at armpit level.",
+          'length': "From top of shoulder to bottom hem.",
+          'shoulder width': "Straight across from shoulder point to point.",
+          '1/2 waist ribbing': "Half measurement of the waist ribbing.",
+          '1/2 sleeve width': "Half sleeve width at cuff.",
+          'hem length': "Bottom hem opening width.",
+          'collar length': "From neckline seam to collar edge.",
+          'bicep': "Widest part of the upper arm.",
+          'long sleeve': "From shoulder seam to wrist cuff."
+        },
+        increments: {
+          'chest': 2,
+          'length': 1.5,
+          'shoulder width': 1,
+          '1/2 waist ribbing': 1,
+          '1/2 sleeve width': 0.5,
+          'hem length': 1,
+          'collar length': 0.5,
+          'bicep': 1,
+          'long sleeve': 1.25
+        },
+        image: "https://cdn.shopify.com/s/files/1/0633/1095/4722/files/sweatshirt_c4f84d3e-0305-4c3e-8c55-ba41d864c20d.png?v=1750213575"
+      }
+    };
+
+    function loadPreset() {
+      const presetKey = document.getElementById('presetSelect').value;
+      if (!presetKey || !presets[presetKey]) {
+        showStatusMessage('Please select a valid preset.', true);
+        return;
+      }
+
+      const preset = presets[presetKey];
+      categories = [...preset.categories];
+      subtitles = { ...preset.subtitles };
+      customIncrements = { ...preset.increments };
+      measurementValues = {};
+      categories.forEach(cat => {
+        measurementValues[cat] = 40;
+      });
+
+      renderMeasurementInputs();
+      renderIncrementInputs();
+
+      const img = document.getElementById("presetImage");
+      img.src = preset.image;
+      img.style.display = 'none';
+      img.style.opacity = '0';
+      showStatusMessage(`Loaded ${presetKey} preset successfully!`);
+      saveToLocalStorage();
+    }
+
+    function exportChartAndImageAsPNG() {
+      const wrapper = document.getElementById('chartExportWrapper');
+      if (wrapper.style.display === 'none') {
+        showStatusMessage('Please generate a size chart first.', true);
+        return;
+      }
+
+      wrapper.style.background = '#fff';
+      const img = document.getElementById('presetImage');
+
+      html2canvas(wrapper, {
+        backgroundColor: '#fff',
+        scale: 2,
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'size-chart.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showStatusMessage('Chart exported successfully!');
+      }).catch(error => {
+        console.error('Export failed:', error);
+        showStatusMessage('Failed to export chart.', true);
+      });
+    }
+
+    // Load saved state on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFromLocalStorage();
+      document.getElementById('presetSelect').addEventListener('change', saveToLocalStorage);
+      document.getElementById('baseSize').addEventListener('change', saveToLocalStorage);
+      document.getElementById('unit').addEventListener('change', saveToLocalStorage);
+      
+      // Initialize timezone display
+      updateTimezoneDisplay();
+      setInterval(updateTimezoneDisplay, 1000);
+    });
+    
+    // Submenu toggle function
+    function toggleSubmenu(button) {
+        const submenu = button.parentElement.nextElementSibling;
+        const isActive = submenu.classList.contains('active');
+        
+        // Close all other submenus
+        document.querySelectorAll('.hamb-nav-submenu').forEach(menu => {
+            menu.classList.remove('active');
+        });
+        document.querySelectorAll('.hamb-nav-submenu-toggle').forEach(toggle => {
+            toggle.classList.remove('active');
+        });
+        
+        // Toggle current submenu
+        if (!isActive) {
+            submenu.classList.add('active');
+            button.classList.add('active');
+        }
+    }
+    
+    // Timezone display
+    function updateTimezoneDisplay() {
+        const tzSpan = document.getElementById('timezoneDisplay');
+        if (tzSpan) {
+            const now = new Date();
+            // Format time as HH:MM AM/PM
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+            // Get timezone abbreviation (best effort)
+            let tzAbbr = '';
+            try {
+                // This works in most modern browsers
+                const parts = now.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+                tzAbbr = parts[parts.length - 1];
+                // If abbreviation is numeric (e.g. +03:00), fallback to region name
+                if (/^[\d\+\-:]+$/.test(tzAbbr)) {
+                    tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                }
+            } catch (e) {
+                tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            }
+            tzSpan.textContent = `${timeString} (${tzAbbr})`;
+        }
+    }
+
+    renderMeasurementInputs();
+    renderIncrementInputs();
+  </script>
+
+
+<script>
+// Hamburger menu toggle
+            const hamburger = document.getElementById('hamburger');
+            const navDrawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('overlay');
+            const closeBtn = document.getElementById('closeBtn');
+            hamburger.addEventListener('click', () => {
+                navDrawer.classList.add('active');
+                overlay.classList.add('active');
+            }
+            );
+            overlay.addEventListener('click', () => {
+                navDrawer.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            );
+            closeBtn.addEventListener('click', () => {
+                navDrawer.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            );
+
+
+</script>
+
+
+</body></html>

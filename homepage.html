@@ -1,0 +1,2021 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Size Chart Creator</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    /* Import Inter font (macOS system font) */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    /* Define CSS Custom Properties for Theming */
+    :root {
+        --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        --background-color: transparent;
+        --gradient-1: rgba(0, 0, 0, 0.6);
+        --gradient-2: rgba(0, 0, 0, 0.4);
+        --text-color: #fff;
+        --header-bg: rgba(26, 26, 26, 0.75);
+        --header-border: rgba(255, 255, 255, 0.18);
+        --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+        --nav-drawer-border: rgba(255, 255, 255, 0.18);
+        --nav-link-hover: rgba(255, 255, 255, 0.1);
+        --overlay-bg: rgba(0, 0, 0, 0.5);
+        --form-bg: rgba(255, 255, 255, 0.15);
+        --input-bg: rgba(255, 255, 255, 0.15);
+        --input-border: rgba(255, 255, 255, 0.3);
+        --input-focus: #007AFF;
+        --input-focus-shadow: rgba(0, 122, 255, 0.3);
+        --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+        --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+        --button-shadow: rgba(0, 122, 255, 0.3);
+        --clear-btn-bg: rgba(255, 97, 87, 0.8);
+        --clear-btn-hover: rgba(255, 97, 87, 1);
+        --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+        --export-btn-bg: rgba(255, 255, 255, 0.2);
+        --export-btn-hover: rgba(255, 255, 255, 0.3);
+        --export-btn-border: rgba(255, 255, 255, 0.2);
+        --export-btn-shadow: rgba(255, 255, 255, 0.1);
+        --remove-btn-border: #ff6157;
+        --remove-btn-color: #ff6157;
+        --edit-btn-border: #007AFF;
+        --edit-btn-color: #007AFF;
+        --remove-btn-hover-bg: #ff6157;
+        --edit-btn-hover-bg: #007AFF;
+        --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+        --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+        --product-card-bg: rgba(255, 255, 255, 0.15);
+        --table-bg: rgba(255, 255, 255, 0.15);
+        --table-header-bg: rgba(255, 255, 255, 0.1);
+        --table-border: rgba(255, 255, 255, 0.2);
+        --table-cell-border: rgba(255, 255, 255, 0.1);
+        --table-hover: rgba(0, 122, 255, 0.1);
+        --table-footer-bg: rgba(0, 122, 255, 0.1);
+        --summary-table-bg: rgba(255, 255, 255, 0.15);
+        --highlight-profit: #34C759;
+        --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+        --highlight-profit-border: rgba(52, 199, 89, 0.2);
+        --storage-status-bg: rgba(255, 255, 255, 0.15);
+        --storage-status-success: #34C759;
+        --storage-status-success-border: rgba(52, 199, 89, 0.2);
+        --storage-status-error: #ff6157;
+        --storage-status-error-border: rgba(255, 97, 87, 0.2);
+        --file-upload-bg: #007AFF;
+        --file-upload-border: #0056CC;
+    }
+
+    /* General Reset and Base Styles */
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: url('https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1370927.jpg?v=1752025416&width=1920') center center/cover no-repeat fixed;
+        min-height: 100vh;
+        color: #ffffff;
+        overflow-x: hidden;
+        position: relative;
+        -webkit-font-smoothing: antialiased;
+    }
+    .hamb-header {
+      height: 44px !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      
+      padding: 0 16px !important;
+      
+      z-index: 1000 !important;
+      display: flex !important;
+      align-items: center !important;
+      
+    }
+    .hamb-header-container {
+        max-width: 1200px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .hamb-header-left {
+      flex: 1 1 0;
+      display: flex;
+      align-items: center;
+      min-width: 44px;
+    }
+    .hamb-header-center {
+      flex: 2 1 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hamb-header-right {
+      flex: 1 1 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-width: 120px;
+    }
+    .hamb-logo {
+        color: var(--text-color);
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .hamb-hamburger {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 8px;
+        transition: opacity 0.3s ease;
+    }
+
+    .hamb-hamburger:hover,
+    .hamb-hamburger:focus {
+        opacity: 0.7;
+        outline: none;
+    }
+    /* Glass-Themed Navigation Drawer */
+    .hamb-nav-drawer {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 300px;
+        height: 100%;
+        background: var(--nav-drawer-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-right: 1.5px solid var(--nav-drawer-border);
+        box-shadow: 2px 0 24px rgba(31,38,135,0.12);
+        padding: 16px;
+        transition: left 0.3s ease;
+        z-index: 10019;
+    }
+    .hamb-nav-drawer.active {
+        left: 0;
+    }
+
+    .hamb-nav-list {
+        list-style: none;
+        padding: 60px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hamb-nav-list li {
+        border-bottom: 1px solid var(--nav-drawer-border);
+        padding-bottom: 12px;
+    }
+
+    .hamb-nav-list li a {
+        display: block;
+        padding: 8px;
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+    }
+
+    .hamb-nav-list li a:hover {
+        background: var(--nav-link-hover);
+    }
+    
+    /* Submenu styles */
+    .hamb-nav-submenu {
+        list-style: none;
+        padding-left: 20px;
+        margin-top: 8px;
+        display: none;
+        border-left: 1px solid var(--nav-drawer-border);
+        margin-left: 8px;
+    }
+    
+    .hamb-nav-submenu.active {
+        display: block;
+    }
+    
+    .hamb-nav-submenu li {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .hamb-nav-submenu li a {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+        opacity: 0.9;
+    }
+    
+    .hamb-nav-item-with-submenu > a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .hamb-nav-submenu-toggle {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 4px;
+        font-size: 12px;
+        transition: transform 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .hamb-nav-submenu-toggle.active {
+        transform: rotate(90deg);
+    }
+    
+    .hamb-nav-submenu li {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 8px;
+    }
+    
+    .hamb-nav-submenu li a {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+    .hamb-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--overlay-bg);
+        z-index: 9999;
+    }
+
+    .hamb-overlay.active {
+        display: block;
+    }
+
+    .hamb-close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: var(--remove-btn-border);
+        border: none;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+
+    .hamb-close-btn:hover {
+        opacity: 0.7;
+    }
+    .hamb-button {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 10px 20px;
+      background: #007aff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .hamb-button:hover,
+    .hamb-button:focus {
+      background: #005bb5;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 95, 163, 0.4);
+      transform: translateY(-2px);
+    }
+    /* Main content wrapper */
+    main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 80px 24px 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .draggablepopup {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: move;
+        position: absolute;
+        user-select: none;
+        z-index: 1;
+    }
+    /* File Explorer styles with unique prefixes */
+    .fe-homepage {
+        text-align: center;
+    }
+    .fe-homepage-folder {
+      cursor: pointer;
+      padding: 20px;
+      display: inline-block;
+    }
+    .fe-homepage-folder img {
+        width: 64px;
+        height: 64px;
+    }
+    .fe-homepage-folder .fe-folder-name {
+      font-size: 14px;
+      margin-top: 8px;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    .fe-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1000px;
+        max-width: 90%;
+        background: var(--product-card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.25);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        z-index: 2000;
+    }
+
+    /* Mobile optimization for file explorer popup */
+    @media (max-width: 768px) {
+      div#sidebar {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    display: flex
+;
+}
+        .fe-popup {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            max-height: none;
+            top: 0;
+            left: 0;
+            transform: none;
+            border-radius: 0;
+            z-index: 10000;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .fe-container {
+            flex-direction: column;
+            height: 100vh;
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 0;
+            border: none;
+            width: 100%;
+            position: relative;
+        }
+
+        .fe-container {
+          border-radius: 16px;
+            height: 100%;
+        }
+
+        .fe-sidebar {
+            width: 100%;
+            height: auto;
+            border-radius: 0;
+            border-right: none;
+            border-bottom: 1.5px solid var(--nav-drawer-border);
+            padding: 16px;
+            background: var(--nav-drawer-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .fe-sidebar-header {
+            padding: 8px 0 12px;
+        }
+
+        .fe-sidebar-item {
+            padding: 12px 16px;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .fe-explorer {
+            flex: 1;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--product-card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px !important;
+        }
+
+        .fe-header {
+            padding: 16px 20px;
+            flex-wrap: wrap;
+            gap: 8px;
+            grid-template-columns: 1fr 1fr;
+            text-overflow: ellipsis;
+            display: grid!important;
+        }
+
+        .fe-nav-buttons {
+            margin-left: 0;
+        }
+
+        .fe-nav-button {
+            padding: 8px 12px;
+            font-size: 16px;
+        }
+
+        .fe-path {
+            margin-left: 0;
+            font-size: 14px;
+            width: 100%;
+            word-break: break-all;
+        }
+
+        .fe-content {
+            flex: 1;
+            padding: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 16px;
+            overflow-y: auto;
+        }
+
+        .fe-item {
+            padding: 6px 4px 4px 4px;
+            border-radius: 8px;
+            height: auto;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .fe-item img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 4px;
+        }
+
+        .fe-item-name {
+            font-size: 10px;
+            margin-top: 4px;
+            margin-bottom: 0;
+            line-height: 1.2;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .fe-download-button {
+            padding: 6px;
+            border-radius: 6px;
+            top: 6px;
+            right: 6px;
+        }
+
+        .fe-download-button svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Mobile close button enhancement */
+        .fe-sidebar-header {
+            position: relative;
+        }
+
+        
+
+      
+    }
+
+    /* Extra small mobile optimization */
+    @media (max-width: 480px) {
+        .draggablepopup[data-id="explorerPopup"] {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        .fe-popup {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .fe-content {
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .fe-item img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .fe-item-name {
+            font-size: 10px;
+        }
+
+        .fe-sidebar-item {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+    }
+    .fe-container {
+      display: flex;
+    }
+    .fe-sidebar {
+        width: 200px;
+        background: var(--nav-drawer-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-right: 1.5px solid var(--nav-drawer-border);
+        padding: 10px;
+        border-radius: 18px 0 0 18px;
+    }
+    .fe-sidebar-header {
+      padding: 10px 10px 5px;
+      display: flex;
+      align-items: center;
+    }
+    .fe-traffic-lights {
+      display: flex;
+      gap: 8px;
+    }
+    .fe-traffic-lights div {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .fe-red { background: #ff6157; }
+    .fe-yellow { background: #ffbd2e; }
+    .fe-green { background: #28c940; }
+    .fe-sidebar-item {
+        padding: 8px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: var(--text-color);
+    }
+    .fe-sidebar-item:hover {
+        background: var(--nav-link-hover);
+    }
+    .fe-sidebar-item svg {
+      margin-right: 10px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .fe-explorer {
+        flex: 1;
+        background: var(--product-card-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 0 18px 18px 0;
+    }
+    .fe-header {
+        background: var(--table-header-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1.5px solid var(--table-border);
+    }
+    .fe-path {
+        margin-left: 20px;
+        font-size: 14px;
+        color: var(--text-color);
+        opacity: 0.7;
+    }
+    .fe-nav-buttons {
+      display: flex;
+      gap: 5px;
+      margin-left: 10px;
+    }
+    .fe-nav-button {
+        padding: 5px 10px;
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--text-color);
+        transition: background 0.2s, color 0.2s;
+    }
+    .fe-nav-button:hover:not(:disabled) {
+        background: var(--input-focus);
+        color: var(--text-color);
+    }
+    .fe-nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .fe-content {
+    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 20px;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    display: grid
+;
+}
+    .fe-item {
+        text-align: center;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background 0.2s;
+        position: relative;
+    }
+    .fe-item:hover {
+        background: var(--table-hover);
+    }
+    .fe-item img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .fe-item.folder img {
+      filter: brightness(0.9);
+    }
+    .fe-item-name {
+        font-size: 12px;
+        margin-top: 8px;
+        color: var(--text-color);
+        word-break: break-all;
+    }
+    .fe-download-button {
+        display: none;
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 8px;
+        background: var(--button-bg);
+        color: var(--text-color);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 8px var(--button-shadow);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .fe-download-button:hover {
+        background: var(--button-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--button-shadow);
+    }
+    .fe-download-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px var(--button-shadow);
+    }
+    .fe-item:hover .fe-download-button {
+      display: block;
+    }
+    .fe-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .fe-modal-content {
+        background: var(--product-card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 12px;
+        border: 1.5px solid rgba(255,255,255,0.25);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        padding: 8px;
+        position: relative;
+        max-width: 90vw;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Mobile optimization for image modal */
+    @media (max-width: 768px) {
+        .fe-modal-content {
+            max-width: 95vw;
+            max-height: 85vh;
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .fe-modal-header {
+            padding: 12px 16px;
+            margin-bottom: 12px;
+        }
+
+        .fe-modal-title {
+            font-size: 16px;
+        }
+
+        .fe-modal-close {
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .fe-modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .fe-modal img {
+            max-height: calc(85vh - 80px);
+            border-radius: 8px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .fe-modal-content {
+            max-width: 98vw;
+            max-height: 90vh;
+            padding: 8px;
+        }
+
+        .fe-modal-header {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+        }
+
+        .fe-modal-title {
+            font-size: 14px;
+        }
+
+        .fe-modal img {
+            max-height: calc(90vh - 60px);
+        }
+    }
+    .fe-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--table-border);
+        margin-bottom: 8px;
+    }
+    .fe-modal-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-color);
+        margin: 0;
+    }
+    .fe-modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+    .fe-modal-close:hover {
+        background: var(--nav-link-hover);
+    }
+    .fe-modal-close svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--text-color);
+    }
+    .fe-modal img {
+      max-width: 100%;
+      max-height: calc(90vh - 60px);
+      border-radius: 6px;
+      object-fit: contain;
+      display: block;
+    }
+    /* Glassmorphism Match with Drop Projection Generator */
+    .draggablepopup[data-id="explorerPopup"] {
+        background: var(--product-card-bg) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border-radius: 18px !important;
+        border: 1.5px solid rgba(255,255,255,0.25) !important;
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12) !important;
+        width: 1000px;
+    }
+
+    /* Mobile override for explorer popup - must come after desktop styles */
+    @media (max-width: 768px) {
+        .draggablepopup[data-id="explorerPopup"] {
+            background: none !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-radius: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            transform: none !important;
+            z-index: 10000 !important;
+            padding: 100px 16px 120px 16px !important;
+            border-radius: 20px !important;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            opacity: 0 !important;
+            transform: translateY(20px) scale(0.95) !important;
+        }
+
+        /* Animated entrance */
+        .draggablepopup[data-id="explorerPopup"]:not([style*="display: none"]) {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+        }
+
+        /* Simple fade-in animation for the popup */
+        .draggablepopup[data-id="explorerPopup"] .fe-container {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Override sidebar styles for mobile */
+        .draggablepopup[data-id="explorerPopup"] .fe-sidebar {
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 0 !important;
+            border-right: none !important;
+            border-bottom: 1.5px solid var(--nav-drawer-border) !important;
+            padding: 16px !important;
+            background: var(--nav-drawer-bg) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+        }
+
+        /* Override explorer styles for mobile */
+        .draggablepopup[data-id="explorerPopup"] .fe-explorer {
+            flex: 1 !important;
+            border-radius: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: var(--product-card-bg) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    }
+
+        /* Make header visible when popup is open */
+        .draggablepopup[data-id="explorerPopup"]:not([style*="display: none"]) ~ .hamb-header,
+        .draggablepopup[data-id="explorerPopup"]:not([style*="display: none"]) + .hamb-header {
+            z-index: 10001 !important;
+            position: relative !important;
+        }
+
+        /* Ensure header stays on top */
+        .hamb-header {
+            z-index: 10001 !important;
+        }
+    }
+    .fe-popup {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .fe-sidebar {
+        background: var(--nav-drawer-bg) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border-right: 1.5px solid var(--nav-drawer-border) !important;
+    }
+    .fe-header {
+        background: var(--table-header-bg) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        border-bottom: 1.5px solid var(--table-border) !important;
+    }
+    .fe-explorer {
+        background: var(--product-card-bg) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border-radius: 0 18px 18px 0 !important;
+    }
+    .timezone-display {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 400;
+      
+      border-radius: 8px;
+      padding: 4px 12px;
+      margin-left: 12px;
+      letter-spacing: 0.5px;
+      user-select: text;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    @media (max-width: 600px) {
+      .hamb-header-center {
+        flex: 2 1 0;
+        font-size: 1rem;
+      }
+      .hamb-header-right {
+        min-width: 80px;
+      }
+      .timezone-display {
+        font-size: 0.85rem;
+        padding: 2px 6px;
+      }
+    }
+    .hamb-nav-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px;
+      border-top: 1.5px solid var(--nav-drawer-border);
+      background: var(--nav-drawer-bg);
+      text-align: right;
+    }
+    .hamb-nav-account-link {
+      display: inline-block;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      text-align: right;
+      padding: 8px;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+    .hamb-nav-account-link:hover {
+      background: var(--nav-link-hover);
+    }
+
+    /* Reset Icons App in Dock */
+    #resetIconsBtn {
+      cursor: pointer;
+      display: none;
+    }
+
+    #resetIconsBtn:hover svg {
+      transform: scale(1.12);
+      transition: transform 0.15s;
+    }
+
+    #resetIconsBtn:active {
+      transform: scale(0.95);
+    }
+
+    /* Show reset app only on desktop */
+    @media (min-width: 769px) {
+      #resetIconsBtn {
+        display: flex;
+      }
+    }
+  </style>
+
+<style>
+  .mac-dock {
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    display: flex;
+    background: var(--product-card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+    padding: 0 32px;
+    z-index: 3000;
+    min-width: 320px;
+    max-width: 90vw;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  .mac-dock-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border-radius: 12px;
+    padding: 0 8px;
+  }
+  .mac-dock-app:active {
+    transform: scale(0.95);
+  }
+  .mac-dock-app:hover {
+    background: none;
+    box-shadow: none;
+  }
+  .mac-dock-app:hover svg {
+    transform: scale(1.12);
+    transition: transform 0.15s;
+  }
+  .mac-dock-app svg {
+    pointer-events: none;
+    margin-bottom: 0;
+    display: block;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.10));
+    border-radius: 8px;
+    transition: filter 0.2s;
+  }
+  .mac-dock-app:active svg {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.10));
+  }
+
+      /* Mobile grid layout for desktop apps */
+    @media (max-width: 768px) {
+      .draggablepopup {
+        position: static !important;
+        transform: none !important;
+        left: auto !important;
+        top: auto !important;
+        width: auto !important;
+        height: auto !important;
+        cursor: default !important;
+        user-select: none !important;
+        z-index: 1 !important;
+      }
+      
+      /* Create a responsive grid container for mobile */
+      body {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+        gap: 16px;
+        padding: 100px 16px 120px 16px;
+        align-items: start;
+        justify-items: center;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      
+      .draggablepopup .fe-homepage {
+        width: 100%;
+        max-width: 140px;
+        text-align: center;
+      }
+      
+      .draggablepopup .fe-homepage-folder {
+       
+        
+       
+        
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .draggablepopup .fe-homepage-folder:active {
+        transform: scale(0.92);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+      
+      .draggablepopup .fe-homepage-folder img,
+      .draggablepopup .fe-homepage-folder svg {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+      }
+      
+      .draggablepopup .fe-folder-name {
+        
+        font-weight: 500;
+        margin-top: 8px;
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+        word-break: break-word;
+        line-height: 1.3;
+        text-align: center;
+        max-width: 100%;
+   
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    /* Extra small mobile optimization */
+    @media (max-width: 480px) {
+      body {
+        grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+        gap: 12px;
+        padding: 80px 12px 100px 12px;
+      }
+      
+      .draggablepopup .fe-homepage {
+        max-width: 120px;
+      }
+      
+      .draggablepopup .fe-homepage-folder {
+        padding: 16px 12px;
+        min-height: 100px;
+      }
+      
+      .draggablepopup .fe-homepage-folder img,
+      .draggablepopup .fe-homepage-folder svg {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 8px;
+      }
+      
+      .draggablepopup .fe-folder-name {
+        font-size: 12px;
+      }
+    }
+
+</style>
+
+</head>
+<body>
+  <!-- Header and Navigation -->
+  <header class="hamb-header">
+    <div class="hamb-header-container">
+      <div class="hamb-header-left">
+        <button class="hamb-hamburger" id="hamburger">☰</button>
+      </div>
+      <div class="hamb-header-center">
+        <a href="#" class="hamb-logo">Brand Tools</a>
+      </div>
+      <div class="hamb-header-right">
+        <span id="timezoneDisplay" class="timezone-display">08:08 PM (MDT)</span>
+      </div>
+    </div>
+  </header>
+  <nav class="hamb-nav-drawer" id="navDrawer">
+    <button class="hamb-close-btn" id="closeBtn"></button>
+    <ul class="hamb-nav-list" id="navList">
+      <li><a href="homepage.html">Home</a></li>
+      <li class="hamb-nav-item-with-submenu">
+        <a href="#" onclick="toggleSubmenu(this.querySelector('.hamb-nav-submenu-toggle'))">
+          Apps
+          <button class="hamb-nav-submenu-toggle">▶</button>
+        </a>
+        <ul class="hamb-nav-submenu">
+          <li><a href="drop-projection-generator.html">Drop Projection Calculator</a></li>
+          <li><a href="size-chart-generator.html">Size Chart Generator</a></li>
+          <li><a href="clothing-mockup-generator.html">Clothing Mockup Generator</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Help</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="hamb-nav-footer">
+      <a href="/account" class="hamb-nav-account-link">My Account</a>
+    </div>
+  </nav>
+  <div class="hamb-overlay" id="overlay"></div>
+
+
+
+  <!-- Draggable Folders -->
+  <div class="draggablepopup" data-id="popup1" draggable="true" style="left: 525.188px; top: 86.5625px;">
+    <div class="fe-homepage">
+      <div class="fe-homepage-folder" data-folder-type="documents" data-folder-name="Mockups">
+        <svg width="70" height="70" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xml:space="preserve">
+          <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;">
+            <path d="M 3.649 80.444 h 82.703 c 2.015 0 3.649 -1.634 3.649 -3.649 v -56.12 c 0 -2.015 -1.634 -3.649 -3.649 -3.649 H 35.525 c -1.909 0 -3.706 -0.903 -4.846 -2.435 l -2.457 -3.301 c -0.812 -1.092 -2.093 -1.735 -3.454 -1.735 H 3.649 C 1.634 9.556 0 11.19 0 13.205 v 63.591 C 0 78.81 1.634 80.444 3.649 80.444 z" style="fill: rgb(65,159,212); fill-rule: nonzero; opacity: 1;" stroke-linecap="round"></path>
+            <path d="M 86.351 80.444 H 3.649 C 1.634 80.444 0 78.81 0 76.795 V 29.11 c 0 -2.015 1.634 -3.649 3.649 -3.649 h 82.703 c 2.015 0 3.649 1.634 3.649 3.649 v 47.685 C 90 78.81 88.366 80.444 86.351 80.444 z" style="fill: rgb(115,209,251); fill-rule: nonzero; opacity: 1;" stroke-linecap="round"></path>
+            <path d="M 85.106 76.854 H 4.894 c -0.276 0 -0.5 -0.224 -0.5 -0.5 s 0.224 -0.5 0.5 -0.5 h 80.213 c 0.276 0 0.5 0.224 0.5 0.5 S 85.383 76.854 85.106 76.854 z" style="fill: rgb(65,159,212); fill-rule: nonzero; opacity: 1;" stroke-linecap="round"></path>
+            <path d="M 85.106 72.762 H 4.894 c -0.276 0 -0.5 -0.224 -0.5 -0.5 s 0.224 -0.5 0.5 -0.5 h 80.213 c 0.276 0 0.5 0.224 0.5 0.5 S 85.383 72.762 85.106 72.762 z" style="fill: rgb(65,159,212); fill-rule: nonzero; opacity: 1;" stroke-linecap="round"></path>
+          </g>
+        </svg>
+        <div class="fe-folder-name">Mockups</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="draggablepopup" data-id="popup3" draggable="true" style="left: 613.188px; top: 87.5781px;">
+    <div class="fe-homepage">
+      <div class="fe-homepage-folder" data-folder-type="calculator" data-href="drop-projection-generator.html">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80px" height="80px">
+          <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+          <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"></path>
+          <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"></path>
+          <circle cx="18" cy="22" r="2" fill="#e0e0e0"></circle>
+          <circle cx="24" cy="22" r="2" fill="#e0e0e0"></circle>
+          <circle cx="30" cy="22" r="2" fill="#ffab40"></circle>
+          <circle cx="18" cy="28" r="2" fill="#e0e0e0"></circle>
+          <circle cx="24" cy="28" r="2" fill="#e0e0e0"></circle>
+          <circle cx="30" cy="28" r="2" fill="#ffab40"></circle>
+          <circle cx="30" cy="34" r="2" fill="#ffab40"></circle>
+          <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"></path>
+        </svg>
+        <div class="fe-folder-name">Drop-Projection Calculator</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="draggablepopup" data-id="popup4" draggable="true" style="left: 803px; top: 88.5781px;">
+    <div class="fe-homepage">
+      <div class="fe-homepage-folder" data-folder-type="calculator" data-href="size-chart-generator.html">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80px" height="80px">
+          <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+          <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"></path>
+          <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"></path>
+          <circle cx="18" cy="22" r="2" fill="#e0e0e0"></circle>
+          <circle cx="24" cy="22" r="2" fill="#e0e0e0"></circle>
+          <circle cx="30" cy="22" r="2" fill="#ffab40"></circle>
+          <circle cx="18" cy="28" r="2" fill="#e0e0e0"></circle>
+          <circle cx="24" cy="28" r="2" fill="#e0e0e0"></circle>
+          <circle cx="30" cy="28" r="2" fill="#ffab40"></circle>
+          <circle cx="30" cy="34" r="2" fill="#ffab40"></circle>
+          <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"></path>
+        </svg>
+        <div class="fe-folder-name">Size-Chart Generator</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="draggablepopup" data-id="popup5" draggable="true" style="left: 973px; top: 85.5781px;">
+    <div class="fe-homepage">
+      <div class="fe-homepage-folder" data-folder-type="calculator" data-href="mockup-generator.html">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80px" height="80px">
+          <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+          <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"></path>
+          <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"></path>
+          <circle cx="18" cy="22" r="2" fill="#e0e0e0"></circle>
+          <circle cx="24" cy="22" r="2" fill="#e0e0e0"></circle>
+          <circle cx="30" cy="22" r="2" fill="#ffab40"></circle>
+          <circle cx="18" cy="28" r="2" fill="#e0e0e0"></circle>
+          <circle cx="24" cy="28" r="2" fill="#e0e0e0"></circle>
+          <circle cx="30" cy="28" r="2" fill="#ffab40"></circle>
+          <circle cx="30" cy="34" r="2" fill="#ffab40"></circle>
+          <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"></path>
+        </svg>
+        <div class="fe-folder-name">Mockup Generator</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="draggablepopup" data-id="explorerPopup" draggable="true" style="display: none; left: 496.375px; top: 285px;">
+    <div class="fe-container">
+      <div class="fe-sidebar">
+        <div class="fe-sidebar-header">
+          <div class="fe-traffic-lights">
+            <div class="fe-red" id="closePopup"></div>
+            <div class="fe-yellow"></div>
+            <div class="fe-green"></div>
+          </div>
+        </div>
+        <div id="sidebar"><div class="fe-sidebar-item">
+          
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 6.5A2.5 2.5 0 014.5 4h3.379a2.5 2.5 0 012.12 1.06l.94 1.32A1.5 1.5 0 0012.5 7H19.5A2.5 2.5 0 0122 9.5v7A2.5 2.5 0 0119.5 19h-15A2.5 2.5 0 012 16.5v-10z" fill="#41A5D4"></path>
+            </svg>
+          Mockups
+        </div><div class="fe-sidebar-item">
+          
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.5 2C16.12 2 15 3.12 15 4.5c0 .28.06.54.15.79C13.7 5.1 12.39 6.13 12 7.5c-.39-1.37-1.7-2.4-3.15-2.21.09-.25.15-.51.15-.79C9 3.12 7.88 2 6.5 2S4 3.12 4 4.5c0 1.38 1.12 2.5 2.5 2.5.28 0 .54-.06.79-.15C7.1 7.3 6.07 8.61 7.5 9c-1.37.39-2.4 1.7-2.21 3.15-.25-.09-.51-.15-.79-.15C3.12 12 2 13.12 2 14.5S3.12 17 4.5 17c1.38 0 2.5-1.12 2.5-2.5 0-.28-.06-.54-.15-.79C7.3 16.9 8.61 17.93 10 17.5c.39 1.37 1.7 2.4 3.15 2.21-.09.25-.15.51-.15.79 0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5c0-1.38-1.12-2.5-2.5-2.5-.28 0-.54.06-.79.15C16.9 16.7 17.93 15.39 17.5 14c1.37-.39 2.4-1.7 2.21-3.15.25.09.51.15.79.15 1.38 0 2.5-1.12 2.5-2.5S20.88 2 19.5 2c-1.38 0-2.5 1.12-2.5 2.5 0 .28.06.54.15.79C16.9 3.1 17.93 2.07 19.5 2z" fill="#4CAF50"></path>
+            </svg>
+          Vacation
+        </div><div class="fe-sidebar-item">
+          
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="7" height="7" rx="2" fill="#FF9800"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="2" fill="#FF9800"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="2" fill="#FF9800"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="2" fill="#FF9800"></rect>
+            </svg>
+          Applications
+        </div></div>
+      </div>
+      <div class="fe-explorer">
+        <div class="fe-header">
+          <div class="fe-nav-buttons">
+            <button class="fe-nav-button" id="backButton" disabled="">◄</button>
+            <button class="fe-nav-button" id="forwardButton" disabled="">►</button>
+          </div>
+          <div class="fe-path" id="path">/home/user</div>
+        </div>
+        <div class="fe-content" id="content"><div class="fe-item folder">
+          <img src="https://via.placeholder.com/48/CCCCCC/FFFFFF?text=📁" alt="T-Shirts">
+          <div class="fe-item-name">T-Shirts</div>
+          
+        </div><div class="fe-item folder">
+          <img src="https://via.placeholder.com/48/CCCCCC/FFFFFF?text=📁" alt="Hoodies">
+          <div class="fe-item-name">Hoodies</div>
+          
+        </div><div class="fe-item folder">
+          <img src="https://via.placeholder.com/48/CCCCCC/FFFFFF?text=📁" alt="Sweatpants">
+          <div class="fe-item-name">Sweatpants</div>
+          
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fe-modal" id="imageModal">
+    <div class="fe-modal-content">
+      <div class="fe-modal-header">
+        <h3 class="fe-modal-title" id="modalTitle">Image Preview</h3>
+        <button class="fe-modal-close" id="modalClose">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </div>
+      <img id="modalImage" src="" alt="Preview">
+    </div>
+  </div>
+<!-- MacOS Dock Footer -->
+<div class="mac-dock" id="macDock">
+  <div class="mac-dock-app" data-href="drop-projection-generator.html" draggable="true" title="Drop-Projection Calculator">
+    <!-- SVG icon for Drop-Projection Calculator -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80" height="80">
+      <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+      <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"></path>
+      <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"></path>
+      <circle cx="18" cy="22" r="2" fill="#e0e0e0"></circle>
+      <circle cx="24" cy="22" r="2" fill="#e0e0e0"></circle>
+      <circle cx="30" cy="22" r="2" fill="#ffab40"></circle>
+      <circle cx="18" cy="28" r="2" fill="#e0e0e0"></circle>
+      <circle cx="24" cy="28" r="2" fill="#e0e0e0"></circle>
+      <circle cx="30" cy="28" r="2" fill="#ffab40"></circle>
+      <circle cx="30" cy="34" r="2" fill="#ffab40"></circle>
+      <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"></path>
+    </svg>
+  </div>
+  <div class="mac-dock-app" data-href="size-chart-generator.html" draggable="true" title="Size-Chart Generator">
+    <!-- SVG icon for Size-Chart Generator (same as above for visual consistency) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80" height="80">
+      <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+      <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"></path>
+      <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"></path>
+      <circle cx="18" cy="22" r="2" fill="#e0e0e0"></circle>
+      <circle cx="24" cy="22" r="2" fill="#e0e0e0"></circle>
+      <circle cx="30" cy="22" r="2" fill="#ffab40"></circle>
+      <circle cx="18" cy="28" r="2" fill="#e0e0e0"></circle>
+      <circle cx="24" cy="28" r="2" fill="#e0e0e0"></circle>
+      <circle cx="30" cy="28" r="2" fill="#ffab40"></circle>
+      <circle cx="30" cy="34" r="2" fill="#ffab40"></circle>
+      <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"></path>
+    </svg>
+  </div>
+  <div class="mac-dock-app" data-href="mockup-generator.html" draggable="true" title="Mockup Generator">
+    <!-- SVG icon for Mockup Generator (same as above for visual consistency) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80" height="80">
+      <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+      <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"></path>
+      <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"></path>
+      <circle cx="18" cy="22" r="2" fill="#e0e0e0"></circle>
+      <circle cx="24" cy="22" r="2" fill="#e0e0e0"></circle>
+      <circle cx="30" cy="22" r="2" fill="#ffab40"></circle>
+      <circle cx="18" cy="28" r="2" fill="#e0e0e0"></circle>
+      <circle cx="24" cy="28" r="2" fill="#e0e0e0"></circle>
+      <circle cx="30" cy="28" r="2" fill="#ffab40"></circle>
+      <circle cx="30" cy="34" r="2" fill="#ffab40"></circle>
+      <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"></path>
+    </svg>
+  </div>
+  
+  <!-- Reset Icons Button in Dock -->
+  <div class="mac-dock-app" id="resetIconsBtn" title="Reset Icons to Default Positions">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="80" height="80">
+      <!-- App background -->
+      <rect x="4" y="4" width="40" height="40" rx="8" fill="#007AFF"/>
+      <rect x="6" y="6" width="36" height="36" rx="6" fill="#0056CC"/>
+      
+      <!-- Smooth reset arrow loop -->
+      <path d="M24 12 A12 12 0 0 1 36 24 A12 12 0 0 1 24 36 A12 12 0 0 1 12 24 A12 12 0 0 1 24 12" 
+            fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+      
+      <!-- Arrow head -->
+      <path d="M24 12 L24 18 L20 14 L24 18 L28 14" 
+            stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+</div>
+
+
+</body></html>
+
+<script type="module">
+  import memberstackDOM from '@memberstack/dom';
+  const memberstack = memberstackDOM.init({
+    publicKey: "pk_sb_d761d86af3d278a1a125",
+  });
+</script>
+<script>
+  // FILE NAVIGATOR SCRIPT
+  // Image URL mapping for Shopify CDN - Thumbnails (48px) and Full-size
+  const thumbnailUrlMap = {
+    'T-Shirt Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/T-Shirt_Front.png?v=1752022444&width=48',
+    'T-Shirt Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/T-Shirt_Back.png?v=1752022441&width=48',
+    'Washed Black T-Shirt Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_T-Shirt_Front.png?v=1752022444&width=48',
+    'Washed Black T-Shirt Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_T-Shirt_Back.png?v=1752022442&width=48',
+    'Long-Sleeve Tee Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Long-Sleeve_Tee_Front.png?v=1752022443&width=48',
+    'Long-Sleeve Tee Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Long-Sleeve_Tee_Back.png?v=1752022443&width=48',
+    'Double-Layered Long-Sleeve Tee Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Double-Layered_Long-Sleeve_Tee_Front.png?v=1752022443&width=48',
+    'Double-Layered Long-Sleeve Tee Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Double-Layered_Long-Sleeve_Tee_Back.png?v=1752022443&width=48',
+    'Grey Fleece Hoodie Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Hoodie_Front.png?v=1752022443&width=48',
+    'Grey Fleece Hoodie Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Hoodie_Back.png?v=1752022443&width=48',
+    'Washed Black Hoodie Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Hoodie_Front.png?v=1752022443&width=48',
+    'Washed Black Hoodie Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Hoodie_Back.png?v=1752022443&width=48',
+    'Grey Fleece Sweatpants Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Sweatpants_Front.png?v=1752022443&width=48',
+    'Grey Fleece Sweatpants Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Sweatpants_Back.png?v=1752022443&width=48',
+    'Washed Black Sweatpants Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Sweatpants_Front.png?v=1752022444&width=48',
+    'Washed Black Sweatpants Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Sweatpants_Back.png?v=1752022444&width=48'
+  };
+
+  const fullSizeUrlMap = {
+    'T-Shirt Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/T-Shirt_Front.png?v=1752022444',
+    'T-Shirt Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/T-Shirt_Back.png?v=1752022441',
+    'Washed Black T-Shirt Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_T-Shirt_Front.png?v=1752022444',
+    'Washed Black T-Shirt Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_T-Shirt_Back.png?v=1752022442',
+    'Long-Sleeve Tee Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Long-Sleeve_Tee_Front.png?v=1752022443',
+    'Long-Sleeve Tee Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Long-Sleeve_Tee_Back.png?v=1752022443',
+    'Double-Layered Long-Sleeve Tee Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Double-Layered_Long-Sleeve_Tee_Front.png?v=1752022443',
+    'Double-Layered Long-Sleeve Tee Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Double-Layered_Long-Sleeve_Tee_Back.png?v=1752022443',
+    'Grey Fleece Hoodie Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Hoodie_Front.png?v=1752022443',
+    'Grey Fleece Hoodie Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Hoodie_Back.png?v=1752022443',
+    'Washed Black Hoodie Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Hoodie_Front.png?v=1752022443',
+    'Washed Black Hoodie Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Hoodie_Back.png?v=1752022443',
+    'Grey Fleece Sweatpants Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Sweatpants_Front.png?v=1752022443',
+    'Grey Fleece Sweatpants Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Grey_Fleece_Sweatpants_Back.png?v=1752022443',
+    'Washed Black Sweatpants Front.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Sweatpants_Front.png?v=1752022444',
+    'Washed Black Sweatpants Back.png': 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/Washed_Black_Sweatpants_Back.png?v=1752022444'
+  };
+
+  const folders = [
+    {
+      name: 'Mockups',
+      type: 'folder',
+      contents: [
+        {
+          name: 'T-Shirts',
+          type: 'folder',
+          contents: [
+            { name: 'T-Shirt Front.png', type: 'image', src: thumbnailUrlMap['T-Shirt Front.png'], fullSrc: fullSizeUrlMap['T-Shirt Front.png'] },
+            { name: 'T-Shirt Back.png', type: 'image', src: thumbnailUrlMap['T-Shirt Back.png'], fullSrc: fullSizeUrlMap['T-Shirt Back.png'] },
+            { name: 'Washed Black T-Shirt Front.png', type: 'image', src: thumbnailUrlMap['Washed Black T-Shirt Front.png'], fullSrc: fullSizeUrlMap['Washed Black T-Shirt Front.png'] },
+            { name: 'Washed Black T-Shirt Back.png', type: 'image', src: thumbnailUrlMap['Washed Black T-Shirt Back.png'], fullSrc: fullSizeUrlMap['Washed Black T-Shirt Back.png'] },
+            { name: 'Long-Sleeve Tee Front.png', type: 'image', src: thumbnailUrlMap['Long-Sleeve Tee Front.png'], fullSrc: fullSizeUrlMap['Long-Sleeve Tee Front.png'] },
+            { name: 'Long-Sleeve Tee Back.png', type: 'image', src: thumbnailUrlMap['Long-Sleeve Tee Back.png'], fullSrc: fullSizeUrlMap['Long-Sleeve Tee Back.png'] },
+            { name: 'Double-Layered Long-Sleeve Tee Front.png', type: 'image', src: thumbnailUrlMap['Double-Layered Long-Sleeve Tee Front.png'], fullSrc: fullSizeUrlMap['Double-Layered Long-Sleeve Tee Front.png'] },
+            { name: 'Double-Layered Long-Sleeve Tee Back.png', type: 'image', src: thumbnailUrlMap['Double-Layered Long-Sleeve Tee Back.png'], fullSrc: fullSizeUrlMap['Double-Layered Long-Sleeve Tee Back.png'] }
+          ]
+        },
+        {
+          name: 'Hoodies',
+          type: 'folder',
+          contents: [
+            { name: 'Grey Fleece Hoodie Front.png', type: 'image', src: thumbnailUrlMap['Grey Fleece Hoodie Front.png'], fullSrc: fullSizeUrlMap['Grey Fleece Hoodie Front.png'] },
+            { name: 'Grey Fleece Hoodie Back.png', type: 'image', src: thumbnailUrlMap['Grey Fleece Hoodie Back.png'], fullSrc: fullSizeUrlMap['Grey Fleece Hoodie Back.png'] },
+            { name: 'Washed Black Hoodie Front.png', type: 'image', src: thumbnailUrlMap['Washed Black Hoodie Front.png'], fullSrc: fullSizeUrlMap['Washed Black Hoodie Front.png'] },
+            { name: 'Washed Black Hoodie Back.png', type: 'image', src: thumbnailUrlMap['Washed Black Hoodie Back.png'], fullSrc: fullSizeUrlMap['Washed Black Hoodie Back.png'] }
+          ]
+        },
+        {
+          name: 'Sweatpants',
+          type: 'folder',
+          contents: [
+            { name: 'Grey Fleece Sweatpants Front.png', type: 'image', src: thumbnailUrlMap['Grey Fleece Sweatpants Front.png'], fullSrc: fullSizeUrlMap['Grey Fleece Sweatpants Front.png'] },
+            { name: 'Grey Fleece Sweatpants Back.png', type: 'image', src: thumbnailUrlMap['Grey Fleece Sweatpants Back.png'], fullSrc: fullSizeUrlMap['Grey Fleece Sweatpants Back.png'] },
+            { name: 'Washed Black Sweatpants Front.png', type: 'image', src: thumbnailUrlMap['Washed Black Sweatpants Front.png'], fullSrc: fullSizeUrlMap['Washed Black Sweatpants Front.png'] },
+            { name: 'Washed Black Sweatpants Back.png', type: 'image', src: thumbnailUrlMap['Washed Black Sweatpants Back.png'], fullSrc: fullSizeUrlMap['Washed Black Sweatpants Back.png'] }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'Vacation',
+      type: 'folder',
+      contents: [
+        { name: 'city.jpg', type: 'image', src: 'https://via.placeholder.com/150/FF33A1/FFFFFF?text=City' }
+      ]
+    },
+    {
+      name: 'Applications',
+      type: 'folder',
+      contents: [
+        { name: 'Drop-Projection Calculator', type: 'app', href: 'drop-projection-generator.html' },
+        { name: 'Size-Chart Generator', type: 'app', href: 'size-chart-generator.html' },
+        { name: 'Mockup Generator', type: 'app', href: 'mockup-generator.html' }
+      ]
+    }
+  ];
+
+  const explorerPopup = document.querySelector('.draggablepopup[data-id="explorerPopup"]');
+  const closePopup = document.getElementById('closePopup');
+  const contentDiv = document.getElementById('content');
+  const sidebar = document.getElementById('sidebar');
+  const modal = document.getElementById('imageModal');
+  const modalImage = document.getElementById('modalImage');
+  const backButton = document.getElementById('backButton');
+  const forwardButton = document.getElementById('forwardButton');
+  const pathDiv = document.getElementById('path');
+  let currentFolder = folders;
+  let folderHistory = [];
+  let forwardHistory = [];
+
+  // Select all folder elements
+  const folderElements = document.querySelectorAll('.fe-homepage-folder');
+
+  // Add click event listeners to folders based on their type
+  folderElements.forEach(folder => {
+    folder.addEventListener('click', () => {
+      const folderType = folder.getAttribute('data-folder-type');
+      const folderName = folder.getAttribute('data-folder-name');
+      if (folderType === 'documents') {
+        // Open file explorer for Documents folders
+        explorerPopup.style.display = 'block';
+        renderSidebar();
+        const targetFolder = folders.find(f => f.name === folderName);
+        if (targetFolder) {
+          folderHistory.push(currentFolder);
+          currentFolder = targetFolder.contents;
+          pathDiv.textContent = `/home/user/${folderName}`;
+          updateNavButtons();
+          renderFolder(currentFolder);
+        }
+      } else if (folderType === 'calculator') {
+        // Redirect to the calculator's page
+        const href = folder.getAttribute('data-href');
+        if (href) {
+          window.location.href = href;
+        }
+      }
+    });
+  });
+
+  closePopup.onclick = () => {
+    explorerPopup.style.display = 'none';
+    currentFolder = folders;
+    folderHistory = [];
+    forwardHistory = [];
+    pathDiv.textContent = '/home/user';
+    updateNavButtons();
+  };
+
+  function renderSidebar() {
+    sidebar.innerHTML = '';
+    folders.forEach(folder => {
+      const div = document.createElement('div');
+      div.className = 'fe-sidebar-item';
+      let iconSvg;
+      if (folder.name === 'Mockups') {
+        // Folder icon
+        iconSvg = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 6.5A2.5 2.5 0 014.5 4h3.379a2.5 2.5 0 012.12 1.06l.94 1.32A1.5 1.5 0 0012.5 7H19.5A2.5 2.5 0 0122 9.5v7A2.5 2.5 0 0119.5 19h-15A2.5 2.5 0 012 16.5v-10z" fill="#41A5D4"/>
+          </svg>`;
+      } else if (folder.name === 'Vacation') {
+        // Palm tree/travel icon
+        iconSvg = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 2C16.12 2 15 3.12 15 4.5c0 .28.06.54.15.79C13.7 5.1 12.39 6.13 12 7.5c-.39-1.37-1.7-2.4-3.15-2.21.09-.25.15-.51.15-.79C9 3.12 7.88 2 6.5 2S4 3.12 4 4.5c0 1.38 1.12 2.5 2.5 2.5.28 0 .54-.06.79-.15C7.1 7.3 6.07 8.61 7.5 9c-1.37.39-2.4 1.7-2.21 3.15-.25-.09-.51-.15-.79-.15C3.12 12 2 13.12 2 14.5S3.12 17 4.5 17c1.38 0 2.5-1.12 2.5-2.5 0-.28-.06-.54-.15-.79C7.3 16.9 8.61 17.93 10 17.5c.39 1.37 1.7 2.4 3.15 2.21-.09.25-.15.51-.15.79 0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5c0-1.38-1.12-2.5-2.5-2.5-.28 0-.54.06-.79.15C16.9 16.7 17.93 15.39 17.5 14c1.37-.39 2.4-1.7 2.21-3.15.25.09.51.15.79.15 1.38 0 2.5-1.12 2.5-2.5S20.88 2 19.5 2c-1.38 0-2.5 1.12-2.5 2.5 0 .28.06.54.15.79C16.9 3.1 17.93 2.07 19.5 2z" fill="#4CAF50"/>
+          </svg>`;
+      } else if (folder.name === 'Applications') {
+        // App grid icon
+        iconSvg = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="7" height="7" rx="2" fill="#FF9800"/>
+            <rect x="14" y="3" width="7" height="7" rx="2" fill="#FF9800"/>
+            <rect x="3" y="14" width="7" height="7" rx="2" fill="#FF9800"/>
+            <rect x="14" y="14" width="7" height="7" rx="2" fill="#FF9800"/>
+          </svg>`;
+      }
+      div.innerHTML = `
+        ${iconSvg}
+        ${folder.name}
+      `;
+      div.onclick = () => {
+        folderHistory.push(currentFolder);
+        forwardHistory = [];
+        currentFolder = folder.contents;
+        pathDiv.textContent = `/home/user/${folder.name}`;
+        updateNavButtons();
+        renderFolder(currentFolder);
+      };
+      sidebar.appendChild(div);
+    });
+  }
+
+  function renderFolder(folder) {
+    contentDiv.innerHTML = '';
+    folder.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'fe-item' + (item.type === 'folder' ? ' folder' : '');
+      let itemIcon;
+      if (item.type === 'app') {
+        itemIcon = `
+          <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#cfd8dc" d="M42,37c0,2.762-2.238,5-5,5H11c-2.762,0-5-2.238-5-5V11c0-2.762,2.238-5,5-5h26c2.762,0,5,2.238,5,5 V37z"/>
+            <path fill="#1f212b" d="M32,38H16c-1.105,0-2-0.895-2-2V12c0-1.105,0.895-2,2-2h16c1.105,0,2,0.895,2,2v24 C34,37.105,33.105,38,32,38z"/>
+            <path fill="#757575" d="M30,18H18c-0.552,0-1-0.448-1-1v-4c0-0.552,0.448-1,1-1h12c0.552,0,1,0.448,1,1v4 C31,17.552,30.552,18,30,18z"/>
+            <circle cx="18" cy="22" r="2" fill="#e0e0e0"/>
+            <circle cx="24" cy="22" r="2" fill="#e0e0e0"/>
+            <circle cx="30" cy="22" r="2" fill="#ffab40"/>
+            <circle cx="18" cy="28" r="2" fill="#e0e0e0"/>
+            <circle cx="24" cy="28" r="2" fill="#e0e0e0"/>
+            <circle cx="30" cy="28" r="2" fill="#ffab40"/>
+            <circle cx="30" cy="34" r="2" fill="#ffab40"/>
+            <path fill="#e0e0e0" d="M24,36h-6c-1.105,0-2-0.895-2-2v0c0-1.105,0.895-2,2-2h6c1.105,0,2,0.895,2,2v0 C26,35.105,25.105,36,24,36z"/>
+          </svg>`;
+      } else {
+        itemIcon = `<img src="${item.type === 'folder' ? 'https://via.placeholder.com/48/CCCCCC/FFFFFF?text=📁' : item.src}" alt="${item.name}">`;
+      }
+      div.innerHTML = `
+        ${itemIcon}
+        <div class="fe-item-name">${item.name}</div>
+        ${item.type === 'image' ? `<button class="fe-download-button" data-src="${item.fullSrc || item.src}" data-name="${item.name}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L12 16M12 16L18 10M12 16L6 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L2 19C2 19.5304 2.21071 20.0391 2.58579 20.4142C2.96086 20.7893 3.46957 21 4 21H20C20.5304 21 21.0391 20.7893 21.4142 20.4142C21.7893 20.0391 22 19.5304 22 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>` : ''}
+      `;
+      div.onclick = (e) => {
+        if (e.target.className !== 'fe-download-button') {
+          if (item.type === 'folder') {
+            folderHistory.push(currentFolder);
+            forwardHistory = [];
+            currentFolder = item.contents;
+            pathDiv.textContent = `/home/user${getPath(folderHistory.length)}/${item.name}`;
+            updateNavButtons();
+            renderFolder(currentFolder);
+          } else if (item.type === 'image') {
+            modalImage.src = item.fullSrc || item.src;
+            document.getElementById('modalTitle').textContent = item.name;
+            modal.style.display = 'flex';
+          } else if (item.type === 'app') {
+            window.location.href = item.href;
+          }
+        }
+      };
+
+      // Add download functionality for download buttons
+      const downloadBtn = div.querySelector('.fe-download-button');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const src = downloadBtn.getAttribute('data-src');
+          const name = downloadBtn.getAttribute('data-name');
+          
+          try {
+            // Fetch the image as a blob
+            const response = await fetch(src);
+            const blob = await response.blob();
+            
+            // Create a blob URL and download link
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = name;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Clean up the blob URL
+            window.URL.revokeObjectURL(blobUrl);
+          } catch (error) {
+            console.error('Download failed:', error);
+            // Fallback: try to open in new tab if download fails
+            window.open(src, '_blank');
+          }
+        });
+      }
+      contentDiv.appendChild(div);
+    });
+  }
+
+  function getPath(depth) {
+    let path = '';
+    for (let i = 0; i < depth; i++) {
+      path += `/${folderHistory[i].find(item => item.contents === folderHistory[i + 1] || item.contents === currentFolder)?.name || ''}`;
+    }
+    return path;
+  }
+
+  function updateNavButtons() {
+    backButton.disabled = folderHistory.length === 0;
+    forwardButton.disabled = forwardHistory.length === 0;
+  }
+
+  backButton.onclick = () => {
+    if (folderHistory.length > 0) {
+      forwardHistory.push(currentFolder);
+      currentFolder = folderHistory.pop();
+      pathDiv.textContent = `/home/user${getPath(folderHistory.length)}`;
+      updateNavButtons();
+      renderFolder(currentFolder);
+    }
+  };
+
+  forwardButton.onclick = () => {
+    if (forwardHistory.length > 0) {
+      folderHistory.push(currentFolder);
+      currentFolder = forwardHistory.pop();
+      pathDiv.textContent = `/home/user${getPath(folderHistory.length)}`;
+      updateNavButtons();
+      renderFolder(currentFolder);
+    }
+  };
+
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
+
+  document.getElementById('modalClose').onclick = () => {
+    modal.style.display = 'none';
+  };
+
+  // DRAGGABLE FOLDER SCRIPT
+  const draggableElements = document.querySelectorAll('.draggablepopup');
+  let offsetX, offsetY;
+
+  // Default positions for each draggable element
+  const defaultPositions = {
+    'popup1': { left: 525, top: 86 },
+    'popup3': { left: 613, top: 87 },
+    'popup4': { left: 803, top: 88 },
+    'popup5': { left: 973, top: 85 },
+    'explorerPopup': { left: 496, top: 285 }
+  };
+
+  // Load saved positions for all draggable elements on page load
+  window.addEventListener('load', () => {
+    draggableElements.forEach((element) => {
+      const id = element.getAttribute('data-id');
+      const savedPosition = localStorage.getItem(`draggablePosition_${id}`);
+      if (savedPosition) {
+        const { left, top } = JSON.parse(savedPosition);
+        element.style.left = `${left}px`;
+        element.style.top = `${top}px`;
+      }
+    });
+  });
+
+  // Reset icons to default positions
+  function resetIconsToDefault() {
+    draggableElements.forEach((element) => {
+      const id = element.getAttribute('data-id');
+      const defaultPos = defaultPositions[id];
+      if (defaultPos) {
+        element.style.left = `${defaultPos.left}px`;
+        element.style.top = `${defaultPos.top}px`;
+        // Clear saved position from localStorage
+        localStorage.removeItem(`draggablePosition_${id}`);
+      }
+    });
+    
+    // Show confirmation with gear rotation animation
+    const resetApp = document.getElementById('resetIconsBtn');
+    const svg = resetApp.querySelector('svg');
+    const originalTransform = svg.style.transform;
+    
+    // Add gear rotation animation
+    svg.style.transform = 'scale(1.1) rotate(720deg)';
+    svg.style.transition = 'transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    
+    setTimeout(() => {
+      svg.style.transform = originalTransform;
+      svg.style.transition = 'transform 0.3s ease';
+    }, 1000);
+  }
+
+  // Add click event to reset app
+  document.getElementById('resetIconsBtn').addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent triggering dock drag events
+    resetIconsToDefault();
+  });
+
+  // Add drag event listeners to each draggable element
+  draggableElements.forEach((element) => {
+    element.addEventListener('dragstart', (event) => {
+      const rect = element.getBoundingClientRect();
+      offsetX = event.clientX - rect.left;
+      offsetY = event.clientY - rect.top;
+      event.dataTransfer.setData('text/plain', element.getAttribute('data-id'));
+    });
+  });
+
+  // Allow dropping
+  document.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
+  // Handle drop for any draggable element
+  document.addEventListener('drop', (event) => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData('text/plain');
+    const element = document.querySelector(`.draggablepopup[data-id="${id}"]`);
+    if (element) {
+      const newLeft = event.clientX - offsetX;
+      const newTop = event.clientY - offsetY;
+      element.style.left = `${newLeft}px`;
+      element.style.top = `${newTop}px`;
+      localStorage.setItem(`draggablePosition_${id}`, JSON.stringify({ left: newLeft, top: newTop }));
+    }
+  });
+
+  // Hamburger menu toggle
+  const hamburger = document.getElementById('hamburger');
+  const navDrawer = document.getElementById('navDrawer');
+  const overlay = document.getElementById('overlay');
+  const closeBtn = document.getElementById('closeBtn');
+  hamburger.addEventListener('click', () => {
+    navDrawer.classList.add('active');
+    overlay.classList.add('active');
+  });
+  overlay.addEventListener('click', () => {
+    navDrawer.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+  closeBtn.addEventListener('click', () => {
+    navDrawer.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  // Timezone display
+  function updateTimezoneDisplay() {
+    const tzSpan = document.getElementById('timezoneDisplay');
+    if (tzSpan) {
+      const now = new Date();
+      // Format time as HH:MM AM/PM
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      // Get timezone abbreviation (best effort)
+      let tzAbbr = '';
+      try {
+        // This works in most modern browsers
+        const parts = now.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+        tzAbbr = parts[parts.length - 1];
+        // If abbreviation is numeric (e.g. +03:00), fallback to region name
+        if (/^[\d\+\-:]+$/.test(tzAbbr)) {
+          tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+      } catch (e) {
+        tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      }
+      tzSpan.textContent = `${timeString} (${tzAbbr})`;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    updateTimezoneDisplay();
+    setInterval(updateTimezoneDisplay, 1000);
+  });
+  
+  // Submenu toggle function
+  function toggleSubmenu(button) {
+    const submenu = button.parentElement.nextElementSibling;
+    const isActive = submenu.classList.contains('active');
+    
+    // Close all other submenus
+    document.querySelectorAll('.hamb-nav-submenu').forEach(menu => {
+      menu.classList.remove('active');
+    });
+    document.querySelectorAll('.hamb-nav-submenu-toggle').forEach(toggle => {
+      toggle.classList.remove('active');
+    });
+    
+    // Toggle current submenu
+    if (!isActive) {
+      submenu.classList.add('active');
+      button.classList.add('active');
+    }
+  }
+</script>
+
+
+<script>
+// MacOS Dock Logic
+const dock = document.getElementById('macDock');
+let draggedApp = null;
+let dragOverApp = null;
+
+// Check if device is mobile
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+// Initialize dock based on screen size
+function initializeDock() {
+  Array.from(dock.children).forEach(app => {
+    if (isMobile()) {
+      app.removeAttribute('draggable');
+      app.style.transform = 'none';
+      app.style.opacity = '1';
+    } else {
+      app.setAttribute('draggable', 'true');
+    }
+  });
+}
+
+Array.from(dock.children).forEach(app => {
+  // Desktop drag functionality
+  app.addEventListener('dragstart', (e) => {
+    if (isMobile()) {
+      e.preventDefault();
+      return;
+    }
+    draggedApp = app;
+    setTimeout(() => app.style.opacity = '0.5', 0);
+  });
+  
+  app.addEventListener('dragend', (e) => {
+    if (isMobile()) return;
+    draggedApp = null;
+    app.style.opacity = '';
+  });
+  
+  app.addEventListener('dragover', (e) => {
+    if (isMobile()) return;
+    e.preventDefault();
+    dragOverApp = app;
+  });
+  
+  app.addEventListener('drop', (e) => {
+    if (isMobile()) return;
+    e.preventDefault();
+    if (draggedApp && dragOverApp && draggedApp !== dragOverApp) {
+      const children = Array.from(dock.children);
+      const draggedIndex = children.indexOf(draggedApp);
+      const overIndex = children.indexOf(dragOverApp);
+      if (draggedIndex < overIndex) {
+        dock.insertBefore(draggedApp, dragOverApp.nextSibling);
+      } else {
+        dock.insertBefore(draggedApp, dragOverApp);
+      }
+    }
+    dragOverApp = null;
+  });
+  
+  // Click functionality (works on both mobile and desktop)
+  app.addEventListener('click', (e) => {
+    if (app.dataset.href) {
+      window.location.href = app.dataset.href;
+    }
+  });
+  
+  // Prevent touch events from triggering drag on mobile
+  app.addEventListener('touchstart', (e) => {
+    if (isMobile()) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  app.addEventListener('touchmove', (e) => {
+    if (isMobile()) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+});
+
+// Handle window resize to update mobile state
+window.addEventListener('resize', () => {
+  initializeDock();
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  initializeDock();
+});
+</script>

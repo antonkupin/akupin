@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Drop University - Premium Brand Tools & Consulting</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        h1, h2, h3 {
+            line-height: 100%;
+        }
+        /* Import Inter font (macOS system font) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        /* Define CSS Custom Properties for Theming */
+        :root {
+            --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+            --background-color: transparent;
+            --gradient-1: rgba(0, 0, 0, 0.6);
+            --gradient-2: rgba(0, 0, 0, 0.4);
+            --text-color: #fff;
+            --header-bg: rgba(26, 26, 26, 0.75);
+            --header-border: rgba(255, 255, 255, 0.18);
+            --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+            --nav-drawer-border: rgba(255, 255, 255, 0.18);
+            --nav-link-hover: rgba(255, 255, 255, 0.1);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+            --form-bg: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(255, 255, 255, 0.15);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --input-focus: #007AFF;
+            --input-focus-shadow: rgba(0, 122, 255, 0.3);
+            --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+            --button-shadow: rgba(0, 122, 255, 0.3);
+            --clear-btn-bg: rgba(255, 97, 87, 0.8);
+            --clear-btn-hover: rgba(255, 97, 87, 1);
+            --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+            --export-btn-bg: rgba(255, 255, 255, 0.2);
+            --export-btn-hover: rgba(255, 255, 255, 0.3);
+            --export-btn-border: rgba(255, 255, 255, 0.2);
+            --export-btn-shadow: rgba(255, 255, 255, 0.1);
+            --remove-btn-border: #ff6157;
+            --remove-btn-color: #ff6157;
+            --edit-btn-border: #007AFF;
+            --edit-btn-color: #007AFF;
+            --remove-btn-hover-bg: #ff6157;
+            --edit-btn-hover-bg: #007AFF;
+            --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+            --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+            --product-card-bg: rgba(255, 255, 255, 0.15);
+            --table-bg: rgba(255, 255, 255, 0.15);
+            --table-header-bg: rgba(255, 255, 255, 0.1);
+            --table-border: rgba(255, 255, 255, 0.2);
+            --table-cell-border: rgba(255, 255, 255, 0.1);
+            --table-hover: rgba(0, 122, 255, 0.1);
+            --table-footer-bg: rgba(0, 122, 255, 0.1);
+            --summary-table-bg: rgba(255, 255, 255, 0.15);
+            --highlight-profit: #34C759;
+            --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+            --highlight-profit-border: rgba(52, 199, 89, 0.2);
+            --storage-status-bg: rgba(255, 255, 255, 0.15);
+            --storage-status-success: #34C759;
+            --storage-status-success-border: rgba(52, 199, 89, 0.2);
+            --storage-status-error: #ff6157;
+            --storage-status-error-border: rgba(255, 97, 87, 0.2);
+            --file-upload-bg: #007AFF;
+            --file-upload-border: #0056CC;
+        }
+
+        /* General Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: url('https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1370927.jpg?v=1752025416&width=1920') center center/cover no-repeat fixed;
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header Styles */
+        .du-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .du-header.scrolled {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .du-header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .du-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .du-nav-menu {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .du-nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .du-nav-menu a:hover {
+            opacity: 0.7;
+        }
+
+        .du-cta-button {
+            background: var(--button-bg);
+            color: var(--text-color);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px var(--button-shadow);
+        }
+
+        .du-cta-button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--button-shadow);
+        }
+
+        /* Main Content */
+        .du-main {
+            padding-top: 80px;
+        }
+
+        /* Hero Section */
+        .du-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .du-hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .du-hero h1 {
+            font-size: 4rem !important;
+            font-weight: 700 !important;
+            margin-bottom: 24px !important;
+            background: linear-gradient(135deg, #ffffff 0%, #007AFF 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            text-shadow: 0 0 30px rgba(0, 122, 255, 0.3) !important;
+            letter-spacing: -0.02em !important;
+        }
+
+        .du-hero p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .du-hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .du-primary-button {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            color: var(--text-color);
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 
+                0 4px 16px rgba(0, 122, 255, 0.3),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .du-primary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .du-primary-button:hover {
+            background: linear-gradient(135deg, #0056CC 0%, #4A4A9C 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 8px 25px rgba(0, 122, 255, 0.4),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .du-primary-button:hover::before {
+            opacity: 1;
+        }
+
+        .du-secondary-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .du-secondary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .du-secondary-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .du-secondary-button:hover::before {
+            opacity: 1;
+        }
+
+        /* Features Section */
+        .du-features {
+            padding: 100px 0;
+            backdrop-filter: blur(30px);
+            position: relative;
+        }
+
+        .du-features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .du-features > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .du-features-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .du-section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 80px;
+            background: linear-gradient(135deg, #ffffff 0%, #007AFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .du-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+
+        .du-feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 
+                0 4px 24px rgba(0, 0, 0, 0.1),
+                0 1px 0 0 rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .du-feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .du-feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                0 1px 0 0 rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .du-feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .du-feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 
+                0 4px 16px rgba(0, 122, 255, 0.3),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .du-feature-card:hover .du-feature-icon {
+            transform: scale(1.1);
+            box-shadow: 
+                0 8px 25px rgba(0, 122, 255, 0.4),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .du-feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .du-feature-card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Apps Section */
+        .du-apps-section {
+            padding: 100px 0;
+            backdrop-filter: blur(30px);
+            position: relative;
+        }
+
+        .du-apps-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .du-apps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .du-apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .du-app-card {
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        }
+
+        .du-app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+        }
+
+        .du-app-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: var(--button-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .du-app-card h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .du-app-card p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .du-app-link {
+            color: var(--input-focus);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .du-app-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Pricing Section */
+        .du-pricing {
+            padding: 100px 0;
+            backdrop-filter: blur(30px);
+            position: relative;
+        }
+
+        .du-pricing-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .du-pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+
+        .du-pricing-card {
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            position: relative;
+        }
+
+        .du-pricing-card.featured {
+            border-color: var(--input-focus);
+            transform: scale(1.05);
+        }
+
+        .du-pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+        }
+
+        .du-pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-4px);
+        }
+
+        .du-pricing-header {
+            margin-bottom: 32px;
+        }
+
+        .du-pricing-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .du-pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--input-focus);
+            margin-bottom: 8px;
+            line-height: 100%;
+        }
+
+        .du-pricing-period {
+            opacity: 0.7;
+            font-size: 1rem;
+        }
+
+        .du-pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .du-pricing-features li {
+            padding: 8px 0;
+            opacity: 0.8;
+        }
+
+        .du-pricing-features li::before {
+            content: "✓";
+            color: var(--highlight-profit);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .du-pricing-button {
+            background: var(--button-bg);
+            color: var(--text-color);
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px var(--button-shadow);
+        }
+
+        .du-pricing-button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--button-shadow);
+        }
+
+        /* CTA Section */
+        .du-cta-section {
+            padding: 100px 0;
+            text-align: center;
+            backdrop-filter: blur(30px);
+            position: relative;
+        }
+
+        .du-cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .du-cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #007AFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .du-cta-description {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .du-cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .du-footer {
+            background: var(--header-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1.5px solid var(--header-border);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .du-footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .du-footer p {
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .du-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .du-hero p {
+                font-size: 1.1rem;
+            }
+
+            .du-hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .du-section-title {
+                font-size: 2rem;
+            }
+
+            .du-features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .du-apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .du-pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .du-nav-menu {
+                display: none;
+            }
+        }
+
+        /* 2025 macOS Styling Enhancements */
+        .du-header {
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .du-hero {
+            background: radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.1) 0%, transparent 70%) !important;
+        }
+
+        .du-feature-card,
+        .du-app-card,
+        .du-pricing-card {
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 
+                0 4px 24px rgba(0, 0, 0, 0.1),
+                0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .du-feature-card:hover,
+        .du-app-card:hover,
+        .du-pricing-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                0 1px 0 0 rgba(255, 255, 255, 0.2) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .du-feature-icon,
+        .du-app-icon {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%) !important;
+            box-shadow: 
+                0 4px 16px rgba(0, 122, 255, 0.3),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .du-primary-button,
+        .du-pricing-button {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 
+                0 4px 16px rgba(0, 122, 255, 0.3),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .du-primary-button:hover,
+        .du-pricing-button:hover {
+            background: linear-gradient(135deg, #0056CC 0%, #4A4A9C 100%) !important;
+            transform: translateY(-2px) scale(1.02) !important;
+            box-shadow: 
+                0 8px 25px rgba(0, 122, 255, 0.4),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .du-secondary-button {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .du-secondary-button:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px) scale(1.02) !important;
+        }
+
+        .du-section-title {
+            background: linear-gradient(135deg, #ffffff 0%, #007AFF 50%, #5856D6 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            text-shadow: 0 0 20px rgba(0, 122, 255, 0.2) !important;
+            letter-spacing: -0.02em !important;
+        }
+
+        .du-pricing-card.featured {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%) !important;
+            border: 2px solid rgba(0, 122, 255, 0.3) !important;
+            box-shadow: 
+                0 8px 32px rgba(0, 122, 255, 0.2),
+                0 1px 0 0 rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .du-pricing-price {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            text-shadow: 0 0 20px rgba(0, 122, 255, 0.3) !important;
+        }
+
+        .du-apps-section {
+            backdrop-filter: blur(30px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+        }
+
+        .du-cta-section {
+            backdrop-filter: blur(30px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+        }
+
+        .du-footer {
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 -1px 0 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Enhanced Animations */
+        @keyframes du-fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes du-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 122, 255, 0.6);
+            }
+        }
+
+        @keyframes du-float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes du-pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes du-shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .du-hero-content {
+            animation: du-fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .du-feature-card,
+        .du-app-card,
+        .du-pricing-card {
+            animation: du-fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+        }
+
+        .du-feature-card:nth-child(1) { animation-delay: 0.1s !important; }
+        .du-feature-card:nth-child(2) { animation-delay: 0.2s !important; }
+        .du-feature-card:nth-child(3) { animation-delay: 0.3s !important; }
+        .du-feature-card:nth-child(4) { animation-delay: 0.4s !important; }
+        .du-feature-card:nth-child(5) { animation-delay: 0.5s !important; }
+        .du-feature-card:nth-child(6) { animation-delay: 0.6s !important; }
+
+        /* macOS-style floating animation for icons */
+        .du-feature-icon {
+            animation: du-float 3s ease-in-out infinite;
+        }
+
+        .du-feature-card:nth-child(1) .du-feature-icon { animation-delay: 0s; }
+        .du-feature-card:nth-child(2) .du-feature-icon { animation-delay: 0.5s; }
+        .du-feature-card:nth-child(3) .du-feature-icon { animation-delay: 1s; }
+        .du-feature-card:nth-child(4) .du-feature-icon { animation-delay: 1.5s; }
+        .du-feature-card:nth-child(5) .du-feature-icon { animation-delay: 2s; }
+        .du-feature-card:nth-child(6) .du-feature-icon { animation-delay: 2.5s; }
+
+        /* Shimmer effect for buttons */
+        .du-primary-button {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            background-size: 200% 200%;
+            animation: du-shimmer 3s ease-in-out infinite;
+        }
+
+        /* Responsive enhancements */
+        @media (max-width: 768px) {
+            .du-hero h1 {
+                font-size: 2.5rem !important;
+                text-shadow: 0 0 20px rgba(0, 122, 255, 0.3) !important;
+            }
+        }
+
+        /* Fix for animation stacking */
+        .du-hero-content.animated {
+            animation: none !important;
+            transform: translateY(0) scale(1) !important;
+        }
+
+        .du-feature-card.animated,
+        .du-app-card.animated,
+        .du-pricing-card.animated {
+            animation: none !important;
+            transform: translateY(0) scale(1) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="du-header">
+        <div class="du-header-container">
+            <a href="#" class="du-logo">Drop University</a>
+            <nav>
+                <ul class="du-nav-menu">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#apps">Apps</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+            </nav>
+            <a href="/signup" class="du-cta-button">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="du-main">
+        <!-- Hero Section -->
+        <section class="du-hero">
+            <div class="du-hero-content">
+                <h1>Master Your Brand with Drop University</h1>
+                <p>Join the elite community of successful brand owners. Get exclusive access to premium tools, personalized consulting, and cutting-edge mockups that will transform your business.</p>
+                <div class="du-hero-buttons">
+                    <a href="/signup" class="du-primary-button">Start Your Journey</a>
+                    <a href="#features" class="du-secondary-button">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="du-features" id="features">
+            <div class="du-features-content">
+                <h2 class="du-section-title">Why Choose Drop University?</h2>
+                <div class="du-features-grid">
+                    <div class="du-feature-card">
+                        <div class="du-feature-icon">👨‍💼</div>
+                        <h3>Personal Consulting</h3>
+                        <p>Get one-on-one guidance from industry experts who have built successful brands. Personalized strategies tailored to your unique business needs.</p>
+                    </div>
+                    <div class="du-feature-card">
+                        <div class="du-feature-icon">🚀</div>
+                        <h3>Exclusive Apps</h3>
+                        <p>Access our premium suite of brand tools including drop projection calculators, size chart generators, and advanced mockup creators.</p>
+                    </div>
+                    <div class="du-feature-card">
+                        <div class="du-feature-icon">🎨</div>
+                        <h3>Premium Mockups</h3>
+                        <p>High-quality, professional mockups for all your products. Stand out from the competition with stunning visual presentations.</p>
+                    </div>
+                    <div class="du-feature-card">
+                        <div class="du-feature-icon">📊</div>
+                        <h3>Data-Driven Insights</h3>
+                        <p>Make informed decisions with our advanced analytics and market research tools. Understand your audience and optimize your strategy.</p>
+                    </div>
+                    <div class="du-feature-card">
+                        <div class="du-feature-icon">🤝</div>
+                        <h3>Community Access</h3>
+                        <p>Connect with like-minded entrepreneurs in our exclusive community. Share experiences, get feedback, and grow together.</p>
+                    </div>
+                    <div class="du-feature-card">
+                        <div class="du-feature-icon">⚡</div>
+                        <h3>Priority Support</h3>
+                        <p>Get fast, reliable support when you need it most. Our dedicated team is here to help you succeed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apps Section -->
+        <section class="du-apps-section" id="apps">
+            <div class="du-apps-content">
+                <h2 class="du-section-title">Exclusive Brand Tools</h2>
+                <div class="du-apps-grid">
+                    <div class="du-app-card">
+                        <div class="du-app-icon">📈</div>
+                        <h4>Drop Projection Calculator</h4>
+                        <p>Advanced analytics to predict your product performance and optimize your launch strategy.</p>
+                        <a href="drop-projection-generator.html" class="du-app-link">Try Demo →</a>
+                    </div>
+                    <div class="du-app-card">
+                        <div class="du-app-icon">📏</div>
+                        <h4>Size Chart Generator</h4>
+                        <p>Create professional size charts for your clothing brand with our intuitive design tool.</p>
+                        <a href="size-chart-generator.html" class="du-app-link">Try Demo →</a>
+                    </div>
+                    <div class="du-app-card">
+                        <div class="du-app-icon">👕</div>
+                        <h4>Mockup Generator</h4>
+                        <p>Generate stunning product mockups for your clothing line with our premium templates.</p>
+                        <a href="clothing-mockup-generator.html" class="du-app-link">Try Demo →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="du-pricing" id="pricing">
+            <div class="du-pricing-content">
+                <h2 class="du-section-title">Choose Your Plan</h2>
+                <div class="du-pricing-grid">
+                    <div class="du-pricing-card">
+                        <div class="du-pricing-header">
+                            <h3 class="du-pricing-title">Starter</h3>
+                            <div class="du-pricing-price">$99</div>
+                            <div class="du-pricing-period">per month</div>
+                        </div>
+                        <ul class="du-pricing-features">
+                            <li>Access to basic brand tools</li>
+                            <li>Email support</li>
+                            <li>Community access</li>
+                            <li>Basic mockup library</li>
+                            <li>Monthly consulting call</li>
+                        </ul>
+                        <a href="/signup" class="du-pricing-button">Get Started</a>
+                    </div>
+                    <div class="du-pricing-card featured">
+                        <div class="du-pricing-header">
+                            <h3 class="du-pricing-title">Professional</h3>
+                            <div class="du-pricing-price">$299</div>
+                            <div class="du-pricing-period">per month</div>
+                        </div>
+                        <ul class="du-pricing-features">
+                            <li>All Starter features</li>
+                            <li>Full access to premium tools</li>
+                            <li>Priority support</li>
+                            <li>Exclusive mockup library</li>
+                            <li>Weekly consulting calls</li>
+                            <li>Custom brand strategy</li>
+                            <li>Market research reports</li>
+                        </ul>
+                        <a href="/upgrade" class="du-pricing-button">Upgrade Now</a>
+                    </div>
+                    <div class="du-pricing-card">
+                        <div class="du-pricing-header">
+                            <h3 class="du-pricing-title">Enterprise</h3>
+                            <div class="du-pricing-price">$599</div>
+                            <div class="du-pricing-period">per month</div>
+                        </div>
+                        <ul class="du-pricing-features">
+                            <li>All Professional features</li>
+                            <li>Dedicated success manager</li>
+                            <li>Custom tool development</li>
+                            <li>24/7 priority support</li>
+                            <li>Daily consulting availability</li>
+                            <li>Advanced analytics dashboard</li>
+                            <li>White-label solutions</li>
+                        </ul>
+                        <a href="/upgrade" class="du-pricing-button">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="du-cta-section" id="contact">
+            <div class="du-cta-content">
+                <h2 class="du-cta-title">Ready to Transform Your Brand?</h2>
+                <p class="du-cta-description">Join thousands of successful entrepreneurs who have already taken their brands to the next level with Drop University.</p>
+                <div class="du-cta-buttons">
+                    <a href="/signup" class="du-primary-button">Start Your Free Trial</a>
+                    <a href="/login" class="du-secondary-button">Already a Member? Login</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="du-footer">
+        <div class="du-footer-content">
+            <p>&copy; 2024 Drop University. All rights reserved. | Premium brand tools and consulting services.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.du-header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // macOS-style parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.du-hero');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+
+        // macOS-style hover effects for cards
+        document.querySelectorAll('.du-feature-card, .du-app-card, .du-pricing-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.zIndex = '1';
+            });
+        });
+
+        // macOS-style button interactions
+        document.querySelectorAll('.du-primary-button, .du-secondary-button').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.style.transform = 'translateY(0) scale(0.98)';
+            });
+            
+            button.addEventListener('mouseup', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Check if animations have already run
+        const hasAnimated = sessionStorage.getItem('du-animations-complete');
+        
+        if (!hasAnimated) {
+            // Observe all cards for animation
+            document.querySelectorAll('.du-feature-card, .du-app-card, .du-pricing-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Mark animations as complete
+            sessionStorage.setItem('du-animations-complete', 'true');
+        } else {
+            // If animations already ran, set final state
+            document.querySelectorAll('.du-feature-card, .du-app-card, .du-pricing-card').forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                card.classList.add('animated');
+            });
+            
+            // Set hero content to final state
+            const heroContent = document.querySelector('.du-hero-content');
+            if (heroContent) {
+                heroContent.classList.add('animated');
+            }
+        }
+    </script>
+</body>
+</html> 
+
+<style>
+    ul, ol {
+        margin-top: 0;
+        /* margin-bottom: 10px; */
+        /* padding-left: 40px; */
+        padding: 0;
+        margin: 0;
+    }
+    </style>

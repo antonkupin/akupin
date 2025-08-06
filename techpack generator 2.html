@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Pack Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .step.completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .preset-card {
+            padding: 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .preset-card:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .preset-card.selected {
+            border-color: #3498db;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .upload-area {
+            border: 3px dashed #bdc3c7;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+
+        .upload-area.dragover {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+
+        .preview-container {
+            position: relative;
+            min-height: 400px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .garment-mockup {
+            max-width: 300px;
+            max-height: 350px;
+            object-fit: contain;
+        }
+
+        .user-graphic {
+            position: absolute;
+            cursor: move;
+            border: 2px dashed transparent;
+            transition: border 0.3s ease;
+        }
+
+        .user-graphic:hover {
+            border-color: #3498db;
+        }
+
+        .user-graphic.selected {
+            border-color: #e74c3c;
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            bottom: -5px;
+            right: -5px;
+            cursor: se-resize;
+        }
+
+        .size-chart {
+            overflow-x: auto;
+        }
+
+        .size-chart table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .size-chart th,
+        .size-chart td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .size-chart th {
+            background: #3498db;
+            color: white;
+        }
+
+        .size-chart input {
+            border: none;
+            background: transparent;
+            width: 80px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .specifications-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .specifications-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-indicator {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .fabric-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #2c3e50;
+            transform: scale(1.15);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            width: 25%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Tech Pack Generator</h1>
+            <p>Create professional specification sheets for garment manufacturers</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </header>
+
+        <div class="step-indicator">
+            <div class="step active" data-step="1">
+                <span>1. Select Garment</span>
+            </div>
+            <div class="step" data-step="2">
+                <span>2. Upload Design</span>
+            </div>
+            <div class="step" data-step="3">
+                <span>3. Edit Specs</span>
+            </div>
+            <div class="step" data-step="4">
+                <span>4. Export PDF</span>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="main-content">
+            <!-- Left Panel -->
+            <div class="panel">
+                <div id="step1" class="step-content">
+                    <h2>Select Garment Type</h2>
+                    <div class="preset-grid" id="presetGrid">
+                        <div class="preset-card" data-preset="tshirt">
+                            <h3>T-Shirt</h3>
+                            <p>Classic white</p>
+                        </div>
+                        <div class="preset-card" data-preset="longsleeve">
+                            <h3>Long Sleeve</h3>
+                            <p>Long sleeve tee</p>
+                        </div>
+                        <div class="preset-card" data-preset="hoodie">
+                            <h3>Hoodie</h3>
+                            <p>Grey fleece</p>
+                        </div>
+                        <div class="preset-card" data-preset="washblacktshirt">
+                            <h3>Black T-Shirt</h3>
+                            <p>Washed black</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step2" class="step-content" style="display: none;">
+                    <h2>Upload Your Design</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <p>Click to upload or drag & drop your design</p>
+                        <p style="color: #7f8c8d; margin-top: 10px;">PNG, JPG files only</p>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    
+                    <div class="form-group">
+                        <label>Graphic Placement</label>
+                        <select id="graphicPlacement">
+                            <option value="front-center">Front Center</option>
+                            <option value="front-left">Front Left Chest</option>
+                            <option value="back-center">Back Center</option>
+                            <option value="sleeve">Sleeve</option>
+                        </select>
+                    </div>
+                    
+                    <div class="specifications-grid">
+                        <div class="form-group">
+                            <label>Graphic Width (px)</label>
+                            <input type="number" id="graphicWidth" value="80" min="20" max="300">
+                        </div>
+                        <div class="form-group">
+                            <label>Graphic Height (px)</label>
+                            <input type="number" id="graphicHeight" value="80" min="20" max="300">
+                        </div>
+                    </div>
+                    
+                    <div class="specifications-grid">
+                        <div class="form-group">
+                            <label>Position X (px)</label>
+                            <input type="number" id="graphicX" value="150" min="0" max="400">
+                        </div>
+                        <div class="form-group">
+                            <label>Position Y (px)</label>
+                            <input type="number" id="graphicY" value="150" min="0" max="400">
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="applyGraphicSettings" style="width: 100%; margin-top: 10px;">Apply Size & Position</button>
+                </div>
+
+                <div id="step3" class="step-content" style="display: none;">
+                    <h2>Edit Specifications</h2>
+                    <div class="specifications-grid">
+                        <div class="form-group">
+                            <label>GSM (Weight)</label>
+                            <input type="number" id="gsm" value="180">
+                        </div>
+                        <div class="form-group">
+                            <label>Fabric Type</label>
+                            <select id="fabricType">
+                                <option value="100% Cotton">100% Cotton</option>
+                                <option value="Cotton Blend">Cotton Blend</option>
+                                <option value="Polyester">Polyester</option>
+                                <option value="Tri-Blend">Tri-Blend</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Fabric Color</label>
+                        <div class="fabric-colors" id="fabricColors">
+                            <div class="color-option selected" style="background: #ffffff; border: 1px solid #ddd;" data-color="White"></div>
+                            <div class="color-option" style="background: #000000;" data-color="Black"></div>
+                            <div class="color-option" style="background: #8b4513;" data-color="Brown"></div>
+                            <div class="color-option" style="background: #0066cc;" data-color="Navy"></div>
+                            <div class="color-option" style="background: #cc0000;" data-color="Red"></div>
+                            <div class="color-option" style="background: #808080;" data-color="Gray"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Washing Instructions</label>
+                        <textarea id="washingInstructions" rows="3">Machine wash cold with like colors. Tumble dry low. Do not bleach.</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Notes</label>
+                        <textarea id="additionalNotes" rows="3" placeholder="Any special requirements or notes..."></textarea>
+                    </div>
+                </div>
+
+                <div id="step4" class="step-content" style="display: none;">
+                    <h2>Export Options</h2>
+                    <div class="form-group">
+                        <label>Tech Pack Name</label>
+                        <input type="text" id="techPackName" placeholder="Enter tech pack name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Brand/Company</label>
+                        <input type="text" id="brandName" placeholder="Your brand name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Season/Collection</label>
+                        <input type="text" id="collection" placeholder="e.g., Spring 2024">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Preview</h2>
+                    <div>
+                        <button class="btn btn-secondary" id="frontViewBtn" style="margin-right: 10px;">Front View</button>
+                        <button class="btn btn-secondary" id="backViewBtn">Back View</button>
+                    </div>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <img id="garmentMockup" class="garment-mockup" src="mockup pictures/t-shirt/T-Shirt Front.png" alt="T-Shirt Mockup">
+                </div>
+
+                <!-- Size Chart -->
+                <div class="size-chart">
+                    <h3>Size Chart (inches)</h3>
+                    <table id="sizeChart">
+                        <thead>
+                            <tr>
+                                <th>Size</th>
+                                <th>Chest</th>
+                                <th>Length</th>
+                                <th>Sleeve</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>XS</td>
+                                <td><input type="number" value="32" step="0.5"></td>
+                                <td><input type="number" value="26" step="0.5"></td>
+                                <td><input type="number" value="8" step="0.5"></td>
+                            </tr>
+                            <tr>
+                                <td>S</td>
+                                <td><input type="number" value="36" step="0.5"></td>
+                                <td><input type="number" value="27" step="0.5"></td>
+                                <td><input type="number" value="8.5" step="0.5"></td>
+                            </tr>
+                            <tr>
+                                <td>M</td>
+                                <td><input type="number" value="40" step="0.5"></td>
+                                <td><input type="number" value="28" step="0.5"></td>
+                                <td><input type="number" value="9" step="0.5"></td>
+                            </tr>
+                            <tr>
+                                <td>L</td>
+                                <td><input type="number" value="44" step="0.5"></td>
+                                <td><input type="number" value="29" step="0.5"></td>
+                                <td><input type="number" value="9.5" step="0.5"></td>
+                            </tr>
+                            <tr>
+                                <td>XL</td>
+                                <td><input type="number" value="48" step="0.5"></td>
+                                <td><input type="number" value="30" step="0.5"></td>
+                                <td><input type="number" value="10" step="0.5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-secondary" id="prevBtn" style="display: none;">Previous</button>
+            <button class="btn btn-primary" id="nextBtn">Next Step</button>
+            <button class="btn btn-secondary" id="saveProjectBtn">Save Project</button>
+            <button class="btn btn-secondary" id="loadProjectBtn">Load Project</button>
+            <button class="btn btn-success" id="exportPdfBtn" style="display: none;">Export PDF</button>
+        </div>
+    </div>
+
+    <script>
+        class TechPackGenerator {
+            constructor() {
+                this.currentStep = 1;
+                this.selectedPreset = null;
+                this.uploadedImage = null;
+                this.userGraphic = null;
+                this.graphicPosition = { x: 150, y: 150 };
+                this.graphicSize = { width: 80, height: 80 };
+                this.selectedColor = 'White';
+                this.isDragging = false;
+                this.isResizing = false;
+                this.currentView = 'front'; // 'front' or 'back'
+
+                this.presets = {
+                    tshirt: {
+                        name: 'T-Shirt',
+                        gsm: 180,
+                        fabric: '100% Cotton',
+                        sizeChart: {
+                            XS: { chest: 32, length: 26, sleeve: 8 },
+                            S: { chest: 36, length: 27, sleeve: 8.5 },
+                            M: { chest: 40, length: 28, sleeve: 9 },
+                            L: { chest: 44, length: 29, sleeve: 9.5 },
+                            XL: { chest: 48, length: 30, sleeve: 10 }
+                        },
+                        mockupFront: "mockup pictures/t-shirt/T-Shirt Front.png",
+                        mockupBack: "mockup pictures/t-shirt/T-Shirt Back.png"
+                    },
+                    longsleeve: {
+                        name: 'Long Sleeve',
+                        gsm: 200,
+                        fabric: 'Cotton Blend',
+                        sizeChart: {
+                            XS: { chest: 32, length: 26, sleeve: 24 },
+                            S: { chest: 36, length: 27, sleeve: 25 },
+                            M: { chest: 40, length: 28, sleeve: 26 },
+                            L: { chest: 44, length: 29, sleeve: 27 },
+                            XL: { chest: 48, length: 30, sleeve: 28 }
+                        },
+                        mockupFront: "mockup pictures/t-shirt/Long-Sleeve Tee Front.png",
+                        mockupBack: "mockup pictures/t-shirt/Long-Sleeve Tee Back.png"
+                    },
+                    hoodie: {
+                        name: 'Hoodie',
+                        gsm: 280,
+                        fabric: 'Cotton Blend',
+                        sizeChart: {
+                            XS: { chest: 34, length: 25, sleeve: 24 },
+                            S: { chest: 38, length: 26, sleeve: 25 },
+                            M: { chest: 42, length: 27, sleeve: 26 },
+                            L: { chest: 46, length: 28, sleeve: 27 },
+                            XL: { chest: 50, length: 29, sleeve: 28 }
+                        },
+                        mockupFront: "mockup pictures/t-shirt/Grey Fleece Hoodie Front.png",
+                        mockupBack: "mockup pictures/t-shirt/Grey Fleece Hoodie Back.png"
+                    },
+                    washblacktshirt: {
+                        name: 'Washed Black T-Shirt',
+                        gsm: 180,
+                        fabric: '100% Cotton',
+                        sizeChart: {
+                            XS: { chest: 32, length: 26, sleeve: 8 },
+                            S: { chest: 36, length: 27, sleeve: 8.5 },
+                            M: { chest: 40, length: 28, sleeve: 9 },
+                            L: { chest: 44, length: 29, sleeve: 9.5 },
+                            XL: { chest: 48, length: 30, sleeve: 10 }
+                        },
+                        mockupFront: "mockup pictures/t-shirt/Washed Black T-Shirt Front.png",
+                        mockupBack: "mockup pictures/t-shirt/Washed Black T-Shirt Back.png"
+                    }
+                };
+
+                this.initializeEventListeners();
+                this.updateProgress();
+                this.showFrontView(); // Initialize with front view active
+            }
+
+            initializeEventListeners() {
+                // Preset selection
+                document.querySelectorAll('.preset-card').forEach(card => {
+                    card.addEventListener('click', () => this.selectPreset(card.dataset.preset));
+                });
+
+                // File upload
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+
+                uploadArea.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    if (e.dataTransfer.files.length > 0) {
+                        this.handleFileUpload(e.dataTransfer.files[0]);
+                    }
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        this.handleFileUpload(e.target.files[0]);
+                    }
+                });
+
+                // Navigation buttons
+                document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
+                document.getElementById('prevBtn').addEventListener('click', () => this.prevStep());
+
+                // Export and save buttons
+                document.getElementById('exportPdfBtn').addEventListener('click', () => this.exportPDF());
+                document.getElementById('saveProjectBtn').addEventListener('click', () => this.saveProject());
+                document.getElementById('loadProjectBtn').addEventListener('click', () => this.loadProject());
+
+                // Color selection
+                document.querySelectorAll('.color-option').forEach(color => {
+                    color.addEventListener('click', () => this.selectColor(color));
+                });
+
+                // Step indicators
+                document.querySelectorAll('.step').forEach(step => {
+                    step.addEventListener('click', () => {
+                        const stepNumber = parseInt(step.dataset.step);
+                        if (stepNumber <= this.getMaxAvailableStep()) {
+                            this.goToStep(stepNumber);
+                        }
+                    });
+                });
+
+                // Front/Back view toggle
+                document.getElementById('frontViewBtn').addEventListener('click', () => this.showFrontView());
+                document.getElementById('backViewBtn').addEventListener('click', () => this.showBackView());
+
+                // Apply graphic settings
+                document.getElementById('applyGraphicSettings').addEventListener('click', () => this.applyGraphicSettings());
+
+                // Real-time updates for graphic size inputs
+                document.getElementById('graphicWidth').addEventListener('input', () => this.updateGraphicFromInputs());
+                document.getElementById('graphicHeight').addEventListener('input', () => this.updateGraphicFromInputs());
+                document.getElementById('graphicX').addEventListener('input', () => this.updateGraphicFromInputs());
+                document.getElementById('graphicY').addEventListener('input', () => this.updateGraphicFromInputs());
+            }
+
+            selectPreset(presetKey) {
+                this.selectedPreset = presetKey;
+                const preset = this.presets[presetKey];
+                
+                // Update UI
+                document.querySelectorAll('.preset-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.querySelector(`[data-preset="${presetKey}"]`).classList.add('selected');
+
+                // Update form values
+                document.getElementById('gsm').value = preset.gsm;
+                document.getElementById('fabricType').value = preset.fabric;
+
+                // Update mockup
+                document.getElementById('garmentMockup').src = preset.mockupFront;
+
+                // Update size chart
+                this.updateSizeChart(preset.sizeChart);
+
+                this.showAlert('Garment preset selected successfully!', 'success');
+            }
+
+            updateSizeChart(sizeChart) {
+                const tbody = document.querySelector('#sizeChart tbody');
+                const rows = tbody.querySelectorAll('tr');
+
+                Object.keys(sizeChart).forEach((size, index) => {
+                    if (rows[index]) {
+                        const inputs = rows[index].querySelectorAll('input');
+                        inputs[0].value = sizeChart[size].chest;
+                        inputs[1].value = sizeChart[size].length;
+                        inputs[2].value = sizeChart[size].sleeve;
+                    }
+                });
+            }
+
+            handleFileUpload(file) {
+                if (!file.type.startsWith('image/')) {
+                    this.showAlert('Please upload a valid image file (PNG, JPG)', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.uploadedImage = e.target.result;
+                    this.addGraphicToPreview();
+                    this.showAlert('Design uploaded successfully!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            addGraphicToPreview() {
+                const previewContainer = document.getElementById('previewContainer');
+                
+                // Remove existing graphic if any
+                const existingGraphic = previewContainer.querySelector('.user-graphic');
+                if (existingGraphic) {
+                    existingGraphic.remove();
+                }
+
+                // Create new graphic element
+                const graphic = document.createElement('img');
+                graphic.src = this.uploadedImage;
+                graphic.className = 'user-graphic';
+                graphic.style.left = this.graphicPosition.x + 'px';
+                graphic.style.top = this.graphicPosition.y + 'px';
+                graphic.style.width = this.graphicSize.width + 'px';
+                graphic.style.height = this.graphicSize.height + 'px';
+
+                // Add resize handle
+                const resizeHandle = document.createElement('div');
+                resizeHandle.className = 'resize-handle';
+                graphic.appendChild(resizeHandle);
+
+                previewContainer.appendChild(graphic);
+                this.userGraphic = graphic;
+
+                // Update input fields
+                this.updateInputFields();
+
+                this.addGraphicInteractions();
+            }
+
+            updateInputFields() {
+                document.getElementById('graphicWidth').value = this.graphicSize.width;
+                document.getElementById('graphicHeight').value = this.graphicSize.height;
+                document.getElementById('graphicX').value = this.graphicPosition.x;
+                document.getElementById('graphicY').value = this.graphicPosition.y;
+            }
+
+            addGraphicInteractions() {
+                if (!this.userGraphic) return;
+
+                let startX, startY, startLeft, startTop;
+
+                // Dragging
+                this.userGraphic.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('resize-handle')) return;
+                    
+                    this.isDragging = true;
+                    this.userGraphic.classList.add('selected');
+                    
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = parseInt(this.userGraphic.style.left);
+                    startTop = parseInt(this.userGraphic.style.top);
+
+                    e.preventDefault();
+                });
+
+                // Resizing
+                const resizeHandle = this.userGraphic.querySelector('.resize-handle');
+                resizeHandle.addEventListener('mousedown', (e) => {
+                    this.isResizing = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = parseInt(this.userGraphic.style.width);
+                    startTop = parseInt(this.userGraphic.style.height);
+                    e.stopPropagation();
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (this.isDragging) {
+                        const newLeft = startLeft + (e.clientX - startX);
+                        const newTop = startTop + (e.clientY - startY);
+                        
+                        this.userGraphic.style.left = Math.max(0, Math.min(250, newLeft)) + 'px';
+                        this.userGraphic.style.top = Math.max(0, Math.min(300, newTop)) + 'px';
+                        
+                        this.graphicPosition.x = parseInt(this.userGraphic.style.left);
+                        this.graphicPosition.y = parseInt(this.userGraphic.style.top);
+                        
+                        // Update input fields
+                        this.updateInputFields();
+                    }
+
+                    if (this.isResizing) {
+                        const newWidth = startLeft + (e.clientX - startX);
+                        const newHeight = startTop + (e.clientY - startY);
+                        
+                        this.userGraphic.style.width = Math.max(20, Math.min(200, newWidth)) + 'px';
+                        this.userGraphic.style.height = Math.max(20, Math.min(200, newHeight)) + 'px';
+                        
+                        this.graphicSize.width = parseInt(this.userGraphic.style.width);
+                        this.graphicSize.height = parseInt(this.userGraphic.style.height);
+                        
+                        // Update input fields
+                        this.updateInputFields();
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                    this.isResizing = false;
+                    if (this.userGraphic) {
+                        this.userGraphic.classList.remove('selected');
+                    }
+                });
+            }
+
+            selectColor(colorElement) {
+                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+                colorElement.classList.add('selected');
+                this.selectedColor = colorElement.dataset.color;
+            }
+
+            nextStep() {
+                if (this.currentStep === 1 && !this.selectedPreset) {
+                    this.showAlert('Please select a garment type first', 'error');
+                    return;
+                }
+
+                if (this.currentStep === 2 && !this.uploadedImage) {
+                    this.showAlert('Please upload your design first', 'error');
+                    return;
+                }
+
+                if (this.currentStep < 4) {
+                    this.goToStep(this.currentStep + 1);
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.goToStep(this.currentStep - 1);
+                }
+            }
+
+            goToStep(step) {
+                // Hide all step contents
+                document.querySelectorAll('.step-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+
+                // Show target step content
+                document.getElementById(`step${step}`).style.display = 'block';
+
+                // Update step indicators
+                document.querySelectorAll('.step').forEach((stepEl, index) => {
+                    stepEl.classList.remove('active', 'completed');
+                    if (index + 1 === step) {
+                        stepEl.classList.add('active');
+                    } else if (index + 1 < step) {
+                        stepEl.classList.add('completed');
+                    }
+                });
+
+                this.currentStep = step;
+                this.updateProgress();
+                this.updateNavigationButtons();
+            }
+
+            getMaxAvailableStep() {
+                if (!this.selectedPreset) return 1;
+                if (!this.uploadedImage) return 2;
+                return 4;
+            }
+
+            updateNavigationButtons() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                const exportBtn = document.getElementById('exportPdfBtn');
+
+                prevBtn.style.display = this.currentStep > 1 ? 'inline-block' : 'none';
+                nextBtn.style.display = this.currentStep < 4 ? 'inline-block' : 'none';
+                exportBtn.style.display = this.currentStep === 4 ? 'inline-block' : 'none';
+            }
+
+            updateProgress() {
+                const progressFill = document.getElementById('progressFill');
+                const progress = (this.currentStep / 4) * 100;
+                progressFill.style.width = progress + '%';
+            }
+
+            showAlert(message, type) {
+                const alertContainer = document.getElementById('alertContainer');
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                alert.style.display = 'block';
+
+                alertContainer.innerHTML = '';
+                alertContainer.appendChild(alert);
+
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 3000);
+            }
+
+
+
+            getSizeChartData() {
+                const tbody = document.querySelector('#sizeChart tbody');
+                const rows = tbody.querySelectorAll('tr');
+                const data = [];
+
+                rows.forEach(row => {
+                    const size = row.cells[0].textContent;
+                    const chest = parseFloat(row.querySelector('input:nth-of-type(1)').value);
+                    const length = parseFloat(row.querySelector('input:nth-of-type(2)').value);
+                    const sleeve = parseFloat(row.querySelector('input:nth-of-type(3)').value);
+
+                    data.push({ size, chest, length, sleeve });
+                });
+
+                return data;
+            }
+
+            saveProject() {
+                const projectData = {
+                    selectedPreset: this.selectedPreset,
+                    uploadedImage: this.uploadedImage,
+                    graphicPosition: this.graphicPosition,
+                    graphicSize: this.graphicSize,
+                    selectedColor: this.selectedColor,
+                    gsm: document.getElementById('gsm').value,
+                    fabricType: document.getElementById('fabricType').value,
+                    washingInstructions: document.getElementById('washingInstructions').value,
+                    additionalNotes: document.getElementById('additionalNotes').value,
+                    graphicPlacement: document.getElementById('graphicPlacement').value,
+                    techPackName: document.getElementById('techPackName').value,
+                    brandName: document.getElementById('brandName').value,
+                    collection: document.getElementById('collection').value,
+                    sizeChart: this.getSizeChartData()
+                };
+
+                const dataStr = JSON.stringify(projectData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `techpack_project_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+
+                URL.revokeObjectURL(url);
+                this.showAlert('Project saved successfully!', 'success');
+            }
+
+            loadProject() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const projectData = JSON.parse(e.target.result);
+                            this.loadProjectData(projectData);
+                            this.showAlert('Project loaded successfully!', 'success');
+                        } catch (error) {
+                            this.showAlert('Invalid project file', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+
+                input.click();
+            }
+
+            loadProjectData(data) {
+                if (data.selectedPreset) {
+                    this.selectPreset(data.selectedPreset);
+                }
+
+                if (data.uploadedImage) {
+                    this.uploadedImage = data.uploadedImage;
+                    this.graphicPosition = data.graphicPosition || { x: 150, y: 150 };
+                    this.graphicSize = data.graphicSize || { width: 80, height: 80 };
+                    this.addGraphicToPreview();
+                }
+
+                // Restore form values
+                if (data.gsm) document.getElementById('gsm').value = data.gsm;
+                if (data.fabricType) document.getElementById('fabricType').value = data.fabricType;
+                if (data.washingInstructions) document.getElementById('washingInstructions').value = data.washingInstructions;
+                if (data.additionalNotes) document.getElementById('additionalNotes').value = data.additionalNotes;
+                if (data.graphicPlacement) document.getElementById('graphicPlacement').value = data.graphicPlacement;
+                if (data.techPackName) document.getElementById('techPackName').value = data.techPackName;
+                if (data.brandName) document.getElementById('brandName').value = data.brandName;
+                if (data.collection) document.getElementById('collection').value = data.collection;
+
+                if (data.selectedColor) {
+                    this.selectedColor = data.selectedColor;
+                    document.querySelectorAll('.color-option').forEach(el => {
+                        el.classList.remove('selected');
+                        if (el.dataset.color === data.selectedColor) {
+                            el.classList.add('selected');
+                        }
+                    });
+                }
+
+                // Restore size chart
+                if (data.sizeChart) {
+                    const tbody = document.querySelector('#sizeChart tbody');
+                    const rows = tbody.querySelectorAll('tr');
+                    
+                    data.sizeChart.forEach((item, index) => {
+                        if (rows[index]) {
+                            const inputs = rows[index].querySelectorAll('input');
+                            inputs[0].value = item.chest;
+                            inputs[1].value = item.length;
+                            inputs[2].value = item.sleeve;
+                        }
+                    });
+                }
+            }
+
+            showFrontView() {
+                this.currentView = 'front';
+                if (this.selectedPreset) {
+                    const preset = this.presets[this.selectedPreset];
+                    document.getElementById('garmentMockup').src = preset.mockupFront;
+                }
+                
+                // Update button states
+                document.getElementById('frontViewBtn').style.background = '#3498db';
+                document.getElementById('frontViewBtn').style.color = 'white';
+                document.getElementById('backViewBtn').style.background = '#95a5a6';
+                document.getElementById('backViewBtn').style.color = 'white';
+            }
+
+            showBackView() {
+                this.currentView = 'back';
+                if (this.selectedPreset) {
+                    const preset = this.presets[this.selectedPreset];
+                    document.getElementById('garmentMockup').src = preset.mockupBack;
+                }
+                
+                // Update button states
+                document.getElementById('backViewBtn').style.background = '#3498db';
+                document.getElementById('backViewBtn').style.color = 'white';
+                document.getElementById('frontViewBtn').style.background = '#95a5a6';
+                document.getElementById('frontViewBtn').style.color = 'white';
+            }
+
+            applyGraphicSettings() {
+                if (!this.userGraphic) return;
+
+                const width = parseInt(document.getElementById('graphicWidth').value);
+                const height = parseInt(document.getElementById('graphicHeight').value);
+                const x = parseInt(document.getElementById('graphicX').value);
+                const y = parseInt(document.getElementById('graphicY').value);
+
+                this.userGraphic.style.width = width + 'px';
+                this.userGraphic.style.height = height + 'px';
+                this.userGraphic.style.left = x + 'px';
+                this.userGraphic.style.top = y + 'px';
+
+                this.graphicSize = { width, height };
+                this.graphicPosition = { x, y };
+
+                this.showAlert('Graphic settings applied!', 'success');
+            }
+
+            updateGraphicFromInputs() {
+                if (!this.userGraphic) return;
+
+                const width = parseInt(document.getElementById('graphicWidth').value);
+                const height = parseInt(document.getElementById('graphicHeight').value);
+                const x = parseInt(document.getElementById('graphicX').value);
+                const y = parseInt(document.getElementById('graphicY').value);
+
+                this.userGraphic.style.width = width + 'px';
+                this.userGraphic.style.height = height + 'px';
+                this.userGraphic.style.left = x + 'px';
+                this.userGraphic.style.top = y + 'px';
+
+                this.graphicSize = { width, height };
+                this.graphicPosition = { x, y };
+            }
+
+            async convertImageToBase64(imageUrl) {
+                return new Promise((resolve, reject) => {
+                    // For local files, we can't use canvas due to CORS
+                    // So we'll return a placeholder or skip the mockup images
+                    if (imageUrl.startsWith('mockup pictures/')) {
+                        // Return null for mockup images - we'll handle them differently
+                        resolve(null);
+                        return;
+                    }
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = this.width;
+                            canvas.height = this.height;
+                            ctx.drawImage(this, 0, 0);
+                            resolve(canvas.toDataURL('image/png'));
+                        } catch (error) {
+                            console.error('Canvas error:', error);
+                            resolve(null);
+                        }
+                    };
+                    img.onerror = () => {
+                        console.error('Image load error');
+                        resolve(null);
+                    };
+                    img.src = imageUrl;
+                });
+            }
+
+            exportPDF() {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    
+                    // Show loading message
+                    this.showAlert('Generating PDF... Please wait.', 'success');
+                    
+                    // Get form data
+                    const techPackName = document.getElementById('techPackName').value || 'Unnamed Tech Pack';
+                    const brandName = document.getElementById('brandName').value || 'Brand Name';
+                    const collection = document.getElementById('collection').value || 'Collection';
+                    const gsm = document.getElementById('gsm').value;
+                    const fabricType = document.getElementById('fabricType').value;
+                    const washingInstructions = document.getElementById('washingInstructions').value;
+                    const additionalNotes = document.getElementById('additionalNotes').value;
+                    const graphicPlacement = document.getElementById('graphicPlacement').value;
+
+                    // Create PDF with high quality settings
+                    const doc = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4',
+                        compress: false
+                    });
+
+                    // PAGE 1: Cover Page
+                    doc.setFontSize(32);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('TECH PACK', 105, 30, { align: 'center' });
+
+                    // Add line under title
+                    doc.setDrawColor(0, 0, 0);
+                    doc.setLineWidth(0.5);
+                    doc.line(20, 35, 190, 35);
+
+                    doc.setFontSize(24);
+                    doc.text(techPackName, 105, 50, { align: 'center' });
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(80, 80, 80);
+                    doc.text(`${brandName}`, 105, 65, { align: 'center' });
+                    doc.text(`${collection}`, 105, 75, { align: 'center' });
+                    doc.text(`${new Date().toLocaleDateString()}`, 105, 85, { align: 'center' });
+
+                    // Garment specifications section
+                    const startY = 110;
+                    doc.setFillColor(240, 240, 240);
+                    doc.rect(20, startY - 10, 170, 100, 'F');
+                    
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(18);
+                    doc.text('GARMENT SPECIFICATIONS', 105, startY, { align: 'center' });
+
+                    doc.setFontSize(12);
+                    const specs = [
+                        ['Garment Type:', this.presets[this.selectedPreset].name],
+                        ['Fabric:', fabricType],
+                        ['GSM:', gsm],
+                        ['Color:', this.selectedColor],
+                        ['Graphic Placement:', graphicPlacement]
+                    ];
+
+                    let yOffset = startY + 15;
+                    specs.forEach(([label, value]) => {
+                        doc.setFont(undefined, 'bold');
+                        doc.text(label, 30, yOffset);
+                        doc.setFont(undefined, 'normal');
+                        doc.text(value, 80, yOffset);
+                        yOffset += 10;
+                    });
+
+                    // PAGE 2: Design Details
+                    doc.addPage();
+                    doc.setFontSize(22);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('DESIGN DETAILS', 105, 25, { align: 'center' });
+
+                    // Placement visualization
+                    doc.setFillColor(250, 250, 250);
+                    doc.rect(20, 40, 170, 100, 'F');
+                    doc.setDrawColor(200, 200, 200);
+                    doc.rect(20, 40, 170, 100, 'S');
+
+                    doc.setTextColor(100, 100, 100);
+                    doc.setFontSize(14);
+                    doc.text('FRONT VIEW', 105, 35, { align: 'center' });
+                    
+                    // Add placement indicator
+                    if (this.uploadedImage) {
+                        // Draw a rectangle to show graphic placement
+                        const scaleFactor = 170 / 400;
+                        const pdfX = 20 + (this.graphicPosition.x * scaleFactor);
+                        const pdfY = 40 + (this.graphicPosition.y * scaleFactor * 0.6);
+                        const pdfWidth = this.graphicSize.width * scaleFactor;
+                        const pdfHeight = this.graphicSize.height * scaleFactor * 0.6;
+                        
+                        doc.setFillColor(220, 220, 220);
+                        doc.rect(pdfX, pdfY, pdfWidth, pdfHeight, 'F');
+                        doc.setDrawColor(100, 100, 100);
+                        doc.rect(pdfX, pdfY, pdfWidth, pdfHeight, 'S');
+                        
+                        doc.setFontSize(10);
+                        doc.setTextColor(80, 80, 80);
+                        doc.text('GRAPHIC', pdfX + pdfWidth/2, pdfY + pdfHeight/2, { align: 'center' });
+                    }
+
+                    // Graphic specifications
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(14);
+                    doc.text('Graphic Specifications:', 20, 155);
+                    
+                    doc.setFontSize(11);
+                    const graphicSpecs = [
+                        `Width: ${this.graphicSize.width}px`,
+                        `Height: ${this.graphicSize.height}px`,
+                        `Position X: ${this.graphicPosition.x}px`,
+                        `Position Y: ${this.graphicPosition.y}px`,
+                        `Placement: ${graphicPlacement}`
+                    ];
+
+                    let yPos = 165;
+                    graphicSpecs.forEach(spec => {
+                        doc.text(`• ${spec}`, 25, yPos);
+                        yPos += 8;
+                    });
+
+                    // PAGE 3: Size Chart
+                    doc.addPage();
+                    doc.setFontSize(22);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('SIZE CHART', 105, 25, { align: 'center' });
+                    doc.text('(All measurements in inches)', 105, 35, { align: 'center', size: 10 });
+
+                    const sizeChartData = this.getSizeChartData();
+                    
+                    // Create professional table
+                    const tableTop = 50;
+                    const tableLeft = 30;
+                    const cellWidth = 35;
+                    const cellHeight = 10;
+                    
+                    // Header
+                    doc.setFillColor(50, 50, 50);
+                    doc.setTextColor(255, 255, 255);
+                    doc.rect(tableLeft, tableTop, cellWidth * 4, cellHeight, 'F');
+                    
+                    doc.setFontSize(11);
+                    doc.text('SIZE', tableLeft + cellWidth/2, tableTop + 7, { align: 'center' });
+                    doc.text('CHEST', tableLeft + cellWidth * 1.5, tableTop + 7, { align: 'center' });
+                    doc.text('LENGTH', tableLeft + cellWidth * 2.5, tableTop + 7, { align: 'center' });
+                    doc.text('SLEEVE', tableLeft + cellWidth * 3.5, tableTop + 7, { align: 'center' });
+                    
+                    // Data rows
+                    doc.setTextColor(0, 0, 0);
+                    sizeChartData.forEach((row, index) => {
+                        const yPosition = tableTop + cellHeight * (index + 1);
+                        
+                        // Alternate row coloring
+                        if (index % 2 === 0) {
+                            doc.setFillColor(245, 245, 245);
+                            doc.rect(tableLeft, yPosition, cellWidth * 4, cellHeight, 'F');
+                        }
+                        
+                        // Draw borders
+                        doc.setDrawColor(200, 200, 200);
+                        doc.rect(tableLeft, yPosition, cellWidth, cellHeight, 'S');
+                        doc.rect(tableLeft + cellWidth, yPosition, cellWidth, cellHeight, 'S');
+                        doc.rect(tableLeft + cellWidth * 2, yPosition, cellWidth, cellHeight, 'S');
+                        doc.rect(tableLeft + cellWidth * 3, yPosition, cellWidth, cellHeight, 'S');
+                        
+                        // Add text
+                        doc.text(row.size, tableLeft + cellWidth/2, yPosition + 7, { align: 'center' });
+                        doc.text(row.chest.toString(), tableLeft + cellWidth * 1.5, yPosition + 7, { align: 'center' });
+                        doc.text(row.length.toString(), tableLeft + cellWidth * 2.5, yPosition + 7, { align: 'center' });
+                        doc.text(row.sleeve.toString(), tableLeft + cellWidth * 3.5, yPosition + 7, { align: 'center' });
+                    });
+
+                    // PAGE 4: Care Instructions & Notes
+                    doc.addPage();
+                    doc.setFontSize(22);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('PRODUCTION NOTES', 105, 25, { align: 'center' });
+
+                    // Care instructions
+                    doc.setFillColor(250, 250, 250);
+                    doc.rect(20, 40, 170, 60, 'F');
+                    
+                    doc.setFontSize(16);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('CARE INSTRUCTIONS', 25, 50);
+
+                    doc.setFontSize(11);
+                    const washingLines = doc.splitTextToSize(washingInstructions, 160);
+                    washingLines.forEach((line, index) => {
+                        doc.text(line, 25, 60 + (index * 7));
+                    });
+
+                    // Additional notes
+                    if (additionalNotes.trim()) {
+                        doc.setFillColor(250, 250, 250);
+                        doc.rect(20, 110, 170, 60, 'F');
+                        
+                        doc.setFontSize(16);
+                        doc.text('ADDITIONAL NOTES', 25, 120);
+
+                        doc.setFontSize(11);
+                        const notesLines = doc.splitTextToSize(additionalNotes, 160);
+                        notesLines.forEach((line, index) => {
+                            doc.text(line, 25, 130 + (index * 7));
+                        });
+                    }
+
+                // Save PDF
+                const filename = `${this.presets[this.selectedPreset].name}_TechPack_${new Date().toISOString().split('T')[0]}.pdf`;
+                doc.save(filename);
+
+                this.showAlert('Tech pack exported successfully!', 'success');
+                
+                } catch (error) {
+                    console.error('PDF Export Error:', error);
+                    this.showAlert('Error generating PDF. Please try again.', 'error');
+                }
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            new TechPackGenerator();
+        });
+    </script>
+</body>
+</html>

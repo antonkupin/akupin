@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clothing Customizer Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fafafa; margin: 0; }
+    .main-layout {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+    .sidebar {
+      width: 220px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 32px 0 0 0;
+      border-right: 1.5px solid #eee;
+      min-width: 180px;
+    }
+    .sidebar .page-btn {
+      background: #f7f7f7;
+      border: none;
+      border-radius: 10px;
+      margin: 0 24px 24px 24px;
+      padding: 36px 0;
+      font-size: 2rem;
+      color: #111;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .sidebar .page-btn.active {
+      background: #fff;
+      font-weight: bold;
+      border: 2px solid #222;
+      color: #222;
+    }
+    .sidebar .add-btn {
+      margin-top: auto;
+      margin-bottom: 32px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f7f7f7;
+      border: none;
+      border-radius: 10px;
+      padding: 32px 0;
+      color: #111;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .center-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 0 0 0;
+      background: #fafafa;
+      min-width: 0;
+    }
+    .center-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px #0001;
+      width: 100%;
+      height: 100%;
+      
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .center-card h2 {
+      margin-top: 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+    .center-card .step-number {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #222;
+    }
+    .rightbar {
+      width: 320px;
+      background: #fafafa;
+      border-left: 1.5px solid #eee;
+      padding: 40px 32px 0 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 220px;
+    }
+    .rightbar .spec-summary {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #0001;
+      padding: 28px 24px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+    .rightbar h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    @media (max-width: 1100px) {
+      .main-layout { flex-direction: column; }
+      .sidebar, .rightbar { width: 100vw; min-width: 0; border: none; }
+      .center-content { width: 100vw; }
+      .center-card { width: 98vw; min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-layout">
+    <div class="sidebar">
+      <button class="page-btn active">Page 1</button>
+      <button class="page-btn">Page 2</button>
+      <button class="page-btn">Page 3</button>
+      <button class="add-btn">Add New &nbsp; <span style="font-size:2rem;">+</span></button>
+    </div>
+    <div class="center-content">
+      <div class="center-card">
+        <div class="step-number">1.</div>
+        <h2>Fabric Weight</h2>
+        <!-- Main content (image upload, annotation, etc.) will go here -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;">
+          <div style="margin: 60px 0; text-align:center; color:#222; font-size:2rem;">Add new image<br /><span style="font-size:1.1rem; color:#444;">Upload File:</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rightbar">
+      <div class="spec-summary">
+        <h3>Your specifications:</h3>
+        <div style="margin-bottom:12px;">Specification type:<br /><span style="font-size:1.4rem;font-weight:500;">Fabric weight</span></div>
+        <div>Value:<br /><span style="font-size:1.1rem;">265gsm</span></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // --- Data Model ---
+    let pages = [
+      {
+        attribute: '',
+        value: '',
+        image: null,
+        annotation: null // {x, y}
+      }
+    ];
+    let currentPage = 0;
+    let annotationScale = 1.0;
+
+    // --- DOM Elements ---
+    const sidebar = document.querySelector('.sidebar');
+    const centerCard = document.querySelector('.center-card');
+    const rightbar = document.querySelector('.rightbar');
+
+    // --- Render Sidebar ---
+    function renderSidebar() {
+      // Remove all page buttons except the add button
+      sidebar.querySelectorAll('.page-btn').forEach(btn => btn.remove());
+      // Insert page buttons
+      pages.forEach((page, idx) => {
+        const btn = document.createElement('button');
+        let label = `Page ${idx + 1}`;
+        if (idx === 0) label = 'Front';
+        else if (idx === 1) label = 'Back';
+        btn.className = 'page-btn' + (idx === currentPage ? ' active' : '');
+        btn.textContent = label;
+        btn.onclick = () => {
+          currentPage = idx;
+          renderAll();
+        };
+        // Right-click to remove (if more than 1 page and not first two)
+        btn.oncontextmenu = (e) => {
+          e.preventDefault();
+          if (pages.length > 1 && idx > 1) {
+            pages.splice(idx, 1);
+            if (currentPage >= pages.length) currentPage = pages.length - 1;
+            renderAll();
+          }
+        };
+        sidebar.insertBefore(btn, sidebar.querySelector('.add-btn'));
+      });
+    }
+
+    // --- Add New Page ---
+    sidebar.querySelector('.add-btn').onclick = () => {
+      pages.push({ attribute: '', value: '', image: null, annotation: null });
+      currentPage = pages.length - 1;
+      renderAll();
+    };
+
+    // --- Render Center Content ---
+    function renderCenter() {
+      const page = pages[currentPage];
+      centerCard.innerHTML = '';
+      
+      // --- Preset selector (always visible) ---
+      const presetWrapper = document.createElement('div');
+      presetWrapper.style.display = 'flex';
+      presetWrapper.style.alignItems = 'center';
+      presetWrapper.style.justifyContent = 'center';
+      presetWrapper.style.margin = '8px 0 16px 0';
+      presetWrapper.innerHTML = `
+        <label for='presetSelect' style='margin-right:10px;'>Quick Load:</label>
+        <select id='presetSelect' style='padding:4px 8px;border-radius:4px;margin-right:10px;'>
+          <option value=''>Select a preset...</option>
+          <option value='t-shirt'>T-Shirt</option>
+          <option value='washed-black-t-shirt'>Washed Black T-Shirt</option>
+          <option value='long-sleeve-tee'>Long-Sleeve Tee</option>
+          <option value='double-layered-long-sleeve-tee'>Double-Layered Long-Sleeve Tee</option>
+          <option value='grey-fleece-hoodie'>Grey Fleece Hoodie</option>
+          <option value='washed-black-hoodie'>Washed Black Hoodie</option>
+          <option value='grey-fleece-sweatpants'>Grey Fleece Sweatpants</option>
+          <option value='washed-black-sweatpants'>Washed Black Sweatpants</option>
+        </select>
+      `;
+      centerCard.appendChild(presetWrapper);
+      setTimeout(() => {
+        const presetSelect = document.getElementById('presetSelect');
+        if (presetSelect) {
+          presetSelect.onchange = function() {
+            const selected = presetSelect.value;
+            if (!selected) return;
+            
+            const presets = {
+              't-shirt': {
+                front: 'mockup pictures/t-shirt/T-Shirt Front.png',
+                back: 'mockup pictures/t-shirt/T-Shirt Back.png'
+              },
+              'washed-black-t-shirt': {
+                front: 'mockup pictures/t-shirt/Washed Black T-Shirt Front.png',
+                back: 'mockup pictures/t-shirt/Washed Black T-Shirt Back.png'
+              },
+              'long-sleeve-tee': {
+                front: 'mockup pictures/t-shirt/Long-Sleeve Tee Front.png',
+                back: 'mockup pictures/t-shirt/Long-Sleeve Tee Back.png'
+              },
+              'double-layered-long-sleeve-tee': {
+                front: 'mockup pictures/t-shirt/Double-Layered Long-Sleeve Tee Front.png',
+                back: 'mockup pictures/t-shirt/Double-Layered Long-Sleeve Tee Back.png'
+              },
+              'grey-fleece-hoodie': {
+                front: 'mockup pictures/t-shirt/Grey Fleece Hoodie Front.png',
+                back: 'mockup pictures/t-shirt/Grey Fleece Hoodie Back.png'
+              },
+              'washed-black-hoodie': {
+                front: 'mockup pictures/t-shirt/Washed Black Hoodie Front.png',
+                back: 'mockup pictures/t-shirt/Washed Black Hoodie Back.png'
+              },
+              'grey-fleece-sweatpants': {
+                front: 'mockup pictures/t-shirt/Grey Fleece Sweatpants Front.png',
+                back: 'mockup pictures/t-shirt/Grey Fleece Sweatpants Back.png'
+              },
+              'washed-black-sweatpants': {
+                front: 'mockup pictures/t-shirt/Washed Black Sweatpants Front.png',
+                back: 'mockup pictures/t-shirt/Washed Black Sweatpants Back.png'
+              }
+            };
+            
+            const preset = presets[selected];
+            if (preset) {
+              // Load front image to page 0
+              if (pages[0]) {
+                pages[0].image = preset.front;
+              }
+              // Load back image to page 1
+              if (pages[1]) {
+                pages[1].image = preset.back;
+              }
+              // Switch to front page
+              currentPage = 0;
+              renderAll();
+            }
+          };
+        }
+      }, 0);
+      
+      // Image upload or preview
+      let imgSection = document.createElement('div');
+      imgSection.style.flex = '1';
+      imgSection.style.display = 'flex';
+      imgSection.style.flexDirection = 'column';
+      imgSection.style.alignItems = 'center';
+      imgSection.style.justifyContent = 'center';
+      imgSection.style.width = '100%';
+      imgSection.style.height = '100%';
+      if (!page.image) {
+        // Upload UI
+        imgSection.innerHTML = `<div style="margin: 60px 0; text-align:center; color:#222; font-size:2rem;">Add new image<br /><input type='file' id='imgUpload' accept='image/*' style='margin-top:20px;'/></div>`;
+        centerCard.appendChild(imgSection);
+        setTimeout(() => {
+          const imgUpload = document.getElementById('imgUpload');
+          if (imgUpload) {
+            imgUpload.onchange = function(e) {
+              const file = e.target.files[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = function(evt) {
+                page.image = evt.target.result;
+                renderAll();
+              };
+              reader.readAsDataURL(file);
+            };
+          }
+        }, 0);
+      } else {
+        // Show image and annotation
+        const canvas = document.createElement('canvas');
+        canvas.width = 1080;
+        canvas.height = 1350;
+        canvas.style.background = '#f8f8f8';
+        canvas.style.border = '2px dashed #aaa';
+        canvas.style.borderRadius = '8px';
+        canvas.style.display = 'block';
+        canvas.style.margin = '0 auto 18px';
+        canvas.style.maxWidth = '100%';
+        canvas.style.height = 'auto';
+        canvas.style.maxHeight = '70vh';
+        imgSection.appendChild(canvas);
+
+        // --- Annotation size slider ---
+        const sliderWrapper = document.createElement('div');
+        sliderWrapper.style.display = 'flex';
+        sliderWrapper.style.alignItems = 'center';
+        sliderWrapper.style.justifyContent = 'center';
+        sliderWrapper.style.margin = '8px 0 18px 0';
+        sliderWrapper.innerHTML = `
+          <label for='dotSizeSlider' style='margin-right:10px;'>Annotation Size:</label>
+          <input type='range' id='dotSizeSlider' min='0.5' max='2.5' step='0.05' value='${annotationScale}' style='width:180px;'>
+          <span id='dotSizeValue' style='margin-left:10px;'>${annotationScale.toFixed(2)}x</span>
+        `;
+        imgSection.appendChild(sliderWrapper);
+        setTimeout(() => {
+          const slider = document.getElementById('dotSizeSlider');
+          const valueLabel = document.getElementById('dotSizeValue');
+          if (slider) {
+            slider.oninput = function() {
+              annotationScale = parseFloat(slider.value);
+              valueLabel.textContent = annotationScale.toFixed(2) + 'x';
+              renderAll();
+            };
+          }
+        }, 0);
+
+        centerCard.appendChild(imgSection);
+        // Draw image
+        const ctx = canvas.getContext('2d');
+        const img = new window.Image();
+        img.onload = function() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Calculate scale and offset for 'cover' effect
+          const canvasAspect = canvas.width / canvas.height;
+          const imgAspect = img.naturalWidth / img.naturalHeight;
+          let drawWidth, drawHeight, offsetX, offsetY;
+
+          if (imgAspect > canvasAspect) {
+            // Image is wider than canvas
+            drawHeight = canvas.height;
+            drawWidth = img.naturalWidth * (canvas.height / img.naturalHeight);
+            offsetX = (canvas.width - drawWidth) / 2;
+            offsetY = 0;
+          } else {
+            // Image is taller than canvas
+            drawWidth = canvas.width;
+            drawHeight = img.naturalHeight * (canvas.width / img.naturalWidth);
+            offsetX = 0;
+            offsetY = (canvas.height - drawHeight) / 2;
+          }
+
+          ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+
+          // Draw text overlays (clipped to image area)
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(offsetX, offsetY, drawWidth, drawHeight);
+          ctx.clip();
+          
+          // Determine text based on current page
+          let titleText, pageNumber;
+          if (currentPage === 0) {
+            titleText = 'Front';
+            pageNumber = '1.';
+          } else if (currentPage === 1) {
+            titleText = 'Back';
+            pageNumber = '2.';
+          } else {
+            titleText = page.attribute || 'Page ' + (currentPage + 1);
+            pageNumber = (currentPage + 1) + '.';
+          }
+          
+          // Draw title text
+          ctx.font = 'bold 48px Arial';
+          ctx.fillStyle = '#fff';
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 3;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.strokeText(titleText, canvas.width / 2, 50);
+          ctx.fillText(titleText, canvas.width / 2, 50);
+          
+          // Draw page number in top right
+          ctx.font = 'bold 36px Arial';
+          ctx.textAlign = 'right';
+          ctx.strokeText(pageNumber, canvas.width - 50, 50);
+          ctx.fillText(pageNumber, canvas.width - 50, 50);
+          
+          ctx.restore();
+
+          // Draw annotation if present
+          if (page.annotation) {
+            ctx.save();
+            ctx.beginPath();
+            const dotRadius = 18 * annotationScale;
+            ctx.arc(page.annotation.x, page.annotation.y, dotRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = '#222';
+            ctx.fill();
+            ctx.font = `bold ${18 * annotationScale}px Arial`;
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(currentPage + 1, page.annotation.x, page.annotation.y);
+            // Draw value below the annotation dot
+            if (page.value) {
+              ctx.font = `${16 * annotationScale}px Arial`;
+              ctx.fillStyle = '#fff';
+              ctx.strokeStyle = '#000';
+              ctx.lineWidth = 2 * annotationScale;
+              ctx.textBaseline = 'top';
+              ctx.strokeText(page.value, page.annotation.x, page.annotation.y + dotRadius + 4 * annotationScale);
+              ctx.fillText(page.value, page.annotation.x, page.annotation.y + dotRadius + 4 * annotationScale);
+            }
+            ctx.restore();
+          }
+        };
+        img.src = page.image;
+        // Annotation logic
+        canvas.onclick = function(e) {
+          const rect = canvas.getBoundingClientRect();
+          // Calculate scale factors
+          const scaleX = canvas.width / rect.width;
+          const scaleY = canvas.height / rect.height;
+          // Get mouse position relative to the canvas
+          const x = Math.round((e.clientX - rect.left) * scaleX);
+          const y = Math.round((e.clientY - rect.top) * scaleY);
+          page.annotation = { x, y };
+          renderAll();
+        };
+      }
+      // Attribute selection (only for pages 2+)
+      if (currentPage > 1) {
+        const attrForm = document.createElement('form');
+        attrForm.style.marginTop = '32px';
+        attrForm.innerHTML = `
+          <label style='font-weight:500;'>Specification type:</label>
+          <select id='attrSelect' style='width:100%;padding:8px;margin-bottom:12px;border-radius:6px;'>
+            <option value=''>Select...</option>
+            <option value='Fabric Content'>Fabric Content</option>
+            <option value='Fabric Weight'>Fabric Weight</option>
+            <option value='Color Options'>Color Options</option>
+            <option value='Fabric Color'>Fabric Color</option>
+            <option value='Screen Print Colors'>Screen Print Colors</option>
+            <option value='Garment Wash Type'>Garment Wash Type</option>
+            <option value='Graphic Application'>Graphic Application</option>
+            <option value='Graphic Placement'>Graphic Placement</option>
+            <option value='Trims & Hardware'>Trims & Hardware</option>
+            <option value='Labels'>Labels</option>
+            <option value='Fit Adjustments'>Fit Adjustments</option>
+          </select>
+          <label style='font-weight:500;'>Value:</label>
+          <input type='text' id='attrValue' style='width:100%;padding:8px;margin-bottom:12px;border-radius:6px;' value="${page.value || ''}" placeholder='Enter value...'/>
+          <button type='submit' style='margin-top:8px;' class='btn'>Save</button>
+        `;
+        attrForm.onsubmit = function(e) {
+          e.preventDefault();
+          page.attribute = attrForm.querySelector('#attrSelect').value;
+          page.value = attrForm.querySelector('#attrValue').value;
+          renderAll();
+        };
+        setTimeout(() => {
+          attrForm.querySelector('#attrSelect').value = page.attribute || '';
+        }, 0);
+        centerCard.appendChild(attrForm);
+      }
+      // PDF Export button
+      const exportBtn = document.createElement('button');
+      exportBtn.className = 'btn';
+      exportBtn.style.marginTop = '32px';
+      exportBtn.textContent = 'Export PDF';
+      exportBtn.onclick = exportAllCenterCardsToPDF;
+      centerCard.appendChild(exportBtn);
+    }
+
+    // --- Render Rightbar ---
+    function renderRightbar() {
+      const page = pages[currentPage];
+      rightbar.innerHTML = '';
+      const specBox = document.createElement('div');
+      specBox.className = 'spec-summary';
+      let attrLabel = page.attribute || '-';
+      if (currentPage === 0) attrLabel = 'Front';
+      else if (currentPage === 1) attrLabel = 'Back';
+      specBox.innerHTML = `<h3>Your specifications:</h3>
+        <div style='margin-bottom:12px;'>Specification type:<br /><span style='font-size:1.4rem;font-weight:500;'>${attrLabel}</span></div>
+        <div>Value:<br /><span style='font-size:1.1rem;'>${page.value || '-'}</span></div>`;
+      rightbar.appendChild(specBox);
+    }
+
+    // --- Render All ---
+    function renderAll() {
+      renderSidebar();
+      renderCenter();
+      renderRightbar();
+    }
+    // --- On Load ---
+    renderAll();
+
+// --- PDF Export (Scaled PNG + Annotations) ---
+async function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const pdfPages = [];
+  const MAX_WIDTH = 595; // A4 width in points (at 72 DPI) for better PDF compatibility
+
+  for (let i = 0; i < pages.length; i++) {
+    const page = pages[i];
+    if (!page.image) {
+      console.warn(`No image for page ${i + 1}, skipping.`);
+      continue;
+    }
+
+    const img = new window.Image();
+    await new Promise((resolve, reject) => {
+      img.onload = () => {
+        // Calculate scaling to fit A4 page (595pt width, 842pt height)
+        const pdfWidth = 595; // A4 width in points
+        const scale = Math.min(1, pdfWidth / img.naturalWidth);
+        const canvasWidth = img.naturalWidth * scale;
+        const canvasHeight = img.naturalHeight * scale;
+
+        // Create temporary canvas
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvasWidth;
+        tempCanvas.height = canvasHeight;
+        const tempCtx = tempCanvas.getContext('2d');
+
+        // Draw scaled image
+        tempCtx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+
+        // Draw annotation if present
+        if (page.annotation) {
+          console.log(`Drawing annotation for page ${i + 1}:`, page.annotation);
+          const scaledX = page.annotation.x * (canvasWidth / 400); // Scale from UI canvas (400px)
+          const scaledY = page.annotation.y * (canvasHeight / 400); // Scale from UI canvas (400px)
+          const radius = 18 * scale;
+          const fontSize = 18 * scale;
+
+          tempCtx.save();
+          tempCtx.beginPath();
+          tempCtx.arc(scaledX, scaledY, radius, 0, 2 * Math.PI);
+          tempCtx.fillStyle = '#222';
+          tempCtx.fill();
+          tempCtx.font = `bold ${fontSize}px Arial`;
+          tempCtx.textAlign = 'center';
+          tempCtx.textBaseline = 'middle';
+          tempCtx.lineWidth = Math.max(2, fontSize * 0.15);
+          tempCtx.strokeStyle = '#fff';
+          tempCtx.strokeText((i + 1).toString(), scaledX, scaledY);
+          tempCtx.fillStyle = '#000';
+          tempCtx.fillText((i + 1).toString(), scaledX, scaledY);
+          tempCtx.restore();
+        } else {
+          console.log(`No annotation for page ${i + 1}`);
+        }
+
+        pdfPages.push({
+          dataUrl: tempCanvas.toDataURL('image/png'),
+          width: canvasWidth,
+          height: canvasHeight
+        });
+        resolve();
+      };
+      img.onerror = () => {
+        console.error(`Failed to load image for page ${i + 1}`);
+        resolve(); // Continue with other pages
+      };
+      img.src = page.image;
+    });
+  }
+
+  if (pdfPages.length === 0) {
+    alert('No valid images to export.');
+    return;
+  }
+
+  let pdf = new jsPDF({ unit: 'pt', format: 'a4' });
+  pdfPages.forEach((pg, index) => {
+    if (index > 0) {
+      pdf.addPage();
+    }
+    // Center the image on A4 page
+    const xOffset = (595 - pg.width) / 2;
+    const yOffset = (842 - pg.height) / 2;
+    pdf.addImage(pg.dataUrl, 'PNG', xOffset, yOffset, pg.width, pg.height);
+  });
+
+  pdf.save('customized-garment.pdf');
+}
+
+    // --- PDF Export ---
+    async function exportAllCenterCardsToPDF() {
+      const originalPage = currentPage;
+      const pageImages = [];
+      const pageSizes = [];
+
+      // Render and capture each page as image
+      for (let i = 0; i < pages.length; i++) {
+        currentPage = i;
+        renderAll();
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for DOM update
+        const element = document.querySelector('.center-card');
+        const canvas = element.querySelector('canvas');
+        if (canvas) {
+          pageImages.push(canvas.toDataURL('image/png'));
+          pageSizes.push([canvas.width, canvas.height]);
+        }
+      }
+
+      // Restore original page
+      currentPage = originalPage;
+      renderAll();
+
+      // Open in new tab for print
+      const win = window.open('', '_blank');
+      win.document.write(`<!DOCTYPE html><html><head><title>Print All Pages</title><style>
+        body { background: #fff; margin: 0; padding: 0; }
+        .page-img { display: block; margin: 40px auto; max-width: 90vw; box-shadow: 0 0 24px #0002; border-radius: 12px; }
+      </style></head><body>
+        ${pageImages.map(img => `<img class='page-img' src='${img}' />`).join('')}
+        <script>window.onload = function() { window.print(); }<\/script>
+      </body></html>`);
+      win.document.close();
+    }
+
+  </script>
+</body>
+</html>

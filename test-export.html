@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Export Functionality</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #test-canvas {
+            width: 400px;
+            height: 400px;
+            background-color: white;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            position: relative;
+        }
+        #test-text {
+            font-size: 24px;
+            color: #333;
+        }
+        #test-image {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 100px;
+            height: 100px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status {
+            text-align: center;
+            margin: 20px;
+            font-weight: bold;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .instructions {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h1>Export Functionality Test</h1>
+        <p>This page tests if the export functionality works in your current environment.</p>
+        <p>Click the button below to test exporting the canvas as an image.</p>
+    </div>
+
+    <div id="test-canvas">
+        <div id="test-text">Test Export</div>
+        <div id="test-image" style="background-color: #007bff;"></div>
+    </div>
+
+    <button onclick="testExport()">Test Export</button>
+    <div id="status"></div>
+
+    <div class="instructions">
+        <h2>If Export Fails:</h2>
+        <ol>
+            <li><strong>For Chrome/Edge:</strong> You need to run this from a web server, not as a local file.</li>
+            <li><strong>For Firefox:</strong> Should work locally, but may need to allow the download.</li>
+            <li><strong>Quick Solution:</strong> Upload to any web hosting or use a local server.</li>
+        </ol>
+        <h3>Setting up a Local Server:</h3>
+        <p>Since Python and Node.js aren't available, you can:</p>
+        <ul>
+            <li>Install Python from <a href="https://www.python.org/downloads/" target="_blank">python.org</a></li>
+            <li>Use Visual Studio Code with the "Live Server" extension</li>
+            <li>Upload files to a free hosting service like GitHub Pages or Netlify</li>
+        </ul>
+    </div>
+
+    <script>
+        async function testExport() {
+            const status = document.getElementById('status');
+            status.textContent = 'Testing export...';
+            status.className = '';
+
+            try {
+                // Check if html2canvas is loaded
+                if (typeof html2canvas === 'undefined') {
+                    throw new Error('html2canvas library not loaded');
+                }
+
+                const canvas = document.getElementById('test-canvas');
+                const exportCanvas = await html2canvas(canvas, {
+                    backgroundColor: null,
+                    scale: 2
+                });
+
+                // Try to download
+                const link = document.createElement('a');
+                link.download = 'test-export.png';
+                link.href = exportCanvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                status.textContent = '✓ Export successful! Check your downloads folder.';
+                status.className = 'success';
+            } catch (error) {
+                status.textContent = `✗ Export failed: ${error.message}`;
+                status.className = 'error';
+                console.error('Export error:', error);
+            }
+        }
+
+        // Check on load
+        window.addEventListener('load', () => {
+            const status = document.getElementById('status');
+            if (typeof html2canvas === 'undefined') {
+                status.textContent = '⚠ html2canvas library not loaded. Check internet connection.';
+                status.className = 'error';
+            } else {
+                status.textContent = '✓ html2canvas library loaded successfully.';
+                status.className = 'success';
+            }
+        });
+    </script>
+</body>
+</html> 

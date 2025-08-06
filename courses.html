@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Navigator with Subcategories & Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fa;
+      color: #222;
+    }
+    .course-nav-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      background: #181a1b;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .course-list {
+      width: 340px;
+      background: #23242a;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 32px 0 32px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+    }
+    .search-bar {
+      padding: 0 32px 18px 32px;
+      background: #23242a;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      font-size: 1em;
+      background: #181a1b;
+      color: #f4f6fa;
+      outline: none;
+      margin-bottom: 0;
+      transition: border 0.2s, background 0.2s;
+    }
+    .search-input:focus {
+      border: 1.5px solid #0071e3;
+      background: #23242a;
+    }
+    .category-item {
+      padding: 18px 32px 18px 32px;
+      border-bottom: 1px solid #23242a;
+      cursor: pointer;
+      background: none;
+      outline: none;
+      font-weight: 700;
+      font-size: 1.13em;
+      letter-spacing: -0.01em;
+      color: #f4f6fa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.18s, color 0.18s;
+      border-left: 4px solid transparent;
+      user-select: none;
+      max-width: -webkit-fill-available;
+    }
+    .category-item.selected {
+      background: #23242a;
+      border-left: 4px solid #0071e3;
+      color: #fff;
+    }
+    .category-item .arrow {
+      font-size: 1.1em;
+      margin-left: 8px;
+      transition: transform 0.2s;
+      color: #aaa;
+      
+    }
+    .category-item.expanded .arrow {
+      transform: rotate(90deg);
+    }
+    .subcategory-list {
+      padding: 0 0 0 24px;
+      margin: 0;
+      list-style: none;
+      background: #23242a;
+    }
+    .subcategory-item {
+      padding: 14px 32px 14px 16px;
+      border-bottom: 1px solid #23242a;
+      cursor: pointer;
+      background: none;
+      outline: none;
+      font-size: 1em;
+      color: #d1d5db;
+      display: flex;
+      align-items: center;
+      border-left: 4px solid transparent;
+      position: relative;
+      transition: background 0.15s, color 0.15s;
+      max-width: -webkit-fill-available;
+    }
+    .subcategory-item.selected {
+      background: #23242a;
+      border-left: 4px solid #0071e3;
+      color: #fff;
+      max-width: -webkit-fill-available;
+    }
+    .subcategory-item.completed {
+      background: #1a1d1f;
+      color: #aaa;
+      max-width: -webkit-fill-available;
+    }
+    .subcategory-item .checkmark {
+      position: absolute;
+      right: 18px;
+      color: #43aa8b;
+      font-size: 1.1em;
+      display: none;
+      max-width: -webkit-fill-available;
+    }
+    .subcategory-item.completed .checkmark {
+      display: inline;
+    }
+    .subcategory-title {
+      font-weight: 500;
+      margin-right: 8px;
+    }
+    .subcategory-desc {
+      font-size: 0.97em;
+      color: #888;
+      margin-left: 8px;
+      flex: 1;
+    }
+    .highlight {
+      background: #ffe066;
+      color: #222;
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+    .course-content {
+      flex: 1;
+      padding: 48px 40px 40px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      min-width: 0;
+      background: #181a1b;
+    }
+    .course-video {
+      width: 100%;
+      background: #000;
+      border-radius: 12px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 16/9;
+    }
+    @media (max-width: 900px) {
+      .course-video {
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 10px;
+        margin-bottom: 18px;
+        margin-top: 8px;
+        position: relative;
+        z-index: auto;
+        background: #000;
+      }
+      .course-video iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .course-content {
+        margin-top: 0;
+        padding-top: 10px;
+      }
+    }
+    .lessons-complete {
+      width: 100%;
+      margin-bottom: 24px;
+      margin-top: -12px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .lessons-complete-label {
+      font-size: 1.08em;
+      color: #f4f6fa;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .lessons-complete-bar {
+      width: 100%;
+      height: 12px;
+      background: #23242a;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 2px;
+    }
+    .lessons-complete-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0071e3 60%, #43aa8b 100%);
+      border-radius: 6px;
+      transition: width 0.4s;
+    }
+    .lessons-complete-count {
+      font-size: 0.98em;
+      color: #aaa;
+      margin-top: 2px;
+      margin-bottom: 0;
+    }
+    .course-content h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.5em;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+    .course-content p {
+      margin: 0 0 24px 0;
+      color: #bbb;
+      font-size: 1.08em;
+    }
+    .course-nav-btns {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .course-btn {
+      padding: 10px 28px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+      color: #fff;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s;
+      box-shadow: 0 2px 8px rgba(0,122,255,0.10);
+    }
+    .course-btn:disabled {
+      background: #333;
+      color: #888;
+      cursor: not-allowed;
+    }
+    @media (max-width: 900px) {
+      .course-nav-container {
+        flex-direction: column-reverse;
+        min-height: unset;
+        border-radius: 0;
+        box-shadow: none;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+      .course-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 10px 2vw 10px 2vw;
+        margin: 0;
+        font-size: 1.05em;
+      }
+      .course-list {
+        width: 100%;
+        max-width: 100%;
+        flex-direction: column;
+        overflow-x: visible;
+        overflow-y: visible;
+        border-right: none;
+        border-bottom: 1px solid #23242a;
+        padding: 0;
+        min-height: 60px;
+        background: #23242a;
+        gap: 0;
+        margin-top: 32px;
+        scrollbar-width: thin;
+        scrollbar-color: #333 #23242a;
+        box-sizing: border-box;
+      }
+      .search-bar {
+        display: block !important;
+        padding: 12px 16px 12px 16px;
+        background: #23242a;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .search-input {
+        font-size: 1.08em;
+        padding: 14px 14px;
+        border-radius: 10px;
+        min-height: 44px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .category-item, .subcategory-item {
+        min-width: 0;
+        width: 100%;
+        font-size: 1.08em;
+        padding: 16px 18px;
+        border-bottom: 1px solid #23242a;
+        border-right: none;
+        border-left: 4px solid transparent;
+        white-space: normal;
+        flex-shrink: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 8px;
+        margin-bottom: 2px;
+        touch-action: manipulation;
+      }
+      .category-item .arrow {
+        font-size: 1.5em;
+        color: #fff;
+        margin-left: 12px;
+        flex-shrink: 0;
+        min-width: 1.5em;
+        min-height: 1.5em;
+      }
+      .category-item.selected, .subcategory-item.selected {
+        border-left: 4px solid #0071e3;
+        background: #23242a;
+        color: #fff;
+      }
+      .subcategory-list {
+        display: none;
+        padding-left: 0;
+        margin: 0;
+        background: #23242a;
+      }
+      .category-item.expanded + .subcategory-list {
+        display: block;
+      }
+      .subcategory-item {
+        font-size: 1em;
+        padding: 14px 18px 14px 28px;
+        border-radius: 6px;
+        margin-bottom: 2px;
+      }
+      .subcategory-item .checkmark {
+        right: 10px;
+        font-size: 1.2em;
+      }
+      .lessons-complete {
+        max-width: 100vw;
+        min-width: 0;
+        margin-bottom: 18px;
+        margin-top: 0;
+      }
+      .lessons-complete-label {
+        font-size: 1.08em;
+        color: #f4f6fa;
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .lessons-complete-bar {
+        height: 10px;
+        border-radius: 5px;
+      }
+      .lessons-complete-fill {
+        border-radius: 5px;
+      }
+      .lessons-complete-count {
+        font-size: 0.98em;
+        color: #aaa;
+        margin-top: 2px;
+        margin-bottom: 0;
+      }
+      .course-content h2 {
+        font-size: 1.2em;
+        margin: 0 0 8px 0;
+      }
+      .course-content p {
+        font-size: 1em;
+        margin: 0 0 18px 0;
+      }
+      .course-nav-btns {
+        gap: 10px;
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+      }
+      .course-btn {
+        padding: 14px 0;
+        font-size: 1.08em;
+        border-radius: 8px;
+        min-width: 0;
+        width: 100%;
+        margin: 0;
+        box-shadow: 0 2px 8px rgba(0,122,255,0.10);
+        touch-action: manipulation;
+      }
+    }
+    @media (max-width: 600px) {
+      .course-content {
+        padding: 8px 1vw 8px 1vw;
+        font-size: 1em;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .course-list {
+        margin-top: 18px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .search-bar {
+        padding: 8px 8px 8px 8px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .search-input {
+        font-size: 1em;
+        padding: 10px 10px;
+        min-height: 38px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .category-item, .subcategory-item {
+        font-size: 0.98em;
+        padding: 10px 10px;
+        border-radius: 7px;
+        margin-bottom: 1px;
+      }
+      .subcategory-item {
+        padding: 10px 10px 10px 20px;
+        border-radius: 6px;
+      }
+      .course-btn {
+        padding: 10px 0;
+        font-size: 1em;
+        border-radius: 7px;
+        min-width: 0;
+        width: 100%;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="course-nav-container">
+    <div class="course-list" id="courseList">
+      <div class="search-bar">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search courses...">
+      </div>
+      <!-- Course items will be rendered here -->
+    </div>
+    <div class="course-content" id="courseContent">
+      <!-- Course content will be rendered here -->
+    </div>
+  </div>
+  <script>
+    // Example data with subcategories
+    const categories = [
+      {
+        name: 'Web Design Fundamentals',
+        subcategories: [
+          {
+            name: 'Introduction',
+            desc: 'Kickstart your journey with the basics of web design and layout.',
+            video: 'https://www.youtube.com/embed/3JluqTojuME',
+          },
+          {
+            name: 'Principles',
+            desc: 'Learn the core principles of effective web design.',
+            video: 'https://www.youtube.com/embed/9gTw2EDkaDQ',
+          },
+        ]
+      },
+      {
+        name: 'HTML & Structure',
+        subcategories: [
+          {
+            name: 'HTML Basics',
+            desc: 'Learn how to structure web pages using HTML5.',
+            video: 'https://www.youtube.com/embed/pQN-pnXPaVg',
+          },
+          {
+            name: 'Semantic HTML',
+            desc: 'Use semantic tags for better accessibility and SEO.',
+            video: 'https://www.youtube.com/embed/GPC6A1l6b0w',
+          },
+        ]
+      },
+      {
+        name: 'CSS & Styling',
+        subcategories: [
+          {
+            name: 'CSS Basics',
+            desc: 'Style your web pages beautifully with CSS3.',
+            video: 'https://www.youtube.com/embed/yfoY53QXEnI',
+          },
+          {
+            name: 'Flexbox & Grid',
+            desc: 'Modern layout techniques for responsive design.',
+            video: 'https://www.youtube.com/embed/JJSoEo8JSnc',
+          },
+        ]
+      },
+      {
+        name: 'JavaScript Basics',
+        subcategories: [
+          {
+            name: 'JS Introduction',
+            desc: 'Add interactivity to your sites with JavaScript.',
+            video: 'https://www.youtube.com/embed/W6NZfCO5SIk',
+          },
+          {
+            name: 'DOM Manipulation',
+            desc: 'Learn how to interact with the DOM.',
+            video: 'https://www.youtube.com/embed/0ik6X4DJKCc',
+          },
+        ]
+      },
+      {
+        name: 'Responsive Design',
+        subcategories: [
+          {
+            name: 'Media Queries',
+            desc: 'Make your websites look great on any device.',
+            video: 'https://www.youtube.com/embed/srvUrASNj0s',
+          },
+          {
+            name: 'Mobile First',
+            desc: 'Design for mobile devices first.',
+            video: 'https://www.youtube.com/embed/5KGah8bW8GE',
+          },
+        ]
+      }
+    ];
+
+    // State
+    let expandedCategories = Array(categories.length).fill(true); // all expanded by default
+    // Try to load completed from localStorage
+    let completed = (function() {
+      try {
+        const saved = localStorage.getItem('courseNavigatorCompleted');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Validate shape
+          if (Array.isArray(parsed) && parsed.length === categories.length) {
+            return parsed.map((arr, i) => Array.isArray(arr) && arr.length === categories[i].subcategories.length ? arr : Array(categories[i].subcategories.length).fill(false));
+          }
+        }
+      } catch (e) {}
+      return categories.map(cat => Array(cat.subcategories.length).fill(false));
+    })();
+    // Try to load selected from localStorage
+    let selected = (function() {
+      try {
+        const saved = localStorage.getItem('courseNavigatorSelected');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (
+            typeof parsed === 'object' &&
+            typeof parsed.cat === 'number' &&
+            typeof parsed.sub === 'number' &&
+            parsed.cat >= 0 && parsed.cat < categories.length &&
+            parsed.sub >= 0 && parsed.sub < categories[parsed.cat].subcategories.length
+          ) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
+      return { cat: 0, sub: 0 };
+    })();
+    let searchTerm = '';
+
+    function saveCompleted() {
+      try {
+        localStorage.setItem('courseNavigatorCompleted', JSON.stringify(completed));
+      } catch (e) {}
+    }
+    function saveSelected() {
+      try {
+        localStorage.setItem('courseNavigatorSelected', JSON.stringify(selected));
+      } catch (e) {}
+    }
+
+    function highlight(text, term) {
+      if (!term) return text;
+      return text.replace(new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<span class="highlight">$1</span>');
+    }
+
+    function renderCourseList() {
+      const list = document.getElementById('courseList');
+      // Remove all except search bar
+      while (list.children.length > 1) list.removeChild(list.lastChild);
+      categories.forEach((cat, catIdx) => {
+        // Filter subcategories by search
+        const filteredSubs = cat.subcategories.map((sub, subIdx) => ({
+          ...sub,
+          _idx: subIdx
+        })).filter(sub => {
+          if (!searchTerm) return true;
+          return (
+            sub.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            sub.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        });
+        if (filteredSubs.length === 0) return; // Hide category if no subcategory matches
+        // Category header
+        const catDiv = document.createElement('div');
+        catDiv.className = 'category-item' + (selected.cat === catIdx ? ' selected' : '') + (expandedCategories[catIdx] ? ' expanded' : '');
+        catDiv.tabIndex = 0;
+        catDiv.innerHTML = `
+          <span>${highlight(cat.name, searchTerm)}</span>
+          <span class="arrow" style="display:inline-block;vertical-align:middle;"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="display:inline-block;vertical-align:middle;"><path d="M6 4L12 9L6 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        `;
+        catDiv.onclick = () => {
+          expandedCategories[catIdx] = !expandedCategories[catIdx];
+          renderCourseList();
+        };
+        catDiv.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { expandedCategories[catIdx] = !expandedCategories[catIdx]; renderCourseList(); } };
+        list.appendChild(catDiv);
+        // Subcategories
+        if (expandedCategories[catIdx]) {
+          const ul = document.createElement('ul');
+          ul.className = 'subcategory-list';
+          filteredSubs.forEach((sub) => {
+            const subDiv = document.createElement('li');
+            subDiv.className = 'subcategory-item' + (selected.cat === catIdx && selected.sub === sub._idx ? ' selected' : '') + (completed[catIdx][sub._idx] ? ' completed' : '');
+            subDiv.tabIndex = 0;
+            subDiv.innerHTML = `
+              <span class="subcategory-title">${highlight(sub.name, searchTerm)}</span>
+              <span class="subcategory-desc">${highlight(sub.desc, searchTerm)}</span>
+              <span class="checkmark">&#10003;</span>
+            `;
+            subDiv.onclick = () => { selected = { cat: catIdx, sub: sub._idx }; saveSelected(); renderAll(); };
+            subDiv.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { selected = { cat: catIdx, sub: sub._idx }; saveSelected(); renderAll(); } };
+            ul.appendChild(subDiv);
+          });
+          list.appendChild(ul);
+        }
+      });
+    }
+
+    function renderCourseContent() {
+      const sub = categories[selected.cat].subcategories[selected.sub];
+      const content = document.getElementById('courseContent');
+      // Calculate progress
+      const totalLessons = categories.reduce((sum, cat) => sum + cat.subcategories.length, 0);
+      const completedLessons = completed.reduce((sum, arr) => sum + arr.filter(Boolean).length, 0);
+      const percent = Math.round((completedLessons / totalLessons) * 100);
+      content.innerHTML = `
+        <div class="course-video">
+          <iframe width="100%" height="100%" src="${sub.video}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        </div>
+        <div class="lessons-complete">
+          <div class="lessons-complete-label">Lessons Complete</div>
+          <div class="lessons-complete-bar"><div class="lessons-complete-fill" style="width:${percent}%;"></div></div>
+          <div class="lessons-complete-count">${completedLessons} of ${totalLessons} lessons complete (${percent}%)</div>
+        </div>
+        <h2>${sub.name}</h2>
+        <p>${sub.desc}</p>
+        <div class="course-nav-btns">
+          <button class="course-btn" id="prevBtn" ${(selected.cat === 0 && selected.sub === 0) ? 'disabled' : ''}>Previous</button>
+          <button class="course-btn" id="nextBtn" ${(selected.cat === categories.length - 1 && selected.sub === categories[categories.length - 1].subcategories.length - 1) ? 'disabled' : ''}>Next Course</button>
+        </div>
+      `;
+      document.getElementById('prevBtn').onclick = () => {
+        // Uncomplete the current lesson
+        completed[selected.cat][selected.sub] = false;
+        saveCompleted();
+        if (selected.sub > 0) {
+          selected.sub--;
+        } else if (selected.cat > 0) {
+          selected.cat--;
+          selected.sub = categories[selected.cat].subcategories.length - 1;
+        }
+        saveSelected();
+        renderAll();
+      };
+      document.getElementById('nextBtn').onclick = () => {
+        completed[selected.cat][selected.sub] = true;
+        saveCompleted();
+        if (selected.sub < categories[selected.cat].subcategories.length - 1) {
+          selected.sub++;
+        } else if (selected.cat < categories.length - 1) {
+          selected.cat++;
+          selected.sub = 0;
+        }
+        saveSelected();
+        renderAll();
+      };
+    }
+
+    function renderAll() {
+      renderCourseList();
+      renderCourseContent();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      searchTerm = this.value;
+      renderCourseList();
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drop Projection Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        input[type=file]::file-upload-button {
+            background-color: var(--file-upload-bg, #81ecec);
+            border: 2px solid var(--file-upload-border, #00cec9);
+        }
+
+        /* Import Inter font (macOS system font) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        /* Define CSS Custom Properties for Theming */
+        :root {
+            --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+            --background-color: transparent;
+            --gradient-1: rgba(0, 0, 0, 0.6);
+            --gradient-2: rgba(0, 0, 0, 0.4);
+            --text-color: #fff;
+            --header-bg: rgba(26, 26, 26, 0.75);
+            --header-border: rgba(255, 255, 255, 0.18);
+            --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+            --nav-drawer-border: rgba(255, 255, 255, 0.18);
+            --nav-link-hover: rgba(255, 255, 255, 0.1);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+            --form-bg: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(255, 255, 255, 0.15);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --input-focus: #007AFF;
+            --input-focus-shadow: rgba(0, 122, 255, 0.3);
+            --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+            --button-shadow: rgba(0, 122, 255, 0.3);
+            --clear-btn-bg: rgba(255, 97, 87, 0.8);
+            --clear-btn-hover: rgba(255, 97, 87, 1);
+            --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+            --export-btn-bg: rgba(255, 255, 255, 0.2);
+            --export-btn-hover: rgba(255, 255, 255, 0.3);
+            --export-btn-border: rgba(255, 255, 255, 0.2);
+            --export-btn-shadow: rgba(255, 255, 255, 0.1);
+            --remove-btn-border: #ff6157;
+            --remove-btn-color: #ff6157;
+            --edit-btn-border: #007AFF;
+            --edit-btn-color: #007AFF;
+            --remove-btn-hover-bg: #ff6157;
+            --edit-btn-hover-bg: #007AFF;
+            --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+            --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+            --product-card-bg: rgba(255, 255, 255, 0.15);
+            --table-bg: rgba(255, 255, 255, 0.15);
+            --table-header-bg: rgba(255, 255, 255, 0.1);
+            --table-border: rgba(255, 255, 255, 0.2);
+            --table-cell-border: rgba(255, 255, 255, 0.1);
+            --table-hover: rgba(0, 122, 255, 0.1);
+            --table-footer-bg: rgba(0, 122, 255, 0.1);
+            --summary-table-bg: rgba(255, 255, 255, 0.15);
+            --highlight-profit: #34C759;
+            --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+            --highlight-profit-border: rgba(52, 199, 89, 0.2);
+            --storage-status-bg: rgba(255, 255, 255, 0.15);
+            --storage-status-success: #34C759;
+            --storage-status-success-border: rgba(52, 199, 89, 0.2);
+            --storage-status-error: #ff6157;
+            --storage-status-error-border: rgba(255, 97, 87, 0.2);
+            --file-upload-bg: #007AFF;
+            --file-upload-border: #0056CC;
+        }
+
+        /* General Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: url('https://images3.alphacoders.com/137/1370927.jpeg') center center/cover no-repeat fixed;
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Dark overlay for better readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Main content wrapper */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 24px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .units-thirds {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .units-seconds {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            width: 100%;
+        }
+
+        /* Glass-Themed Header */
+        .hamb-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 44px;
+            background: var(--header-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1.5px solid var(--header-border);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        .hamb-header-container {
+    max-width: 1200px !important;
+    display: flex !important
+;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+}
+
+        .hamb-logo {
+    color: #fff !important;
+    font-size: 1.2rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+        }
+
+        .hamb-hamburger {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            transition: opacity 0.3s ease;
+        }
+
+        .hamb-hamburger:hover,
+        .hamb-hamburger:focus {
+            opacity: 0.7;
+            outline: none;
+        }
+
+        /* Glass-Themed Navigation Drawer */
+        .hamb-nav-drawer {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: var(--nav-drawer-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1.5px solid var(--nav-drawer-border);
+            box-shadow: 2px 0 24px rgba(31,38,135,0.12);
+            padding: 16px;
+            transition: left 0.3s ease;
+            z-index: 10019;
+        }
+
+        .hamb-nav-drawer.active {
+            left: 0;
+        }
+
+        .hamb-nav-list {
+            list-style: none;
+            padding: 60px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hamb-nav-list li {
+            border-bottom: 1px solid var(--nav-drawer-border);
+            padding-bottom: 12px;
+        }
+
+        .hamb-nav-list li a {
+            display: block;
+            padding: 8px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+
+            .hamb-nav-list li a:hover {
+        background: var(--nav-link-hover);
+    }
+    
+    /* Submenu styles */
+    .hamb-nav-submenu {
+        list-style: none;
+        padding-left: 20px;
+        margin-top: 8px;
+        display: none;
+        border-left: 1px solid var(--nav-drawer-border);
+        margin-left: 8px;
+    }
+    
+    .hamb-nav-submenu.active {
+        display: block;
+    }
+    
+    .hamb-nav-submenu li {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 8px;
+    }
+    
+    .hamb-nav-submenu li a {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+    
+    .hamb-nav-item-with-submenu > a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .hamb-nav-submenu-toggle {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 4px;
+        font-size: 12px;
+        transition: transform 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .hamb-nav-submenu-toggle.active {
+        transform: rotate(90deg);
+    }
+    
+    .hamb-nav-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px;
+      border-top: 1.5px solid var(--nav-drawer-border);
+      background: var(--nav-drawer-bg);
+      text-align: right;
+    }
+    
+    .hamb-nav-account-link {
+      display: inline-block;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      text-align: right;
+      padding: 8px;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+    
+    .hamb-nav-account-link:hover {
+      background: var(--nav-link-hover);
+    }
+    
+    .timezone-display {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 400;
+      border-radius: 8px;
+      padding: 4px 12px;
+      margin-left: 12px;
+      letter-spacing: 0.5px;
+      user-select: text;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    
+    .hamb-header-left {
+      flex: 1 1 0;
+      display: flex;
+      align-items: center;
+      min-width: 44px;
+    }
+    
+    .hamb-header-center {
+      flex: 2 1 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .hamb-header-right {
+      flex: 1 1 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-width: 120px;
+    }
+
+        .hamb-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-bg);
+            z-index: 9999;
+        }
+
+        .hamb-overlay.active {
+            display: block;
+        }
+
+        .hamb-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--remove-btn-border);
+            border: none;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .hamb-close-btn:hover {
+            opacity: 0.7;
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 24px;
+            color: var(--text-color);
+            padding-bottom: 12px;
+            margin-top: 56px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Layout */
+        .flex-row {
+            column-gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .flex-row > div {
+            flex: 1 1 160px;
+            min-width: 140px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Glass-Themed Form */
+        form {
+            border: none;
+            padding: 24px;
+            border-radius: 18px;
+            background: var(--form-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            transition: all 0.3s ease;
+        }
+
+        form:hover,
+        form:focus-within {
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+            transform: translateY(-2px);
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+            letter-spacing: 0.2px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            font-size: 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px var(--input-focus-shadow);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input.error {
+            border-color: var(--storage-status-error);
+        }
+
+        .error-message {
+            margin-top: -10px;
+            margin-bottom: 10px;
+            color: var(--storage-status-error);
+            font-size: 12px;
+        }
+
+        /* Glass-Themed Buttons */
+        .hamb-button {
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 16px 24px;
+            background: var(--button-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--button-shadow);
+        }
+
+        .hamb-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .hamb-button:hover::before {
+            left: 100%;
+        }
+
+        .hamb-button:hover,
+        .hamb-button:focus {
+            background: var(--button-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px var(--button-shadow);
+            outline: none;
+        }
+
+        .hamb-button:active {
+            transform: translateY(0);
+        }
+
+        .buttonadd {
+            background: var(--button-bg);
+        }
+
+        .clear-btn {
+            background: var(--clear-btn-bg);
+        }
+
+        .clear-btn:hover,
+        .clear-btn:focus {
+            background: var(--clear-btn-hover);
+            box-shadow: 0 0 0 3px var(--clear-btn-shadow);
+        }
+
+        .export-btn, .save-data-btn, .load-data-btn {
+            display: block;
+            background: var(--export-btn-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: 1px solid var(--export-btn-border);
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            margin: auto;
+            width: 100%;
+        }
+
+        .export-btn:hover,
+        .export-btn:focus,
+        .save-data-btn Nitigasi:hover,
+        .save-data-btn:focus,
+        .load-data-btn:hover,
+        .load-data-btn:focus {
+            background: var(--export-btn-hover);
+            border-color: var(--export-btn-border);
+            box-shadow: 0 0 0 3px var(--export-btn-shadow);
+        }
+
+        .remove-btn, .edit-btn {
+            background: none;
+            border: 1px solid var(--remove-btn-border);
+            color: var(--remove-btn-color);
+            font-weight: 600;
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .edit-btn {
+            border-color: var(--edit-btn-border);
+            color: var(--edit-btn-color);
+        }
+
+        .remove-btn:hover,
+        .remove-btn:focus,
+        .edit-btn:hover,
+        .edit-btn:focus {
+            background: var(--remove-btn-hover-bg);
+            color: var(--text-color);
+            box-shadow: 0 0 0 3px var(--remove-btn-hover-shadow);
+        }
+
+        .edit-btn:hover,
+        .edit-btn:focus {
+            background: var(--edit-btn-hover-bg);
+            box-shadow: 0 0 0 3px var(--edit-btn-hover-shadow);
+        }
+
+        /* Glass-Themed Product Cards */
+        .product-list {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            border: none;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover,
+        .product-card:focus-within {
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+            transform: translateY(-2px);
+        }
+
+        .product-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex-grow: 1;
+            color: var(--text-color);
+            user-select: text;
+            line-height: 1.4;
+        }
+
+        .product-info h3 {
+            margin: 0 0 6px;
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: capitalize;
+        }
+
+        .product-info p {
+            margin: 0;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* Glass-Themed Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 30px;
+            font-variant-numeric: tabular-nums;
+            background: var(--table-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            overflow: hidden;
+        }
+
+        thead th {
+            padding: 12px;
+            font-size: 13px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 1px solid var(--table-border);
+            background: var(--table-header-bg);
+            color: var(--text-color);
+        }
+
+        tbody td {
+            padding: 12px;
+            font-size: 13px;
+            text-align: center;
+            font-weight: 400;
+            border: 1px solid var(--table-cell-border);
+            color: var(--text-color);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: var(--table-hover);
+        }
+
+        tfoot td {
+            padding: 12px;
+            font-size: 13px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid var(--table-border);
+            background: var(--table-footer-bg);
+            color: var(--text-color);
+        }
+
+        .product-thumb {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .product-name-cell {
+            text-align: left;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            text-transform: capitalize;
+        }
+
+        /* Utility Classes */
+        .summary-table {
+            font-weight: 600;
+            margin-top: 18px !important;
+            font-size: 14px;
+            color: var(--text-color);
+            background: var(--summary-table-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .summary-table tr {
+            border: 1px solid var(--table-border);
+        }
+
+        .highlight-profit {
+            color: var(--highlight-profit);
+            background: var(--highlight-profit-bg);
+            border-color: var(--highlight-profit-border);
+        }
+
+        .storage-status {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            background: var(--storage-status-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--table-border);
+        }
+
+        .storage-status.success {
+            color: var(--storage-status-success);
+            border: 1px solid var(--storage-status-success-border);
+        }
+
+        .storage-status.error {
+            color: var(--storage-status-error);
+            border: 1px solid var(--storage-status-error-border);
+        }
+
+        .toggle-section {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            padding: 0;
+        }
+
+        .toggle-section::before {
+            content: '▼ ';
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-section[aria-expanded="false"]::before {
+            transform: rotate(-90deg);
+        }
+
+        .cards {
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            display: grid;
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: var(--product-card-bg);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 700px) {
+            .flex-row {
+                flex-direction: column;
+            }
+
+            .flex-row > div {
+                min-width: auto;
+                width: 100%;
+                flex: 1 1 0;
+            }
+
+            .button-group {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hamb-nav-drawer {
+                width: 250px;
+            }
+            .product-card {
+                grid-template-columns: 1fr;
+            }
+            .product-card img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        .saveandload {
+            display: grid;
+            gap: 18px;
+            width: 100%;
+            align-items: flex-end;
+            margin: auto;
+            background: var(--form-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 24px;
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            margin-bottom: 20px;
+        }
+
+        #profitChart {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .chart-selector {
+            margin: 10px auto;
+            text-align: center;
+        }
+
+        .chart-selector label {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .chart-selector select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chart-selector select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px var(--input-focus-shadow);
+        }
+
+        /* Glassmorphism Match with Homepage */
+        .hamb-header {
+            background: rgba(26, 26, 26, 0.75) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-bottom: 1.5px solid rgba(255,255,255,0.18) !important;
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12) !important;
+        }
+        .hamb-nav-drawer {
+            background: rgba(30, 30, 30, 0.25) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-right: 1.5px solid rgba(255,255,255,0.18) !important;
+            box-shadow: 2px 0 24px rgba(31,38,135,0.12) !important;
+        }
+        .cards, .saveandload, form, .product-card, .summary-table, .storage-status, table {
+            background: rgba(255,255,255,0.18) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-radius: 18px !important;
+            border: 1.5px solid rgba(255,255,255,0.25) !important;
+            box-shadow: none !important;
+        }
+        table {
+            background: rgba(255,255,255,0.18) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-radius: 18px !important;
+            border: 1.5px solid rgba(255,255,255,0.25) !important;
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            overflow: hidden !important;
+            box-shadow: none !important;
+        }
+        thead th:first-child {
+            border-top-left-radius: 18px !important;
+        }
+        thead th:last-child {
+            border-top-right-radius: 18px !important;
+        }
+        tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 18px !important;
+        }
+        tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 18px !important;
+        }
+        @media (prefers-color-scheme: dark) {
+            .cards, .saveandload, form, .product-card, .summary-table, .storage-status, table, .hamb-nav-drawer {
+                background: rgba(30,30,30,0.25) !important;
+                border: 1.5px solid rgba(255,255,255,0.18) !important;
+            }
+        }
+        .summary-table td, .summary-table th {
+          padding: 12px !important;
+          font-size: 13px !important;
+          text-align: center !important;
+          font-weight: 600 !important;
+        }
+        .summary-table {
+          margin-top: 18px !important;
+          border-radius: 18px !important;
+          border: none !important;
+        }
+        .summary-table th, .summary-table td, .summary-table tr {
+          border: none !important;
+        }
+        form, .saveandload {
+          border: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Glass-Themed Header -->
+    <header class="hamb-header">
+        <div class="hamb-header-container">
+            <div class="hamb-header-left">
+                <button class="hamb-hamburger" id="hamburger" tabindex="0">☰</button>
+            </div>
+            <div class="hamb-header-center">
+                <a href="#" class="hamb-logo">Brand Tools</a>
+            </div>
+            <div class="hamb-header-right">
+                <span id="timezoneDisplay" class="timezone-display">08:08 PM (MDT)</span>
+            </div>
+        </div>
+    </header>
+    <nav class="hamb-nav-drawer" id="navDrawer">
+        <button class="hamb-close-btn" id="closeBtn" tabindex="0"></button>
+        <ul class="hamb-nav-list">
+            <li><a href="homepage.html">Home</a></li>
+            <li class="hamb-nav-item-with-submenu">
+                <a href="#" onclick="toggleSubmenu(this.querySelector('.hamb-nav-submenu-toggle'))">
+                    Apps
+                    <button class="hamb-nav-submenu-toggle">▶</button>
+                </a>
+                <ul class="hamb-nav-submenu">
+                    <li><a href="drop-projection-generator.html">Drop Projection Calculator</a></li>
+                    <li><a href="size-chart-generator.html">Size Chart Generator</a></li>
+                    <li><a href="clothing-mockup-generator.html">Clothing Mockup Generator</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="hamb-nav-footer">
+            <a href="/account" class="hamb-nav-account-link">My Account</a>
+        </div>
+    </nav>
+    <div class="hamb-overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main>
+        <h1>Drop Projection Calculator</h1>
+        <div class="cards">
+            <form id="productForm" aria-label="Add or edit product">
+                <div class="flex-row">
+                    <div>
+                        <label for="productName">Description</label>
+                        <input type="text" id="productName" name="productName" placeholder="Shirt" required autocomplete="off">
+                    </div>
+                    <div class="units-thirds">
+                        <div>
+                            <label for="unitCost">Unit Cost</label>
+                            <input type="number" id="unitCost" name="unitCost" min="0" step="0.01" placeholder="12.00" required>
+                        </div>
+                        <div>
+                            <label for="retailPrice">Retail Price</label>
+                            <input type="number" id="retailPrice" name="retailPrice" min="0" step="0.01" placeholder="30.00" required>
+                        </div>
+                        <div>
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity" min="1" step="1" placeholder="100" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="productImage">Product Image</label>
+                        <input type="file" id="productImage" name="productImage" accept="image/*">
+                    </div>
+                    <div style="margin-top: 34px;">
+                        <div class="button-group">
+                            <button type="submit" class="hamb-button buttonadd" id="submitProductBtn">Add Product</button>
+                            <button type="button" class="hamb-button clear-btn" id="clearAllBtn">Clear All</button>
+                            <button type="button" class="hamb-button clear-btn" id="cancelEditBtn" style="display: none;">Cancel Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="storageStatus" class="storage-status success" style="display: none;">Loaded 0 saved products!</div>
+            </form>
+            <div class="saveandload">
+                <div>
+                    <label for="currencySelect">Currency</label>
+                    <select id="currencySelect">
+                        <option value="USD">$ USD</option>
+                        <option value="EUR">€ EUR</option>
+                        <option value="GBP">£ GBP</option>
+                    </select>
+                </div>
+                <div class="units-seconds">
+                    <div>
+                        <label for="loadDataFile">Load Data File</label>
+                        <input type="file" id="loadDataFile" name="loadDataFile" accept=".json" style="margin-bottom: 28px; height: 36px;">
+                    </div>
+                    <button type="button" class="hamb-button save-data-btn" id="saveDataBtn">Save Data</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="product-list" id="productList" aria-live="polite">
+            <p style="font-weight: 600; opacity: 0.5; text-align: center;">No products added yet.</p>
+        </section>
+
+        <section>
+            <h2>
+                <button class="toggle-section" aria-expanded="true" aria-controls="breakEvenSection">Break-Even Summary</button>
+            </h2>
+            <div id="breakEvenSection">
+                <table id="breakEvenTable" aria-describedby="breakEvenSummary">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col">Profit Per Unit</th>
+                            <th scope="col">Break-Even Units</th>
+                            <th scope="col">Revenue At Break-Even</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="summary-table" id="breakEvenSummary" aria-live="polite"></div>
+                <button class="export-btn" id="exportBreakEvenBtn" style="margin-top:20px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                        <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10"></path>
+                    </svg>
+                    Export Table as Image
+                </button>
+            </div>
+        </section>
+
+        <section>
+            <h2>
+                <button class="toggle-section" aria-expanded="true" aria-controls="fullSellOutSection">Full Sell-Out Projection</button>
+            </h2>
+            <div id="fullSellOutSection">
+                <table id="fullSellOutTable" aria-describedby="fullSellOutSummary">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Total Units</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col">Total Revenue</th>
+                            <th scope="col">Total Profit</th>
+                            <th scope="col">Profit Margin</th>
+                            <th scope="col">ROI (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="summary-table" id="fullSellOutSummary" aria-live="polite"></div>
+                <button class="export-btn" id="exportFullSellOutBtn" style="margin-top:20px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                        <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10"></path>
+                    </svg>
+                    Export Table as Image
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Configuration Constants
+        const STORAGE_KEY = 'dropCalculatorProducts';
+        const THEME_STORAGE_KEY = 'themePreference';
+        const MAX_IMAGE_SIZE = 1024 * 1024; // 1MB
+        const STORAGE_OVERHEAD_FACTOR = 1.33;
+        const MAX_IMAGE_DIMENSION = 800;
+        const INITIAL_JPEG_QUALITY = 0.8;
+
+        // Utility Functions
+        let formatMoney = (num) => `$${num.toFixed(2)}`;
+
+        const showStorageStatus = (message, isError = false) => {
+            const statusDiv = document.getElementById('storageStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `storage-status ${isError ? 'error' : 'success'}`;
+            statusDiv.style.display = 'block';
+            setTimeout(() => statusDiv.style.display = 'none', 3000);
+        };
+
+        const estimateStorageSize = (data) => new Blob([JSON.stringify(data)]).size * STORAGE_OVERHEAD_FACTOR;
+
+        const saveToLocalStorage = (products) => {
+            try {
+                const dataString = JSON.stringify(products);
+                if (estimateStorageSize(products) > 5 * 1024 * 1024) {
+                    throw new Error('Storage limit exceeded. Try using smaller images or fewer products.');
+                }
+                try {
+                    localStorage.setItem(STORAGE_KEY, dataString);
+                    showStorageStatus('Products saved successfully!');
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        showStorageStatus('Browser storage limit reached. Clear some data or use smaller images.', true);
+                    } else {
+                        throw error;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to save to localStorage:', error);
+                showStorageStatus(error.message || 'Failed to save products.', true);
+            }
+        };
+
+        const loadFromLocalStorage = () => {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const products = JSON.parse(saved);
+                    if (Array.isArray(products)) {
+                        const validProducts = products.filter(
+                            (p) => p.name && typeof p.cost === 'number' && typeof p.retail === 'number' && typeof p.units === 'number' && (!p.image || typeof p.image === 'string')
+                        );
+                        showStorageStatus(`Loaded ${validProducts.length} saved products!`);
+                        return validProducts;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load from localStorage:', error);
+                showStorageStatus('Failed to load saved products.', true);
+            }
+            return [];
+        };
+
+        const clearLocalStorage = () => {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                showStorageStatus('All products cleared from storage!');
+            } catch (error) {
+                console.error('Failed to clear localStorage:', error);
+                showStorageStatus('Failed to clear storage.', true);
+            }
+        };
+
+        const compressImage = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        let { width, height } = img;
+                        const maxDimension = MAX_IMAGE_DIMENSION;
+
+                        if (width > height) {
+                            if (width > maxDimension) {
+                                height *= maxDimension / width;
+                                width = maxDimension;
+                            }
+                        } else {
+                            if (height > maxDimension) {
+                                width *= maxDimension / height;
+                                height = maxDimension;
+                            }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        let quality = INITIAL_JPEG_QUALITY;
+                        let dataUrl;
+                        do {
+                            dataUrl = canvas.toDataURL('image/jpeg', quality);
+                            if (Math.round((dataUrl.length * 3) / 4) <= MAX_IMAGE_SIZE || quality <= 0.1) break;
+                            quality -= 0.1;
+                        } while (true);
+
+                        if (dataUrl.length * 3 / 4 > MAX_IMAGE_SIZE) {
+                            reject(new Error('Unable to compress image to under 1MB.'));
+                        } else {
+                            resolve(dataUrl);
+                        }
+                    };
+                    img.onerror = () => reject(new Error('Error loading image.'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error('Error reading image file.'));
+                reader.readAsDataURL(file);
+            });
+        };
+
+        const saveDataToFile = () => {
+            try {
+                if (products.length === 0) {
+                    showStorageStatus('No products to save!', true);
+                    return;
+                }
+                const dataString = JSON.stringify(products, null, 2);
+                const blob = new Blob([dataString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'drop-calculator-data.json';
+                link.click();
+                URL.revokeObjectURL(url);
+                showStorageStatus('Data saved to file successfully!');
+            } catch (error) {
+                console.error('Failed to save data to file:', error);
+                showStorageStatus('Failed to save data to file.', true);
+            }
+        };
+
+        const loadDataFromFile = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (!Array.isArray(data)) {
+                            throw new Error('Invalid file format. Please upload a valid JSON file.');
+                        }
+                        const validProducts = data.filter(
+                            (p) => p.name && typeof p.cost === 'number' && typeof p.retail === 'number' && typeof p.units === 'number' && (!p.image || typeof p.image === 'string')
+                        );
+                        resolve(validProducts);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = () => reject(new Error('Error reading file.'));
+                reader.readAsText(file);
+            });
+        };
+
+        const exportTableAsImage = (tableId, summaryId, filename) => {
+            const table = document.getElementById(tableId);
+            const summary = document.getElementById(summaryId);
+            const container = document.createElement('div');
+            container.style.padding = '20px';
+            container.style.background = 'var(--table-bg)';
+            container.style.backdropFilter = 'blur(10px)';
+            container.appendChild(table.cloneNode(true));
+            if (summary.innerHTML) container.appendChild(summary.cloneNode(true));
+            document.body.appendChild(container);
+
+            html2canvas(container, { scale: 2, backgroundColor: null })
+                .then((canvas) => {
+                    const link = document.createElement('a');
+                    link.download = `${filename}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    document.body.removeChild(container);
+                    showStorageStatus(`Exported ${filename} successfully!`);
+                })
+                .catch((error) => {
+                    console.error('Failed to export table:', error);
+                    showStorageStatus('Failed to export table as image.', true);
+                });
+        };
+
+        // DOM Elements
+        const form = document.getElementById('productForm');
+        const productList = document.getElementById('productList');
+        const breakEvenTableBody = document.querySelector('#breakEvenTable tbody');
+        const fullSellOutTableBody = document.querySelector('#fullSellOutTable tbody');
+        const fullSellOutSummary = document.getElementById('fullSellOutSummary');
+        const breakEvenSummary = document.getElementById('breakEvenSummary');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const saveDataBtn = document.getElementById('saveDataBtn');
+        const loadDataFile = document.getElementById('loadDataFile');
+        const exportBreakEvenBtn = document.getElementById('exportBreakEvenBtn');
+        const exportFullSellOutBtn = document.getElementById('exportFullSellOutBtn');
+        const submitProductBtn = document.getElementById('submitProductBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const hamburger = document.getElementById('hamburger');
+        const navDrawer = document.getElementById('navDrawer');
+        const overlay = document.getElementById('overlay');
+        const closeBtn = document.getElementById('closeBtn');
+        const currencySelect = document.getElementById('currencySelect');
+
+        // State
+        let products = loadFromLocalStorage();
+        let editingIndex = null;
+        let undoStack = [];
+        let currentCurrency = 'USD';
+        let currentChartType = 'pie';
+
+        // Helper Functions
+        const sanitizeHTML = (str) => {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        };
+
+        const validateInput = (input, condition, errorMessage) => {
+            const errorDiv = input.parentElement.querySelector('.error-message');
+            if (errorDiv) errorDiv.remove();
+            if (!condition(input.value)) {
+                input.classList.add('error');
+                const error = document.createElement('div');
+                error.className = 'error-message';
+                error.textContent = errorMessage;
+                input.parentElement.appendChild(error);
+                return false;
+            }
+            input.classList.remove('error');
+            return true;
+        };
+
+        const checkProfitMargin = (cost, retail) => {
+            if (retail <= cost) {
+                showStorageStatus('Error: Retail price must be greater than unit cost.', true);
+                return false;
+            }
+            const profitMargin = retail > 0 ? ((retail - cost) / retail) * 100 : 0;
+            if (profitMargin < 10) {
+                showStorageStatus('Warning: Profit margin is below 10%.', true);
+            }
+            return true;
+        };
+
+        const debounce = (func, wait) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        };
+
+        const addToUndoStack = (action, data) => {
+            undoStack.push({ action, data });
+            const existingUndoBtn = document.getElementById('undoBtn');
+            if (existingUndoBtn) existingUndoBtn.remove();
+            const undoBtn = document.createElement('button');
+            undoBtn.id = 'undoBtn';
+            undoBtn.className = 'hamb-button';
+            undoBtn.textContent = 'Undo';
+            document.querySelector('.button-group').appendChild(undoBtn);
+            undoBtn.addEventListener('click', () => {
+                const lastAction = undoStack.pop();
+                if (lastAction.action === 'remove') {
+                    products.splice(lastAction.data.index, 0, lastAction.data.product);
+                } else if (lastAction.action === 'clear') {
+                    products = lastAction.data.products;
+                }
+                saveToLocalStorage(products);
+                updateTables();
+                undoBtn.remove();
+            });
+        };
+
+        // Event Listeners
+        hamburger.addEventListener('click', () => {
+            navDrawer.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            navDrawer.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            navDrawer.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navDrawer.classList.contains('active')) {
+                navDrawer.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+
+        currencySelect.addEventListener('change', () => {
+            currentCurrency = currencySelect.value;
+            const symbols = { USD: '$', EUR: '€', GBP: '£' };
+            formatMoney = (num) => `${symbols[currentCurrency]}${num.toFixed(2)}`;
+            updateTables();
+        });
+
+        form.addEventListener('input', debounce(() => {
+            const isValid = [
+                validateInput(form.productName, (val) => val.trim().length > 0, 'Description is required.'),
+                validateInput(form.unitCost, (val) => !isNaN(val) && parseFloat(val) >= 0, 'Unit Cost must be a non-negative number.'),
+                validateInput(form.retailPrice, (val) => !isNaN(val) && parseFloat(val) >= 0, 'Retail Price must be a non-negative number.'),
+                validateInput(form.quantity, (val) => !isNaN(val) && parseInt(val) >= 1, 'Quantity must be a positive integer.')
+            ].every(Boolean);
+            submitProductBtn.disabled = !isValid;
+        }, 300));
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = sanitizeHTML(form.productName.value.trim());
+            const cost = parseFloat(form.unitCost.value);
+            const retail = parseFloat(form.retailPrice.value);
+            const units = parseInt(form.quantity.value);
+
+            if (!name || isNaN(cost) || isNaN(retail) || isNaN(units) || cost < 0 || retail < 0 || units < 1) {
+                showStorageStatus('Please enter valid product details.', true);
+                return;
+            }
+
+            if (!checkProfitMargin(cost, retail)) return;
+
+            let image = editingIndex !== null ? products[editingIndex].image : '';
+            if (form.productImage.files.length > 0) {
+                const file = form.productImage.files[0];
+                try {
+                    if (file.size > MAX_IMAGE_SIZE * 10) {
+                        showStorageStatus('Image is too large for compression. Please choose a smaller image.', true);
+                        return;
+                    }
+                    image = await compressImage(file);
+                } catch (error) {
+                    console.error('Failed to compress image:', error);
+                    showStorageStatus(error.message || 'Failed to process image.', true);
+                    return;
+                }
+            }
+
+            const product = { name, cost, retail, units, image };
+            if (editingIndex !== null) {
+                products[editingIndex] = product;
+                showStorageStatus(`Updated "${name}" successfully!`);
+                resetForm();
+            } else {
+                products.push(product);
+                showStorageStatus(`Added "${name}" successfully!`);
+            }
+            saveToLocalStorage(products);
+            form.reset();
+            form.productName.focus();
+            updateTables();
+        });
+
+        clearAllBtn.addEventListener('click', () => {
+            if (products.length === 0) {
+                showStorageStatus('No products to clear!');
+                return;
+            }
+            if (confirm('Are you sure you want to clear all products? This action cannot be undone.')) {
+                addToUndoStack('clear', { products: [...products] });
+                products = [];
+                resetForm();
+                clearLocalStorage();
+                updateTables();
+                form.productName.focus();
+            }
+        });
+
+        cancelEditBtn.addEventListener('click', () => {
+            resetForm();
+            showStorageStatus('Edit cancelled.');
+            form.productName.focus();
+        });
+
+        saveDataBtn.addEventListener('click', () => {
+            saveDataToFile();
+        });
+
+        loadDataFile.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                products = await loadDataFromFile(file);
+                saveToLocalStorage(products);
+                resetForm();
+                updateTables();
+                showStorageStatus(`Loaded ${products.length} products from file!`);
+                form.productName.focus();
+            } catch (error) {
+                console.error('Failed to load data from file:', error);
+                showStorageStatus(error.message || 'Failed to load data from file.', true);
+            }
+        });
+
+        exportBreakEvenBtn.addEventListener('click', () => {
+            if (products.length === 0) {
+                showStorageStatus('No data to export!', true);
+                return;
+            }
+            exportTableAsImage('breakEvenTable', 'breakEvenSummary', 'break-even-table');
+        });
+
+        exportFullSellOutBtn.addEventListener('click', () => {
+            if (products.length === 0) {
+                showStorageStatus('No data to export!', true);
+                return;
+            }
+            exportTableAsImage('fullSellOutTable', 'fullSellOutSummary', 'full-sell-out-table');
+        });
+
+        document.querySelectorAll('.toggle-section').forEach(button => {
+            button.addEventListener('click', () => {
+                const section = document.getElementById(button.getAttribute('aria-controls'));
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                button.setAttribute('aria-expanded', !isExpanded);
+                section.style.display = isExpanded ? 'none' : 'block';
+            });
+        });
+
+        // Rendering Functions
+        const resetForm = () => {
+            editingIndex = null;
+            submitProductBtn.textContent = 'Add Product';
+            submitProductBtn.classList.add('buttonadd');
+            cancelEditBtn.style.display = 'none';
+            form.reset();
+            form.productImage.value = '';
+            form.querySelectorAll('.error-message').forEach(el => el.remove());
+            form.querySelectorAll('input').forEach(input => input.classList.remove('error'));
+            submitProductBtn.disabled = false;
+            clearAllBtn.style.display = '';
+        };
+
+        const editProduct = (index) => {
+            const product = products[index];
+            editingIndex = index;
+            form.productName.value = product.name;
+            form.unitCost.value = product.cost;
+            form.retailPrice.value = product.retail;
+            form.quantity.value = product.units;
+            form.productImage.value = '';
+            submitProductBtn.textContent = 'Update Product';
+            submitProductBtn.classList.remove('buttonadd');
+            cancelEditBtn.style.display = 'inline-block';
+            form.productName.focus();
+            clearAllBtn.style.display = 'none';
+        };
+
+        const updateDashboard = () => {
+            const totalProducts = products.length;
+            const avgProfitMargin = products.length > 0
+                ? products.reduce((sum, p) => sum + ((p.retail - p.cost) / p.retail * 100), 0) / products.length
+                : 0;
+            const totalProfit = products.reduce((sum, p) => sum + ((p.retail - p.cost) * p.units), 0);
+
+            document.getElementById('totalProducts').textContent = totalProducts;
+            document.getElementById('avgProfitMargin').textContent = `${avgProfitMargin.toFixed(1)}%`;
+            document.getElementById('totalProfit').textContent = formatMoney(totalProfit);
+        };
+
+        const renderProductList = () => {
+            productList.innerHTML = products.length === 0
+                ? '<p style="font-weight: 600; opacity: 0.5; text-align: center;">No products added yet.</p>'
+                : '';
+
+            products.forEach((product, index) => {
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.innerHTML = `
+                    ${product.image ? `<img src="${product.image}" alt="${product.name}" loading="lazy" />` : ''}
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>Cost: ${formatMoney(product.cost)} | Retail: ${formatMoney(product.retail)} | Qty: ${product.units}</p>
+                    </div>
+                    <button class="edit-btn" aria-label="Edit product ${product.name}" data-index="${products.indexOf(product)}">Edit</button>
+                    <button class="remove-btn" aria-label="Remove product ${product.name}" data-index="${products.indexOf(product)}">Remove</button>
+                `;
+                productList.appendChild(div);
+            });
+
+            document.querySelectorAll('.edit-btn').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    editProduct(idx);
+                });
+            });
+
+            document.querySelectorAll('.remove-btn').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    if (confirm(`Are you sure you want to remove "${products[idx].name}"?`)) {
+                        addToUndoStack('remove', { index: idx, product: products[idx] });
+                        products.splice(idx, 1);
+                        resetForm();
+                        saveToLocalStorage(products);
+                        updateTables();
+                        form.productName.focus();
+                    }
+                });
+            });
+        };
+
+        const renderBreakEvenTable = () => {
+            breakEvenTableBody.innerHTML = '';
+            breakEvenSummary.innerHTML = '';
+            if (products.length === 0) return;
+
+            let totalCostAll = 0;
+            let totalBreakEvenUnits = 0;
+            let totalRevenueAtBreakEven = 0;
+            let totalProfitAtBreakEven = 0;
+
+            products.forEach(({ name, cost, retail, units, image }) => {
+                const totalCost = cost * units;
+                const profitPerUnit = retail - cost;
+                const breakEvenUnits = profitPerUnit > 0 ? Math.ceil(totalCost / profitPerUnit) : Infinity;
+                const revenueAtBreakEven = breakEvenUnits * retail;
+                const profitAtBreakEven = breakEvenUnits !== Infinity ? (revenueAtBreakEven - (breakEvenUnits * cost)) : 0;
+
+                totalCostAll += totalCost;
+                totalBreakEvenUnits += breakEvenUnits === Infinity ? 0 : breakEvenUnits;
+                totalRevenueAtBreakEven += breakEvenUnits === Infinity ? 0 : revenueAtBreakEven;
+                totalProfitAtBreakEven += breakEvenUnits !== Infinity ? profitAtBreakEven : 0;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="product-name-cell">
+                        ${image ? `<img src="${image}" alt="${name}" class="product-thumb" loading="lazy" />` : ''}
+                        ${name}
+                    </td>
+                    <td>${formatMoney(totalCost)}</td>
+                    <td>${formatMoney(profitPerUnit)}</td>
+                    <td>${breakEvenUnits === Infinity ? 'N/A' : breakEvenUnits}</td>
+                    <td>${breakEvenUnits === Infinity ? 'N/A' : formatMoney(revenueAtBreakEven)}</td>
+                `;
+                breakEvenTableBody.appendChild(row);
+            });
+
+            totalProfitAtBreakEven = totalRevenueAtBreakEven - totalCostAll;
+            breakEvenSummary.innerHTML = `
+                <table class="summary-table">
+                    <tr style="padding: 12px; font-size: 13px; height: 45px; text-align: center; font-weight: 600; border-bottom: 1px solid var(--table-border); background: var(--table-header-bg); color: var(--text-color);">
+                        <th scope="col">Totals</th>
+                        <th scope="col">Total Cost</th>
+                        <th scope="col">Total Break-Even Units</th>
+                        <th scope="col">Total Revenue At Break-Even</th>
+                        <th scope="col">Total Profit</th>
+                    </tr>
+                    <tr>
+                        <td>Totals</td>
+                        <td>${formatMoney(totalCostAll)}</td>
+                        <td>${totalBreakEvenUnits === 0 ? 'N/A' : totalBreakEvenUnits}</td>
+                        <td>${totalBreakEvenUnits === 0 ? 'N/A' : formatMoney(totalRevenueAtBreakEven)}</td>
+                        <td class="highlight-profit">${formatMoney(totalProfitAtBreakEven)}</td>
+                    </tr>
+                </table>
+            `;
+        };
+
+        const renderFullSellOutTable = () => {
+            fullSellOutTableBody.innerHTML = '';
+            fullSellOutSummary.innerHTML = '';
+            if (products.length === 0) return;
+
+            let totalUnits = 0;
+            let totalCostAll = 0;
+            let totalRevenueAll = 0;
+            let totalProfitAll = 0;
+            let totalRoiNumerator = 0;
+            let totalRoiDenominator = 0;
+
+            products.forEach(({ name, cost, retail, units, image }) => {
+                const totalCost = cost * units;
+                const totalRevenue = retail * units;
+                const totalProfit = totalRevenue - totalCost;
+                const profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+                const roi = totalCost > 0 ? ((totalProfit / totalCost) * 100).toFixed(1) : '0.0';
+
+                totalUnits += units;
+                totalCostAll += totalCost;
+                totalRevenueAll += totalRevenue;
+                totalProfitAll += totalProfit;
+                totalRoiNumerator += totalProfit;
+                totalRoiDenominator += totalCost;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="product-name-cell">
+                        ${image ? `<img src="${image}" alt="${name}" class="product-thumb" loading="lazy" />` : ''}
+                        ${name}
+                    </td>
+                    <td>${units}</td>
+                    <td>${formatMoney(totalCost)}</td>
+                    <td>${formatMoney(totalRevenue)}</td>
+                    <td>${formatMoney(totalProfit)}</td>
+                    <td>${profitMargin.toFixed(1)}%</td>
+                    <td>${roi}%</td>
+                `;
+                fullSellOutTableBody.appendChild(row);
+            });
+
+            const totalProfitMargin = totalRevenueAll > 0 ? (totalProfitAll / totalRevenueAll) * 100 : 0;
+            const totalRoi = totalRoiDenominator > 0 ? ((totalRoiNumerator / totalRoiDenominator) * 100).toFixed(1) : '0.0';
+            fullSellOutSummary.innerHTML = `
+                <table class="summary-table">
+                    <tr style="padding: 12px; font-size: 13px; height: 45px; text-align: center; font-weight: 600; border-bottom: 1px solid var(--table-border); background: var(--table-header-bg); color: var(--text-color);">
+                        <th scope="col">Totals</th>
+                        <th scope="col">Total Units</th>
+                        <th scope="col">Total Cost</th>
+                        <th scope="col">Total Revenue</th>
+                        <th scope="col">Total Profit</th>
+                        <th scope="col">Profit Margin</th>
+                        <th scope="col">ROI (%)</th>
+                    </tr>
+                    <tr>
+                        <td>Totals</td>
+                        <td>${totalUnits}</td>
+                        <td>${formatMoney(totalCostAll)}</td>
+                        <td>${formatMoney(totalRevenueAll)}</td>
+                        <td class="highlight-profit">${formatMoney(totalProfitAll)}</td>
+                        <td>${totalProfitMargin.toFixed(1)}%</td>
+                        <td>${totalRoi}%</td>
+                    </tr>
+                </table>
+            `;
+        };
+
+        const updateTables = () => {
+            renderProductList();
+            renderBreakEvenTable();
+            renderFullSellOutTable();
+            updateDashboard();
+        };
+
+        // Initialize
+        updateTables();
+        
+        // Submenu toggle function
+        function toggleSubmenu(button) {
+            const submenu = button.parentElement.nextElementSibling;
+            const isActive = submenu.classList.contains('active');
+            
+            // Close all other submenus
+            document.querySelectorAll('.hamb-nav-submenu').forEach(menu => {
+                menu.classList.remove('active');
+            });
+            document.querySelectorAll('.hamb-nav-submenu-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+            
+            // Toggle current submenu
+            if (!isActive) {
+                submenu.classList.add('active');
+                button.classList.add('active');
+            }
+        }
+        
+        // Timezone display
+        function updateTimezoneDisplay() {
+            const tzSpan = document.getElementById('timezoneDisplay');
+            if (tzSpan) {
+                const now = new Date();
+                // Format time as HH:MM AM/PM
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                // Get timezone abbreviation (best effort)
+                let tzAbbr = '';
+                try {
+                    // This works in most modern browsers
+                    const parts = now.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+                    tzAbbr = parts[parts.length - 1];
+                    // If abbreviation is numeric (e.g. +03:00), fallback to region name
+                    if (/^[\d\+\-:]+$/.test(tzAbbr)) {
+                        tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    }
+                } catch (e) {
+                    tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                }
+                tzSpan.textContent = `${timeString} (${tzAbbr})`;
+            }
+        }
+        
+        // Initialize timezone display
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimezoneDisplay();
+            setInterval(updateTimezoneDisplay, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Pack Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* Import Inter font (macOS system font) */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    /* Define CSS Custom Properties for Theming */
+    :root {
+        --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        --background-color: transparent;
+        --gradient-1: rgba(0, 0, 0, 0.6);
+        --gradient-2: rgba(0, 0, 0, 0.4);
+        --text-color: #fff;
+        --header-bg: rgba(26, 26, 26, 0.75);
+        --header-border: rgba(255, 255, 255, 0.18);
+        --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+        --nav-drawer-border: rgba(255, 255, 255, 0.18);
+        --nav-link-hover: rgba(255, 255, 255, 0.1);
+        --overlay-bg: rgba(0, 0, 0, 0.5);
+        --form-bg: rgba(255, 255, 255, 0.15);
+        --input-bg: rgba(255, 255, 255, 0.15);
+        --input-border: rgba(255, 255, 255, 0.3);
+        --input-focus: #007AFF;
+        --input-focus-shadow: rgba(0, 122, 255, 0.3);
+        --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+        --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+        --button-shadow: rgba(0, 122, 255, 0.3);
+        --clear-btn-bg: rgba(255, 97, 87, 0.8);
+        --clear-btn-hover: rgba(255, 97, 87, 1);
+        --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+        --export-btn-bg: rgba(255, 255, 255, 0.2);
+        --export-btn-hover: rgba(255, 255, 255, 0.3);
+        --export-btn-border: rgba(255, 255, 255, 0.2);
+        --export-btn-shadow: rgba(255, 255, 255, 0.1);
+        --remove-btn-border: #ff6157;
+        --remove-btn-color: #ff6157;
+        --edit-btn-border: #007AFF;
+        --edit-btn-color: #007AFF;
+        --remove-btn-hover-bg: #ff6157;
+        --edit-btn-hover-bg: #007AFF;
+        --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+        --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+        --product-card-bg: rgba(255, 255, 255, 0.15);
+        --table-bg: rgba(255, 255, 255, 0.15);
+        --table-header-bg: rgba(255, 255, 255, 0.1);
+        --table-border: rgba(255, 255, 255, 0.2);
+        --table-cell-border: rgba(255, 255, 255, 0.1);
+        --table-hover: rgba(0, 122, 255, 0.1);
+        --table-footer-bg: rgba(0, 122, 255, 0.1);
+        --summary-table-bg: rgba(255, 255, 255, 0.15);
+        --highlight-profit: #34C759;
+        --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+        --highlight-profit-border: rgba(52, 199, 89, 0.2);
+        --storage-status-bg: rgba(255, 255, 255, 0.15);
+        --storage-status-success: #34C759;
+        --storage-status-success-border: rgba(52, 199, 89, 0.2);
+        --storage-status-error: #ff6157;
+        --storage-status-error-border: rgba(255, 97, 87, 0.2);
+        --file-upload-bg: #007AFF;
+        --file-upload-border: #0056CC;
+    }
+
+    /* General Reset and Base Styles */
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: url('https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1370927.jpg?v=1752025416&width=1920') center center/cover no-repeat fixed;
+        min-height: 100vh;
+        color: #ffffff;
+        overflow-x: hidden;
+        position: relative;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Dark overlay for better readability */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Main content wrapper */
+    main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 80px 24px 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Headings */
+    h1 {
+        font-size: 32px;
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: 40px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+        font-size: 24px;
+        color: var(--text-color);
+        padding-bottom: 12px;
+        margin-top: 56px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Glass-Themed Form */
+    form {
+        border: none;
+        padding: 24px;
+        border-radius: 18px;
+        background: var(--form-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255,255,255,0.25);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        transition: all 0.3s ease;
+    }
+
+    form:hover,
+    form:focus-within {
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+        transform: translateY(-2px);
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: var(--text-color);
+        letter-spacing: 0.2px;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 16px 20px;
+        margin-bottom: 18px;
+        font-size: 16px;
+        border: 1px solid var(--input-border);
+        border-radius: 12px;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-family: inherit;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="file"]:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--input-focus);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    }
+
+    input[type="text"]::placeholder,
+    input[type="number"]::placeholder,
+    textarea::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Glass-Themed Buttons */
+    button {
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 16px 24px;
+        background: var(--button-bg);
+        backdrop-filter: blur(10px);
+        color: var(--text-color);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 16px var(--button-shadow);
+    }
+
+    button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    button:hover::before {
+        left: 100%;
+    }
+
+    button:hover,
+    button:focus {
+        background: var(--button-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px var(--button-shadow);
+        outline: none;
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    /* Glass-Themed Tables */
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 30px;
+        font-variant-numeric: tabular-nums;
+        background: var(--table-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.25);
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        overflow: hidden;
+    }
+
+    thead th {
+        padding: 12px;
+        font-size: 13px;
+        text-align: center;
+        font-weight: 600;
+        border-bottom: 1px solid var(--table-border);
+        background: var(--table-header-bg);
+        color: var(--text-color);
+    }
+
+    tbody td {
+        padding: 12px;
+        font-size: 13px;
+        text-align: center;
+        font-weight: 400;
+        border: 1px solid var(--table-cell-border);
+        color: var(--text-color);
+        vertical-align: middle;
+    }
+
+    tbody tr:hover {
+        background: var(--table-hover);
+    }
+
+    /* Section styling */
+    .section {
+        margin-bottom: 32px;
+    }
+
+    /* Summary section styling */
+    #techpack-summary-section {
+        background: var(--form-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1.5px solid rgba(255,255,255,0.25);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+        transition: all 0.3s ease;
+    }
+
+    #techpack-summary-section:hover {
+        box-shadow: 0 8px 32px 0 rgba(31,38,135,0.2);
+        transform: translateY(-2px);
+    }
+
+    /* Card-based Checkbox Interface */
+    .checkbox-group {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 8px 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.3) transparent;
+    }
+
+    .checkbox-group::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .checkbox-group::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+    }
+
+    .checkbox-group::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255,255,255,0.2);
+      min-width: 140px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .checkbox-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0,122,255,0.1) 0%, rgba(0,122,255,0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked ~ .checkbox-item::before {
+      opacity: 1;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked {
+      background: #007AFF;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content .checkbox-image {
+      background: rgba(0,122,255,0.2);
+      border: 2px solid #007AFF;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content .checkbox-text {
+      color: #007AFF;
+      font-weight: 600;
+    }
+
+    .checkbox-item:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,122,255,0.2);
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content:hover {
+      background: rgba(0,122,255,0.4);
+      transform: scale(1.05) translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0,122,255,0.3);
+    }
+
+    .checkbox-item:active {
+      transform: translateY(0);
+      transition: transform 0.1s ease;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content:active {
+      transform: scale(1.02);
+      transition: transform 0.1s ease;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content {
+      background: rgba(0,122,255,0.3);
+      border-color: #007AFF;
+      box-shadow: 0 0 0 2px rgba(0,122,255,0.5);
+      transform: scale(1.05);
+    }
+
+    .checkbox-item input[type="checkbox"]:checked {
+      background: #007AFF;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content .checkbox-image {
+      background: rgba(0,122,255,0.2);
+      border: 2px solid #007AFF;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content .checkbox-text {
+      color: #007AFF;
+      font-weight: 600;
+    }
+
+    .checkbox-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      padding: 8px;
+      position: relative;
+    }
+
+    .checkbox-content::after {
+      content: '✓';
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 24px;
+      height: 24px;
+      background: #007AFF;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + .checkbox-content::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .checkbox-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .checkbox-text {
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .field-section {
+      margin-bottom: 32px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .field-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-color);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Card Selection Animation */
+    @keyframes cardSelect {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.08);
+      }
+      100% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 700px) {
+        main {
+            padding: 60px 16px 40px;
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        h2 {
+            font-size: 20px;
+        }
+        
+        form {
+            padding: 16px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tech Pack Generator</h1>
+    <div id="techpack-form-section" class="section">
+      <form id="techpackForm">
+        <div style="margin-bottom: 20px;">
+          <label for="presetSelect" style="font-weight:600;">Garment Type</label>
+          <select id="presetSelect" name="preset" required>
+            <option value="">-- Select Garment Type --</option>
+          </select>
+        </div>
+        
+        <!-- Image Upload Section -->
+        <div class="field-section">
+          <h3 class="field-title">Upload Images</h3>
+          <div style="margin-bottom: 16px;">
+            <label for="garmentImage">Garment Mockup Image</label>
+            <input type="file" id="garmentImage" name="garmentImage" accept="image/*" />
+            <div id="garmentImagePreview" style="margin-top: 12px; display: none;">
+              <img id="garmentPreviewImg" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);" />
+              <button type="button" id="removeGarmentImage" style="margin-left: 12px; padding: 8px 16px; background: var(--clear-btn-bg); border: none; border-radius: 8px; color: white; font-size: 12px;">Remove</button>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 16px;">
+            <label for="graphicImage">Graphic/Design Image</label>
+            <input type="file" id="graphicImage" name="graphicImage" accept="image/*" />
+            <div id="graphicImagePreview" style="margin-top: 12px; display: none;">
+              <img id="graphicPreviewImg" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);" />
+              <button type="button" id="removeGraphicImage" style="margin-left: 12px; padding: 8px 16px; background: var(--clear-btn-bg); border: none; border-radius: 8px; color: white; font-size: 12px;">Remove</button>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 16px;">
+            <label for="fabricImage">Fabric Swatch Image</label>
+            <input type="file" id="fabricImage" name="fabricImage" accept="image/*" />
+            <div id="fabricImagePreview" style="margin-top: 12px; display: none;">
+              <img id="fabricPreviewImg" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);" />
+              <button type="button" id="removeFabricImage" style="margin-left: 12px; padding: 8px 16px; background: var(--clear-btn-bg); border: none; border-radius: 8px; color: white; font-size: 12px;">Remove</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="detailsFields">
+          <!-- Dynamic details fields will be rendered here -->
+        </div>
+        <button type="submit" style="margin-top:24px;">Generate Tech Pack</button>
+      </form>
+    </div>
+    <div id="techpack-summary-section" class="section" style="display:none;">
+      <!-- Summary/spec sheet will go here -->
+    </div>
+  </main>
+  <script>
+    // Preset definitions for easy extensibility
+    const PRESETS = {
+      tshirt: {
+        label: 'T-Shirt',
+        details: {
+          fabricContent: '',
+          fabricWeight: '',
+          fabricColor: '',
+          printColors: '',
+          washType: '',
+          graphicApplication: '',
+          graphicSize: '',
+          trims: '',
+          labels: '',
+          fitAdjustments: ''
+        }
+      },
+      longsleeve: {
+        label: 'Long Sleeve',
+        details: {
+          fabricContent: '',
+          fabricWeight: '',
+          fabricColor: '',
+          printColors: '',
+          washType: '',
+          graphicApplication: '',
+          graphicSize: '',
+          trims: '',
+          labels: '',
+          fitAdjustments: ''
+        }
+      },
+      hoodie: {
+        label: 'Hoodie',
+        details: {
+          fabricContent: '',
+          fabricWeight: '',
+          fabricColor: '',
+          printColors: '',
+          washType: '',
+          graphicApplication: '',
+          graphicSize: '',
+          trims: '',
+          labels: '',
+          fitAdjustments: ''
+        }
+      },
+      pants: {
+        label: 'Pants',
+        details: {
+          fabricContent: '',
+          fabricWeight: '',
+          fabricColor: '',
+          printColors: '',
+          washType: '',
+          graphicApplication: '',
+          graphicSize: '',
+          trims: '',
+          labels: '',
+          fitAdjustments: ''
+        }
+      },
+      shorts: {
+        label: 'Shorts',
+        details: {
+          fabricContent: '',
+          fabricWeight: '',
+          fabricColor: '',
+          printColors: '',
+          washType: '',
+          graphicApplication: '',
+          graphicSize: '',
+          trims: '',
+          labels: '',
+          fitAdjustments: ''
+        }
+      },
+      jacket: {
+        label: 'Jacket',
+        details: {
+          fabricContent: '',
+          fabricWeight: '',
+          fabricColor: '',
+          printColors: '',
+          washType: '',
+          graphicApplication: '',
+          graphicSize: '',
+          trims: '',
+          labels: '',
+          fitAdjustments: ''
+        }
+      }
+    };
+
+    // Populate preset selector
+    const presetSelect = document.getElementById('presetSelect');
+    Object.entries(PRESETS).forEach(([key, preset]) => {
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = preset.label;
+      presetSelect.appendChild(option);
+    });
+
+    // Render details fields dynamically
+    presetSelect.addEventListener('change', function() {
+      renderDetailsFields(this.value);
+    });
+
+    function renderDetailsFields(presetKey) {
+      const detailsDiv = document.getElementById('detailsFields');
+      detailsDiv.innerHTML = '';
+      if (!presetKey || !PRESETS[presetKey]) return;
+      const details = PRESETS[presetKey].details;
+      
+      // Define preset options for each field type
+      const fieldOptions = {
+        fabricContent: [
+          '100% Cotton',
+          '100% Polyester',
+          'Cotton/Polyester Blend',
+          'Cotton/Spandex Blend',
+          'Polyester/Spandex Blend',
+          'Organic Cotton',
+          'Recycled Polyester',
+          'Custom'
+        ],
+        fabricWeight: [
+          '180 GSM (Lightweight)',
+          '200 GSM (Lightweight)',
+          '265 GSM (Standard)',
+          '320 GSM (Heavy)',
+          '460 GSM (Very Heavy)',
+          'Custom'
+        ],
+        fabricColor: [
+          'White',
+          'Black',
+          'Navy Blue',
+          'Gray',
+          'Red',
+          'Green',
+          'Yellow',
+          'Pink',
+          'Purple',
+          'Orange',
+          'Brown',
+          'Custom'
+        ],
+        printColors: [
+          'White',
+          'Black',
+          'Navy Blue',
+          'Red',
+          'Yellow',
+          'Green',
+          'Orange',
+          'Pink',
+          'Purple',
+          'Gold',
+          'Silver',
+          'Multi-color',
+          'Custom'
+        ],
+        washType: [
+          'No Wash',
+          'Garment Wash',
+          'Stone Wash',
+          'Acid Wash',
+          'Enzyme Wash',
+          'Bleach Wash',
+          'Softener Wash',
+          'Custom'
+        ],
+        graphicApplication: [
+          'Screen Print',
+          'Embroidery',
+          'Puff Print',
+          'DTG (Direct to Garment)',
+          'Heat Transfer',
+          'Sublimation',
+          'Foil Print',
+          'Custom'
+        ],
+        graphicSize: [
+          'Left Chest (4"x4")',
+          'Center Chest (6"x6")',
+          'Full Back (12"x16")',
+          'Small Logo (2"x2")',
+          'Large Back Print (14"x18")',
+          'Sleeve Print (3"x3")',
+          'Custom Size'
+        ],
+        trims: [
+          'Standard Buttons',
+          'Custom Buttons',
+          'Zipper',
+          'Drawstring',
+          'Elastic Waistband',
+          'Ribbed Cuffs',
+          'Ribbed Collar',
+          'No Trims',
+          'Custom'
+        ],
+        labels: [
+          'Sewn Label',
+          'Heat Transfer Label',
+          'Printed Label',
+          'No Label',
+          'Custom'
+        ],
+        fitAdjustments: [
+          'Standard Fit',
+          'Slim Fit',
+          'Relaxed Fit',
+          'Oversized Fit',
+          'Custom Measurements',
+          'No Adjustments'
+        ]
+      };
+
+      // For each detail, render a checkbox group
+      Object.entries(details).forEach(([field, value]) => {
+        let label = field
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase());
+        
+        const options = fieldOptions[field] || [];
+        
+        if (options.length > 0) {
+          detailsDiv.innerHTML += `
+            <div class="field-section">
+              <h3 class="field-title">${label}</h3>
+              <div class="checkbox-group">
+                ${options.map(option => `
+                  <label class="checkbox-item">
+                    <input type="checkbox" name="${field}" value="${option}" />
+                    <div class="checkbox-content">
+                      <div class="checkbox-image">
+                        <img src="${getImageForOption(option, field)}" alt="${option}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 24px;">
+                          ${getIconForOption(option, field)}
+                        </div>
+                      </div>
+                      <span class="checkbox-text">${option}</span>
+                    </div>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          // Fallback to text input for any fields not in the options
+          detailsDiv.innerHTML += `
+            <div style="margin-bottom:16px;">
+              <label for="${field}">${label}</label>
+              <input type="text" id="${field}" name="${field}" value="${value}" placeholder="Enter ${label.toLowerCase()}" />
+            </div>
+          `;
+        }
+      });
+
+      // Add hover effects and click feedback for checkbox items
+      const checkboxItems = detailsDiv.querySelectorAll('.checkbox-item');
+      checkboxItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const content = item.querySelector('.checkbox-content');
+        
+        item.addEventListener('mouseenter', () => {
+          if (!checkbox.checked) {
+            item.style.background = 'rgba(255,255,255,0.2)';
+            item.style.transform = 'translateY(-1px)';
+          }
+        });
+        
+        item.addEventListener('mouseleave', () => {
+          if (!checkbox.checked) {
+            item.style.background = 'rgba(255,255,255,0.1)';
+            item.style.transform = 'translateY(0)';
+          }
+        });
+        
+        // Add click feedback
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            // Add a subtle bounce effect when selected
+            content.style.animation = 'cardSelect 0.3s ease-out';
+            setTimeout(() => {
+              content.style.animation = '';
+            }, 300);
+          }
+        });
+      });
+    }
+
+    function getImageForOption(option, field) {
+      // Use placeholder images from Picsum Photos for realistic placeholders
+      const baseUrl = 'https://picsum.photos/120/120?random=';
+      
+      if (field === 'fabricColor') {
+        switch (option) {
+          case 'White': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Black': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Navy Blue': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Gray': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Red': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Green': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Yellow': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Pink': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Purple': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Orange': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Brown': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Custom': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'fabricWeight') {
+        switch (option) {
+          case '180 GSM (Lightweight)': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case '200 GSM (Lightweight)': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case '265 GSM (Standard)': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case '320 GSM (Heavy)': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case '460 GSM (Very Heavy)': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Custom': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'washType') {
+        switch (option) {
+          case 'No Wash': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Garment Wash': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Stone Wash': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Acid Wash': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Enzyme Wash': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Bleach Wash': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Softener Wash': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Custom': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'graphicApplication') {
+        switch (option) {
+          case 'Screen Print': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Embroidery': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Puff Print': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'DTG (Direct to Garment)': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Heat Transfer': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Sublimation': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Foil Print': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Custom': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'graphicSize') {
+        switch (option) {
+          case 'Left Chest (4"x4")': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Center Chest (6"x6")': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Full Back (12"x16")': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Small Logo (2"x2")': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Large Back Print (14"x18")': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Sleeve Print (3"x3")': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Custom Size': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'trims') {
+        switch (option) {
+          case 'Standard Buttons': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Custom Buttons': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Zipper': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Drawstring': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Elastic Waistband': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Ribbed Cuffs': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Ribbed Collar': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'No Trims': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Custom': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'labels') {
+        switch (option) {
+          case 'Sewn Label': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Heat Transfer Label': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Printed Label': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'No Label': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'Custom': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      } else if (field === 'fitAdjustments') {
+        switch (option) {
+          case 'Standard Fit': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Slim Fit': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          case 'Relaxed Fit': return 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=120&h=120&fit=crop&crop=center';
+          case 'Oversized Fit': return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=120&h=120&fit=crop&crop=center';
+          case 'Custom Measurements': return 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=120&h=120&fit=crop&crop=center';
+          case 'No Adjustments': return 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=120&h=120&fit=crop&crop=center';
+          default: return baseUrl + Math.floor(Math.random() * 1000);
+        }
+      }
+      return baseUrl + Math.floor(Math.random() * 1000); // Default random image
+    }
+
+        function getIconForOption(option, field) {
+      if (field === 'fabricColor') {
+        switch (option) {
+          case 'White': return '⚪️';
+          case 'Black': return '⚫️';
+          case 'Navy Blue': return '💙';
+          case 'Gray': return '🖤';
+          case 'Red': return '❤️';
+          case 'Green': return '💚';
+          case 'Yellow': return '💛';
+          case 'Pink': return '💖';
+          case 'Purple': return '💜';
+          case 'Orange': return '🧡';
+          case 'Brown': return '🏾';
+          case 'Custom': return '🛠️';
+          default: return '';
+        }
+      } else if (field === 'fabricWeight') {
+        switch (option) {
+          case '180 GSM (Lightweight)': return '🏃‍♂️';
+          case '200 GSM (Lightweight)': return '🏃‍♂️';
+          case '265 GSM (Standard)': return '👕';
+          case '320 GSM (Heavy)': return '💪';
+          case '460 GSM (Very Heavy)': return '💪';
+          case 'Custom': return '⚙️';
+          default: return '';
+        }
+      } else if (field === 'washType') {
+        switch (option) {
+          case 'No Wash': return '🧼';
+          case 'Garment Wash': return '🧼';
+          case 'Stone Wash': return '🧼';
+          case 'Acid Wash': return '🧼';
+          case 'Enzyme Wash': return '🧼';
+          case 'Bleach Wash': return '🧼';
+          case 'Softener Wash': return '🧼';
+          case 'Custom': return '⚙️';
+          default: return '';
+        }
+      } else if (field === 'graphicApplication') {
+        switch (option) {
+          case 'Screen Print': return '🖼️';
+          case 'Embroidery': return '✂️';
+          case 'Puff Print': return '💨';
+          case 'DTG (Direct to Garment)': return '🖥️';
+          case 'Heat Transfer': return '🔥';
+          case 'Sublimation': return '🎨';
+          case 'Foil Print': return '💎';
+          case 'Custom': return '⚙️';
+          default: return '';
+        }
+      } else if (field === 'graphicSize') {
+        switch (option) {
+          case 'Left Chest (4"x4")': return '👕';
+          case 'Center Chest (6"x6")': return '👕';
+          case 'Full Back (12"x16")': return '👕';
+          case 'Small Logo (2"x2")': return '👕';
+          case 'Large Back Print (14"x18")': return '👕';
+          case 'Sleeve Print (3"x3")': return '👕';
+          case 'Custom Size': return '⚙️';
+          default: return '';
+        }
+      } else if (field === 'trims') {
+        switch (option) {
+          case 'Standard Buttons': return '🔗';
+          case 'Custom Buttons': return '🔗';
+          case 'Zipper': return '🔗';
+          case 'Drawstring': return '🔗';
+          case 'Elastic Waistband': return '🔗';
+          case 'Ribbed Cuffs': return '🔗';
+          case 'Ribbed Collar': return '🔗';
+          case 'No Trims': return '🔗';
+          case 'Custom': return '⚙️';
+          default: return '';
+        }
+      } else if (field === 'labels') {
+        switch (option) {
+          case 'Sewn Label': return '🏷️';
+          case 'Heat Transfer Label': return '🏷️';
+          case 'Printed Label': return '🏷️';
+          case 'No Label': return '🏷️';
+          case 'Custom': return '⚙️';
+          default: return '';
+        }
+      } else if (field === 'fitAdjustments') {
+        switch (option) {
+          case 'Standard Fit': return '👕';
+          case 'Slim Fit': return '👕';
+          case 'Relaxed Fit': return '👕';
+          case 'Oversized Fit': return '👕';
+          case 'Custom Measurements': return '⚙️';
+          case 'No Adjustments': return '👕';
+          default: return '';
+        }
+      }
+      return ''; // Default icon if no specific icon found
+    }
+
+    // Handle form submission
+    document.getElementById('techpackForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const presetKey = document.getElementById('presetSelect').value;
+      if (!presetKey || !PRESETS[presetKey]) return;
+      const details = {};
+      Object.keys(PRESETS[presetKey].details).forEach(field => {
+        const checkboxes = document.querySelectorAll(`input[name="${field}"]:checked`);
+        if (checkboxes.length > 0) {
+          details[field] = Array.from(checkboxes).map(cb => cb.value).join(', ');
+        } else {
+          details[field] = '';
+        }
+      });
+      showSummary(presetKey, details);
+    });
+
+    function showSummary(presetKey, details) {
+      const summarySection = document.getElementById('techpack-summary-section');
+      let html = `<h2>Tech Pack Summary</h2>`;
+      html += `<div style="margin-bottom: 20px;"><strong>Garment Type:</strong> ${PRESETS[presetKey].label}</div>`;
+      html += '<table>';
+      html += '<thead><tr><th>Specification</th><th>Details</th></tr></thead><tbody>';
+      Object.entries(details).forEach(([field, value]) => {
+        let label = field
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase());
+        html += `<tr><td><strong>${label}</strong></td><td>${value || 'Not specified'}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      html += `<button id="downloadPdfBtn" style="margin-top:24px;">Download as PDF</button>`;
+      summarySection.innerHTML = html;
+      summarySection.style.display = 'block';
+      document.getElementById('downloadPdfBtn').onclick = function() {
+        generatePDF(PRESETS[presetKey].label, details);
+      };
+      window.scrollTo({top: summarySection.offsetTop, behavior: 'smooth'});
+    }
+
+    function generatePDF(garmentType, details) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      let y = 40;
+
+      // --- Header with logo and brand name ---
+      const logoUrl = 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/brandtools-logo.png?v=1752025416'; // Replace with your logo
+      const brandName = 'Brand Tools';
+      // Draw logo (if available)
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.text(brandName, 120, y + 30);
+      doc.setFontSize(12);
+      doc.text(`Generated: ${new Date().toLocaleDateString()}`, 120, y + 50);
+      // Try to load logo image
+      doc.addImage(logoUrl, 'PNG', 30, y, 70, 70, undefined, 'FAST');
+      y += 80;
+      doc.setLineWidth(1);
+      doc.setDrawColor(200,200,200);
+      doc.line(30, y, pageWidth - 30, y);
+      y += 30;
+
+      // --- Garment Type ---
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text(`Garment Type: ${garmentType}`, 30, y);
+      y += 24;
+
+      // --- Details Table ---
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      const tableStartY = y + 10;
+      let rowY = tableStartY;
+      const rowHeight = 24;
+      const col1X = 30, col2X = 200;
+      Object.entries(details).forEach(([field, value]) => {
+        let label = field
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase());
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, col1X, rowY);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${value}`, col2X, rowY);
+        rowY += rowHeight;
+        if (rowY > 780) { // New page if needed
+          doc.addPage();
+          rowY = 40;
+        }
+      });
+      y = rowY + 20;
+
+      // --- Footer ---
+      doc.setFontSize(10);
+      doc.setTextColor(150);
+      doc.text('Generated with Brand Tools Tech Pack Generator', 30, 820);
+
+      doc.save(`TechPack-${garmentType.replace(/\s+/g, '')}.pdf`);
+    }
+
+    // Image upload functionality
+    function setupImageUpload(inputId, previewId, previewImgId, removeBtnId) {
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      const previewImg = document.getElementById(previewImgId);
+      const removeBtn = document.getElementById(removeBtnId);
+      
+      input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      
+      removeBtn.addEventListener('click', function() {
+        input.value = '';
+        preview.style.display = 'none';
+        previewImg.src = '';
+      });
+    }
+
+    // Setup image upload handlers
+    document.addEventListener('DOMContentLoaded', function() {
+      setupImageUpload('garmentImage', 'garmentImagePreview', 'garmentPreviewImg', 'removeGarmentImage');
+      setupImageUpload('graphicImage', 'graphicImagePreview', 'graphicPreviewImg', 'removeGraphicImage');
+      setupImageUpload('fabricImage', 'fabricImagePreview', 'fabricPreviewImg', 'removeFabricImage');
+    });
+
+    // Handle form submission
+    document.getElementById('techpackForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const presetKey = document.getElementById('presetSelect').value;
+      if (!presetKey || !PRESETS[presetKey]) return;
+      
+      const details = {};
+      Object.keys(PRESETS[presetKey].details).forEach(field => {
+        const checkboxes = document.querySelectorAll(`input[name="${field}"]:checked`);
+        if (checkboxes.length > 0) {
+          details[field] = Array.from(checkboxes).map(cb => cb.value).join(', ');
+        } else {
+          details[field] = '';
+        }
+      });
+      
+      // Get uploaded images
+      const images = {
+        garment: document.getElementById('garmentImage').files[0],
+        graphic: document.getElementById('graphicImage').files[0],
+        fabric: document.getElementById('fabricImage').files[0]
+      };
+      
+      showSummary(presetKey, details, images);
+    });
+
+    function showSummary(presetKey, details, images) {
+      const summarySection = document.getElementById('techpack-summary-section');
+      let html = `<h2>Tech Pack Summary</h2>`;
+      html += `<div style="margin-bottom: 20px;"><strong>Garment Type:</strong> ${PRESETS[presetKey].label}</div>`;
+      
+      // Add image previews if uploaded
+      if (images.garment || images.graphic || images.fabric) {
+        html += `<div style="margin-bottom: 20px;">
+          <h3 style="margin-bottom: 12px; font-size: 16px;">Uploaded Images</h3>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">`;
+        
+        if (images.garment) {
+          html += `<div style="text-align: center;">
+            <img src="${URL.createObjectURL(images.garment)}" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);" />
+            <div style="font-size: 12px; margin-top: 4px;">Garment Mockup</div>
+          </div>`;
+        }
+        
+        if (images.graphic) {
+          html += `<div style="text-align: center;">
+            <img src="${URL.createObjectURL(images.graphic)}" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);" />
+            <div style="font-size: 12px; margin-top: 4px;">Graphic Design</div>
+          </div>`;
+        }
+        
+        if (images.fabric) {
+          html += `<div style="text-align: center;">
+            <img src="${URL.createObjectURL(images.fabric)}" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);" />
+            <div style="font-size: 12px; margin-top: 4px;">Fabric Swatch</div>
+          </div>`;
+        }
+        
+        html += `</div></div>`;
+      }
+      
+      html += '<table>';
+      html += '<thead><tr><th>Specification</th><th>Details</th></tr></thead><tbody>';
+      Object.entries(details).forEach(([field, value]) => {
+        let label = field
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase());
+        html += `<tr><td><strong>${label}</strong></td><td>${value || 'Not specified'}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      html += `<button id="downloadPdfBtn" style="margin-top:24px;">Download as PDF</button>`;
+      summarySection.innerHTML = html;
+      summarySection.style.display = 'block';
+      document.getElementById('downloadPdfBtn').onclick = async function() {
+        await generatePDF(PRESETS[presetKey].label, details, images);
+      };
+      window.scrollTo({top: summarySection.offsetTop, behavior: 'smooth'});
+    }
+
+    async function generatePDF(garmentType, details, images) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      let y = 40;
+
+      // --- Header with logo and brand name ---
+      const logoUrl = 'https://cdn.shopify.com/s/files/1/0633/1095/4722/files/brandtools-logo.png?v=1752025416';
+      const brandName = 'Brand Tools';
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.text(brandName, 120, y + 30);
+      doc.setFontSize(12);
+      doc.text(`Generated: ${new Date().toLocaleDateString()}`, 120, y + 50);
+      doc.addImage(logoUrl, 'PNG', 30, y, 70, 70, undefined, 'FAST');
+      y += 80;
+      doc.setLineWidth(1);
+      doc.setDrawColor(200,200,200);
+      doc.line(30, y, pageWidth - 30, y);
+      y += 30;
+
+      // --- Garment Type ---
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text(`Garment Type: ${garmentType}`, 30, y);
+      y += 24;
+
+      // --- Images Section ---
+      if (images.garment || images.graphic || images.fabric) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.text('Uploaded Images:', 30, y);
+        y += 20;
+        
+        let imageX = 30;
+        const imageWidth = 120;
+        const imageHeight = 120;
+        
+        // Process images asynchronously
+        const imagePromises = [];
+        
+        if (images.garment) {
+          imagePromises.push(
+            new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                try {
+                  doc.addImage(e.target.result, 'JPEG', imageX, y, imageWidth, imageHeight);
+                  doc.setFontSize(10);
+                  doc.text('Garment Mockup', imageX, y + imageHeight + 15);
+                } catch (error) {
+                  console.log('Could not add garment image to PDF');
+                }
+                resolve();
+              };
+              reader.readAsDataURL(images.garment);
+            })
+          );
+          imageX += 140;
+        }
+        
+        if (images.graphic) {
+          imagePromises.push(
+            new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                try {
+                  doc.addImage(e.target.result, 'JPEG', imageX, y, imageWidth, imageHeight);
+                  doc.setFontSize(10);
+                  doc.text('Graphic Design', imageX, y + imageHeight + 15);
+                } catch (error) {
+                  console.log('Could not add graphic image to PDF');
+                }
+                resolve();
+              };
+              reader.readAsDataURL(images.graphic);
+            })
+          );
+          imageX += 140;
+        }
+        
+        if (images.fabric) {
+          imagePromises.push(
+            new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                try {
+                  doc.addImage(e.target.result, 'JPEG', imageX, y, imageWidth, imageHeight);
+                  doc.setFontSize(10);
+                  doc.text('Fabric Swatch', imageX, y + imageHeight + 15);
+                } catch (error) {
+                  console.log('Could not add fabric image to PDF');
+                }
+                resolve();
+              };
+              reader.readAsDataURL(images.fabric);
+            })
+          );
+        }
+        
+        // Wait for all images to be processed
+        await Promise.all(imagePromises);
+        y += imageHeight + 40;
+      }
+
+      // --- Details Table ---
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      const tableStartY = y + 10;
+      let rowY = tableStartY;
+      const rowHeight = 24;
+      const col1X = 30, col2X = 200;
+      Object.entries(details).forEach(([field, value]) => {
+        let label = field
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase());
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, col1X, rowY);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${value}`, col2X, rowY);
+        rowY += rowHeight;
+        if (rowY > 780) {
+          doc.addPage();
+          rowY = 40;
+        }
+      });
+      y = rowY + 20;
+
+      // --- Footer ---
+      doc.setFontSize(10);
+      doc.setTextColor(150);
+      doc.text('Generated with Brand Tools Tech Pack Generator', 30, 820);
+
+      doc.save(`TechPack-${garmentType.replace(/\s+/g, '')}.pdf`);
+    }
+
+    // Initial render (empty)
+    renderDetailsFields('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,2595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing Mockup Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Import Inter font (macOS system font) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        /* Define CSS Custom Properties for Theming */
+        :root {
+            --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+            --background-color: transparent;
+            --gradient-1: rgba(0, 0, 0, 0.6);
+            --gradient-2: rgba(0, 0, 0, 0.4);
+            --text-color: #fff;
+            --header-bg: rgba(26, 26, 26, 0.75);
+            --header-border: rgba(255, 255, 255, 0.18);
+            --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+            --nav-drawer-border: rgba(255, 255, 255, 0.18);
+            --nav-link-hover: rgba(255, 255, 255, 0.1);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+            --form-bg: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(255, 255, 255, 0.15);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --input-focus: #007AFF;
+            --input-focus-shadow: rgba(0, 122, 255, 0.3);
+            --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+            --button-shadow: rgba(0, 122, 255, 0.3);
+            --clear-btn-bg: rgba(255, 97, 87, 0.8);
+            --clear-btn-hover: rgba(255, 97, 87, 1);
+            --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+            --export-btn-bg: rgba(255, 255, 255, 0.2);
+            --export-btn-hover: rgba(255, 255, 255, 0.3);
+            --export-btn-border: rgba(255, 255, 255, 0.2);
+            --export-btn-shadow: rgba(255, 255, 255, 0.1);
+            --remove-btn-border: #ff6157;
+            --remove-btn-color: #ff6157;
+            --edit-btn-border: #007AFF;
+            --edit-btn-color: #007AFF;
+            --remove-btn-hover-bg: #ff6157;
+            --edit-btn-hover-bg: #007AFF;
+            --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+            --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+            --product-card-bg: rgba(255, 255, 255, 0.15);
+            --table-bg: rgba(255, 255, 255, 0.15);
+            --table-header-bg: rgba(255, 255, 255, 0.1);
+            --table-border: rgba(255, 255, 255, 0.2);
+            --table-cell-border: rgba(255, 255, 255, 0.1);
+            --table-hover: rgba(0, 122, 255, 0.1);
+            --table-footer-bg: rgba(0, 122, 255, 0.1);
+            --summary-table-bg: rgba(255, 255, 255, 0.15);
+            --highlight-profit: #34C759;
+            --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+            --highlight-profit-border: rgba(52, 199, 89, 0.2);
+            --storage-status-bg: rgba(255, 255, 255, 0.15);
+            --storage-status-success: #34C759;
+            --storage-status-success-border: rgba(52, 199, 89, 0.2);
+            --storage-status-error: #ff6157;
+            --storage-status-error-border: rgba(255, 97, 87, 0.2);
+            --file-upload-bg: #007AFF;
+            --file-upload-border: #0056CC;
+        }
+
+        /* General Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: url('https://images3.alphacoders.com/137/1370927.jpeg') center center/cover no-repeat fixed;
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+           
+        }
+
+        /* Dark overlay for better readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* Glass-Themed Header */
+        .hamb-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 44px;
+            background: var(--header-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1.5px solid var(--header-border);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+        .hamb-header-container {
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .hamb-logo {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .hamb-hamburger {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            transition: opacity 0.3s ease;
+        }
+        .hamb-hamburger:hover,
+        .hamb-hamburger:focus {
+            opacity: 0.7;
+            outline: none;
+        }
+        /* Glass-Themed Navigation Drawer */
+        .hamb-nav-drawer {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: var(--nav-drawer-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1.5px solid var(--nav-drawer-border);
+            box-shadow: 2px 0 24px rgba(31,38,135,0.12);
+            padding: 16px;
+            transition: left 0.3s ease;
+            z-index: 10019;
+        }
+        .hamb-nav-drawer.active {
+            left: 0;
+        }
+        .hamb-nav-list {
+            list-style: none;
+            padding: 60px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .hamb-nav-list li {
+            border-bottom: 1px solid var(--nav-drawer-border);
+            padding-bottom: 12px;
+        }
+        .hamb-nav-list li a {
+            display: block;
+            padding: 8px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+            .hamb-nav-list li a:hover {
+        background: var(--nav-link-hover);
+    }
+    
+    /* Submenu styles */
+    .hamb-nav-submenu {
+        list-style: none;
+        padding-left: 20px;
+        margin-top: 8px;
+        display: none;
+        border-left: 1px solid var(--nav-drawer-border);
+        margin-left: 8px;
+    }
+    
+    .hamb-nav-submenu.active {
+        display: block;
+    }
+    
+    .hamb-nav-submenu li {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 8px;
+    }
+    
+    .hamb-nav-submenu li a {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+    
+    .hamb-nav-item-with-submenu > a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .hamb-nav-submenu-toggle {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 4px;
+        font-size: 12px;
+        transition: transform 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .hamb-nav-submenu-toggle.active {
+        transform: rotate(90deg);
+    }
+    
+    .hamb-nav-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px;
+      border-top: 1.5px solid var(--nav-drawer-border);
+      background: var(--nav-drawer-bg);
+      text-align: right;
+    }
+    
+    .hamb-nav-account-link {
+      display: inline-block;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      text-align: right;
+      padding: 8px;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+    
+    .hamb-nav-account-link:hover {
+      background: var(--nav-link-hover);
+    }
+    
+    .timezone-display {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 400;
+      border-radius: 8px;
+      padding: 4px 12px;
+      margin-left: 12px;
+      letter-spacing: 0.5px;
+      user-select: text;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    
+    .hamb-header-left {
+      flex: 1 1 0;
+      display: flex;
+      align-items: center;
+      min-width: 44px;
+    }
+    
+    .hamb-header-center {
+      flex: 2 1 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .hamb-header-right {
+      flex: 1 1 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      min-width: 120px;
+    }
+        .hamb-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-bg);
+            z-index: 9999;
+        }
+        .hamb-overlay.active {
+            display: block;
+        }
+        .hamb-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--remove-btn-border);
+            border: none;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .hamb-close-btn:hover {
+            opacity: 0.7;
+        }
+        .hamb-button {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 10px 20px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .hamb-button:hover,
+        .hamb-button:focus {
+            background: #005bb5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 95, 163, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Main content wrapper */
+        main {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 80px 24px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            margin-top: 0;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: var(--text-color);
+            padding-bottom: 12px;
+            margin-top: 56px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .align-panel {
+            width: 300px;
+            margin-left: 20px;
+            color: var(--text-color);
+            border-radius: 18px;
+            padding: 20px;
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .panelscolumn {
+            flex-direction: column;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            margin: auto;
+            padding: 20px;
+            overflow-x: hidden;
+            color: var(--text-color);
+            max-width: 1300px;
+            position: relative;
+            z-index: 1;
+            padding-top: 100px;
+        }
+
+        h1, h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 14px;
+            color: var(--text-color);
+            margin: 0 0 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--table-border);
+        }
+
+        #canvas {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background-color: transparent;
+            border: 1px solid var(--input-border);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #shirt-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-container {
+            position: absolute;
+            cursor: move;
+            border: 1px dashed rgba(0, 122, 255, 0.5);
+            user-select: none;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            background: transparent; /* Changed to transparent to preserve PNG transparency */
+            border-radius: 8px;
+        }
+
+        .image-container.dragging {
+            box-shadow: 0 0 12px rgba(0, 122, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 6px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #007aff;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .resize-handle:hover, .resize-handle[aria-label]:focus {
+            background: #0051cc;
+            transform: scale(1.2);
+        }
+
+        #top-left { top: -5px; left: -5px; }
+        #top-right { top: -5px; right: -5px; }
+        #bottom-left { bottom: -5px; left: -5px; }
+        #bottom-right { bottom: -5px; right: -5px; }
+
+        .width-measurement, .height-measurement {
+            background: var(--product-card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-color);
+            user-select: none;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .width-measurement {
+            white-space: nowrap;
+        }
+
+        .height-measurement {
+            transform-origin: center;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 70%;
+            margin-right: 20px;
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 24px;
+            border-radius: 18px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            transition: all 0.3s ease;
+        }
+
+        #toolbar {
+            display: grid;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            grid-template-columns: 1fr 1fr 0px;
+            max-width: 10px;
+        }
+
+        #toolbar button {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+            color: var(--text-color);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        #toolbar button:hover {
+            background: var(--input-focus);
+        }
+
+        #toolbar button.active {
+            background: var(--button-bg);
+        }
+
+        #preset-selector, #image-input, #bg-color, #unit-selector, #rotation, #text-input, #font-selector, #text-size, #text-color {
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #preset-selector:focus, #image-input:focus, #bg-color:focus, #unit-selector:focus, #rotation:focus, #text-input:focus, #font-selector:focus, #text-size:focus, #text-color:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px var(--input-focus-shadow);
+        }
+
+        #controls label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            letter-spacing: 0.2px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        #controls button {
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            background: var(--button-bg);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--button-shadow);
+        }
+
+        #controls button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        #controls button:hover::before {
+            left: 100%;
+        }
+
+        #controls button:hover {
+            background: var(--button-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px var(--button-shadow);
+        }
+
+        #controls button:active {
+            transform: translateY(0);
+        }
+
+        #controls button:disabled {
+            background: var(--clear-btn-bg);
+            cursor: not-allowed;
+        }
+
+        #undo-redo-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        #text-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        #text-input-container input[type="text"] {
+            flex: 1;
+        }
+
+        #text-add {
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+            background: #007aff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        #text-add:hover {
+            background: #0051cc;
+            transform: translateY(-1px);
+        }
+
+        #layer-panel, #history-panel {
+            width: 300px;
+            margin-left: 20px;
+            color: var(--text-color);
+            border-radius: 18px;
+            padding: 20px;
+            background: var(--product-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 4px 24px 0 rgba(31,38,135,0.12);
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Replace the existing @media (max-width: 1080px) rule for panels */
+        @media (max-width: 1080px) {
+            #layer-panel, #history-panel {
+                width: 100%;
+                max-width: 600px;
+                margin: 20px 0 0; /* Stack below canvas, with history below layer */
+            }
+            #history-panel {
+                margin-top: 0; /* Ensure history panel is directly below layer panel */
+            }
+        }
+
+        .layer-item, .history-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: transparent;
+            transition: background 0.2s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .layer-item:hover, .history-item:hover {
+            background: var(--table-hover);
+        }
+
+        .layer-item.selected, .history-item.selected {
+            background: var(--table-footer-bg);
+            font-weight: 600;
+        }
+
+        .layer-controls {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .layer-item button, .history-item button {
+            width: 24px;
+            height: 24px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-color);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .layer-item button:hover, .history-item button:hover {
+            background: var(--input-focus);
+        }
+
+        .layer-item button.visibility {
+            font-size: 14px;
+        }
+
+        .layer-name {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-size: 12px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: background 0.2s ease;
+            min-width: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .layer-name:focus {
+            background: var(--input-bg);
+            outline: none;
+            border: 1px solid var(--input-border);
+        }
+
+        .layer-name:disabled {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+        }
+
+        .layer-icon {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .layer-icon.locked {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        #alignment-guides {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .guide-line {
+            position: absolute;
+            background: #ff2d55;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .guide-line.horizontal {
+            height: 2px;
+            width: 100%;
+        }
+
+        .guide-line.vertical {
+            width: 2px;
+            height: 100%;
+        }
+
+        .text-overlay {
+            position: absolute;
+            user-select: none;
+            cursor: move;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        @media (max-width: 1080px) {
+            body {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #canvas {
+                width: 100%;
+                max-width: 600px;
+                height: auto;
+                aspect-ratio: 1/1;
+                border-radius: 10px;
+            }
+
+            #controls, #layer-panel, #history-panel {
+                width: 300px;
+                max-width: 600px;
+                margin: 0 0 20px;
+            }
+
+            #preset-selector, #image-input, #bg-color, #unit-selector, #rotation, #text-input, #font-selector, #text-size, #text-color {
+                width: 100%;
+            }
+
+            #undo-redo-container {
+                justify-content: space-between;
+            }
+
+            #text-input-container {
+                flex-direction: column;
+            }
+
+            #text-input-container input[type="text"], #text-add {
+                width: 100%;
+            }
+
+            .layer-item, .history-item {
+                gap: 2px;
+                padding: 4px;
+            }
+
+            .layer-name {
+                font-size: 11px;
+                padding: 2px;
+            }
+
+            .layer-item button, .history-item button {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+
+            .layer-icon {
+                font-size: 12px;
+                width: 16px;
+            }
+        }
+
+        /* Control Sections */
+        .control-section {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .tool-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .tool-row label {
+            min-width: 80px;
+            font-size: 13px;
+        }
+
+        .tool-row select,
+        .tool-row input[type="range"] {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .text-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .text-controls select,
+        .text-controls input {
+            font-size: 13px;
+            padding: 8px 12px;
+        }
+
+        #text-input-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        #text-input-container input[type="text"] {
+            flex: 1;
+        }
+
+        #undo-redo-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        #undo-redo-container button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .rotation-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .rotation-control input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--input-bg);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .rotation-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--button-bg);
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .rotation-control input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--button-bg);
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .rotation-control input[type="number"] {
+            width: 60px;
+            padding: 4px 8px;
+            font-size: 12px;
+            text-align: center;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            color: var(--text-color);
+        }
+
+        .rotation-degrees {
+            font-size: 12px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .effect-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .secondary-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-color);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover {
+            background: var(--input-focus);
+            border-color: var(--input-focus);
+        }
+
+        .effects-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .effect-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .effect-control label {
+            min-width: 80px;
+            font-size: 13px;
+        }
+
+        .effect-control input[type="range"] {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--input-bg);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .effect-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--button-bg);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .effect-control input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--button-bg);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .effect-value {
+            min-width: 40px;
+            font-size: 11px;
+            color: var(--text-color);
+            text-align: right;
+        }
+    </style>
+</head>
+
+<!-- Header and Navigation -->
+<body>
+      <header class="hamb-header">
+    <div class="hamb-header-container">
+      <div class="hamb-header-left">
+        <button class="hamb-hamburger" id="hamburger">☰</button>
+      </div>
+      <div class="hamb-header-center">
+        <a href="#" class="hamb-logo">Brand Tools</a>
+      </div>
+      <div class="hamb-header-right">
+        <span id="timezoneDisplay" class="timezone-display">08:08 PM (MDT)</span>
+      </div>
+    </div>
+  </header>
+  <nav class="hamb-nav-drawer" id="navDrawer">
+    <button class="hamb-close-btn" id="closeBtn"></button>
+    <ul class="hamb-nav-list" id="navList">
+      <li><a href="homepage.html">Home</a></li>
+      <li class="hamb-nav-item-with-submenu">
+        <a href="#" onclick="toggleSubmenu(this.querySelector('.hamb-nav-submenu-toggle'))">
+          Apps
+          <button class="hamb-nav-submenu-toggle">▶</button>
+        </a>
+        <ul class="hamb-nav-submenu">
+          <li><a href="drop-projection-generator.html">Drop Projection Calculator</a></li>
+          <li><a href="size-chart-generator.html">Size Chart Generator</a></li>
+          <li><a href="clothing-mockup-generator.html">Clothing Mockup Generator</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Help</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="hamb-nav-footer">
+      <a href="/account" class="hamb-nav-account-link">My Account</a>
+    </div>
+  </nav>
+    <div class="hamb-overlay" id="overlay"></div>
+
+    <div id="controls">
+        <h1>Clothing Mockup Generator</h1>
+        
+        <!-- Template Section -->
+        <div class="control-section">
+            <h3 class="section-header">Template</h3>
+            <label for="template-category">Mockup Category</label>
+            <select id="template-category" aria-label="Select mockup category">
+                <option value="tshirt">T-Shirt</option>
+                <option value="longsleeve">Long-Sleeve Tee</option>
+                <option value="doublelongsleeve">Double-Layered Long-Sleeve Tee</option>
+                <option value="hoodie-washed">Washed Black Hoodie</option>
+                <option value="hoodie-grey">Grey Fleece Hoodie</option>
+                <option value="sweatpants-washed">Washed Black Sweatpants</option>
+                <option value="sweatpants-grey">Grey Fleece Sweatpants</option>
+            </select>
+            <label for="template-side">Side</label>
+            <select id="template-side" aria-label="Select mockup side">
+                <option value="front">Front</option>
+                <option value="back">Back</option>
+            </select>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="control-section">
+            <h3 class="section-header">Upload Design</h3>
+            <input type="file" id="image-input" accept="image/*" multiple aria-label="Upload design image" title="Upload one or more images to add to the canvas">
+        </div>
+
+        <!-- Tools Section -->
+        <div class="control-section">
+            <h3 class="section-header">Tools</h3>
+            <div class="tool-row">
+                <label for="unit-selector">Units</label>
+                <select id="unit-selector" aria-label="Select measurement unit" title="Choose units for size measurements">
+                    <option value="in">Inches</option>
+                    <option value="cm">Centimeters</option>
+                    <option value="px">Pixels</option>
+                </select>
+            </div>
+            <div class="tool-row">
+                <label for="rotation">Rotation</label>
+                <div class="rotation-control">
+                    <input type="range" id="rotation" min="0" max="360" value="0" aria-label="Rotate image" title="Rotate the selected image layer (degrees)">
+                    <input type="number" id="rotation-number" min="0" max="360" value="0" aria-label="Rotation degrees" title="Enter rotation in degrees">
+                    <span class="rotation-degrees">°</span>
+                </div>
+            </div>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="lock-aspect" checked aria-label="Lock aspect ratio" title="Maintain image proportions when resizing"> Lock Aspect Ratio</label>
+                <label><input type="checkbox" id="snap-grid" aria-label="Enable snap to grid" title="Snap layers to a 20px grid for precise alignment"> Snap to Grid</label>
+                <label><input type="checkbox" id="preview-toggle" aria-label="Toggle preview mode" title="Hide controls and measurements for a clean preview"> Preview Mode</label>
+            </div>
+            <div id="undo-redo-container">
+                <button id="undo-btn" aria-label="Undo last action" title="Undo the last action">Undo</button>
+                <button id="redo-btn" aria-label="Redo last action" title="Redo the last undone action">Redo</button>
+            </div>
+        </div>
+
+        <!-- Image Effects Section -->
+        <div class="control-section">
+            <h3 class="section-header">Image Effects</h3>
+            <div class="effects-grid">
+                <div class="effect-control">
+                    <label for="brightness">Brightness</label>
+                    <input type="range" id="brightness" min="0" max="200" value="100" title="Adjust brightness">
+                    <span class="effect-value">100%</span>
+                </div>
+                <div class="effect-control">
+                    <label for="contrast">Contrast</label>
+                    <input type="range" id="contrast" min="0" max="200" value="100" title="Adjust contrast">
+                    <span class="effect-value">100%</span>
+                </div>
+                <div class="effect-control">
+                    <label for="saturation">Saturation</label>
+                    <input type="range" id="saturation" min="0" max="200" value="100" title="Adjust saturation">
+                    <span class="effect-value">100%</span>
+                </div>
+                <div class="effect-control">
+                    <label for="blur">Blur</label>
+                    <input type="range" id="blur" min="0" max="10" value="0" step="0.1" title="Apply blur effect">
+                    <span class="effect-value">0px</span>
+                </div>
+                <div class="effect-control">
+                    <label for="opacity">Opacity</label>
+                    <input type="range" id="opacity" min="0" max="100" value="100" title="Adjust layer opacity">
+                    <span class="effect-value">100%</span>
+                </div>
+            </div>
+            <div class="effect-buttons">
+                <button id="reset-effects" class="secondary-btn">Reset Effects</button>
+                <button id="auto-adjust" class="secondary-btn">Auto Adjust</button>
+            </div>
+        </div>
+
+        <!-- Text Section -->
+        <div class="control-section">
+            <h3 class="section-header">Text</h3>
+            <div id="text-input-container">
+                <input type="text" id="text-input" placeholder="Add text" aria-label="Enter text for overlay" title="Enter text to add to the canvas">
+                <button id="text-add" aria-label="Add text to canvas" title="Add the entered text as a new layer">Add</button>
+            </div>
+            <div class="text-controls">
+                <select id="font-selector" aria-label="Select font" title="Choose the font for text layers">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Helvetica">Helvetica</option>
+                </select>
+                <input type="number" id="text-size" value="20" min="10" max="100" aria-label="Text size" title="Set the font size for text layers (10-100px)">
+                <input type="color" id="text-color" value="#000000" aria-label="Text color" title="Choose the color for text layers">
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="control-section">
+            <h3 class="section-header">Export</h3>
+            <button id="download-btn" aria-label="Download mockup" title="Download the canvas as a PNG image">Download Mockup</button>
+            <div style="margin-top: 8px; font-size: 12px; color: var(--text-color); opacity: 0.7;">
+                <p>Tip: If export fails when running locally, try:</p>
+                <ul style="margin-left: 20px; margin-top: 4px;">
+                    <li>Using Chrome or Firefox browser</li>
+                    <li>Running from a web server</li>
+                    <li>Refreshing the page</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="canvas">
+        <img id="shirt-image" src="mockup pictures/t-shirt/T-Shirt Back.png" alt="Clothing Placeholder">
+        <div id="alignment-guides"></div>
+    </div>
+    <div class="panelscolumn">
+        <div id="layer-panel">
+            <h3>Layers</h3>
+            <div id="layer-list"></div>
+        </div>
+        <div id="history-panel">
+            <h3 style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                History
+                <button id="history-toggle" aria-label="Toggle history panel" style="background: none; border: none; color: var(--text-color); font-size: 1.2em; cursor: pointer; margin-left: 8px; display: flex; align-items: center;">
+                    <span id="history-chevron" style="display: inline-block; transition: transform 0.3s;">▼</span>
+                </button>
+            </h3>
+            <div id="history-list" style="transition: max-height 0.3s, opacity 0.3s; overflow: hidden; max-height: 300px; opacity: 1;"></div>
+        </div>
+        <div class="align-panel">
+            <label>Align Items</label>
+            <div id="toolbar">
+                <button id="align-left" aria-label="Align left" title="Align layer to left">←</button>
+                <button id="align-center" aria-label="Align center" title="Align layer to center">↔</button>
+                <button id="align-right" aria-label="Align right" title="Align layer to right">→</button>
+                <button id="align-top" aria-label="Align top" title="Align layer to top">↑</button>
+                <button id="align-middle" aria-label="Align middle" title="Align layer to middle">↕</button>
+                <button id="align-bottom" aria-label="Align bottom" title="Align layer to bottom">↓</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const imageInput = document.getElementById('image-input');
+        const shirtImage = document.getElementById('shirt-image');
+        const unitSelector = document.getElementById('unit-selector');
+        const rotationInput = document.getElementById('rotation');
+        const rotationNumber = document.getElementById('rotation-number');
+        // Image effects controls
+        const brightnessInput = document.getElementById('brightness');
+        const contrastInput = document.getElementById('contrast');
+        const saturationInput = document.getElementById('saturation');
+        const blurInput = document.getElementById('blur');
+        const opacityInput = document.getElementById('opacity');
+        const resetEffectsBtn = document.getElementById('reset-effects');
+        const autoAdjustBtn = document.getElementById('auto-adjust');
+        const lockAspect = document.getElementById('lock-aspect');
+        const snapGrid = document.getElementById('snap-grid');
+        const previewToggle = document.getElementById('preview-toggle');
+        const undoBtn = document.getElementById('undo-btn');
+        const redoBtn = document.getElementById('redo-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const textInput = document.getElementById('text-input');
+        const textAdd = document.getElementById('text-add');
+        const fontSelector = document.getElementById('font-selector');
+        const textSize = document.getElementById('text-size');
+        const textColor = document.getElementById('text-color');
+        const layerList = document.getElementById('layer-list');
+        const historyList = document.getElementById('history-list');
+        const alignmentGuides = document.getElementById('alignment-guides');
+        const alignButtons = {
+            left: document.getElementById('align-left'),
+            center: document.getElementById('align-center'),
+            right: document.getElementById('align-right'),
+            top: document.getElementById('align-top'),
+            middle: document.getElementById('align-middle'),
+            bottom: document.getElementById('align-bottom')
+        };
+
+        let layers = [];
+        let history = [];
+        let historyIndex = -1;
+        let isDraggingLayer = false;
+        let isResizing = false;
+        let currentX, currentY;
+        let activeHandle = null;
+        let activeLayer = null;
+        const pixelsPerInch = 20;
+        const minSize = 50;
+        const gridSize = 20;
+        const maxFileSize = 5 * 1024 * 1024; // 5MB
+        const maxHistory = 20;
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function saveState(action) {
+            const state = {
+                layers: layers.map(layer => {
+                    if (layer.type === 'image') {
+                        return {
+                            type: 'image',
+                            src: layer.element.querySelector('img').src,
+                            width: layer.width,
+                            height: layer.height,
+                            left: parseFloat(layer.element.style.left || 0),
+                            top: parseFloat(layer.element.style.top || 0),
+                            rotation: layer.rotation,
+                            zIndex: layer.element.style.zIndex,
+                            display: layer.element.style.display,
+                            locked: layer.locked,
+                            name: layer.name,
+                            effects: layer.effects || {
+                                brightness: 100,
+                                contrast: 100,
+                                saturation: 100,
+                                blur: 0,
+                                opacity: 100
+                            }
+                        };
+                    } else {
+                        return {
+                            type: 'text',
+                            content: layer.element.textContent,
+                            left: parseFloat(layer.element.style.left || 0),
+                            top: parseFloat(layer.element.style.top || 0),
+                            font: layer.element.style.fontFamily,
+                            size: parseFloat(layer.element.style.fontSize || 20),
+                            color: layer.element.style.color,
+                            zIndex: layer.element.style.zIndex,
+                            display: layer.element.style.display,
+                            locked: layer.locked,
+                            name: layer.name,
+                            effects: layer.effects || {
+                                brightness: 100,
+                                contrast: 100,
+                                saturation: 100,
+                                blur: 0,
+                                opacity: 100
+                            }
+                        };
+                    }
+                }),
+                preset: 'custom',
+                action
+            };
+            history = history.slice(0, historyIndex + 1);
+            if (history.length >= maxHistory) history.shift();
+            history.push(state);
+            historyIndex++;
+            updateUndoRedoButtons();
+            updateHistoryPanel();
+            localStorage.setItem('mockupState', JSON.stringify(state));
+        }
+
+        const debouncedSave = debounce(saveState, 100);
+
+        function loadSavedState() {
+            const savedState = localStorage.getItem('mockupState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                // No longer loading preset, but setting image source
+                const cat = state.preset === 'custom' ? 'tshirt' : state.preset; // Default to tshirt if custom
+                const side = state.preset === 'custom' ? 'back' : 'back'; // Default to back if custom
+                shirtImage.src = templateImages[cat] && templateImages[cat][side] || 'https://via.placeholder.com/600x600?text=Image+Not+Found';
+                canvas.style.backgroundColor = 'transparent';
+                layers = [];
+                state.layers.forEach(layerData => addLayer(layerData));
+                updateLayerPanel();
+                updateHistoryPanel();
+                updateMeasurements();
+                updateUndoRedoButtons();
+            }
+        }
+
+        function updateUndoRedoButtons() {
+            undoBtn.disabled = historyIndex <= 0;
+            redoBtn.disabled = historyIndex >= history.length - 1;
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                applyState(history[historyIndex]);
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                applyState(history[historyIndex]);
+            }
+        }
+
+        function applyState(state) {
+            layers.forEach(layer => layer.element.remove());
+            layers = [];
+            state.layers.forEach(layerData => addLayer(layerData));
+            // No longer loading preset, but setting image source
+            const cat = state.preset === 'custom' ? 'tshirt' : state.preset; // Default to tshirt if custom
+            const side = state.preset === 'custom' ? 'back' : 'back'; // Default to back if custom
+            shirtImage.src = templateImages[cat] && templateImages[cat][side] || 'https://via.placeholder.com/600x600?text=Image+Not+Found';
+            canvas.style.backgroundColor = 'transparent';
+            updateLayerPanel();
+            updateHistoryPanel();
+            updateMeasurements();
+            updateUndoRedoButtons();
+            localStorage.setItem('mockupState', JSON.stringify(state));
+        }
+
+        function updateHistoryPanel() {
+            historyList.innerHTML = '';
+            history.slice().reverse().forEach((state, index) => {
+                const actualIndex = history.length - 1 - index;
+                const historyItem = document.createElement('div');
+                historyItem.className = `history-item ${actualIndex === historyIndex ? 'selected' : ''}`;
+                historyItem.innerHTML = `<span>${state.action || `State ${actualIndex + 1}`}</span>`;
+                historyItem.addEventListener('click', () => {
+                    historyIndex = actualIndex;
+                    applyState(history[actualIndex]);
+                });
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        function addLayer(data) {
+            if (data.type === 'image') {
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                container.style.width = data.width + 'px';
+                container.style.height = data.height + 'px';
+                container.style.left = data.left + 'px';
+                container.style.top = data.top + 'px';
+                container.style.transform = `rotate(${data.rotation || 0}deg)`;
+                container.style.zIndex = data.zIndex || layers.length + 1;
+                container.style.filter = 'drop-shadow(2px 2px 2px rgba(0,0,0,0.3))';
+                container.style.display = data.display || 'block';
+                container.setAttribute('aria-label', data.name || 'Uploaded design image');
+
+                const img = document.createElement('img');
+                img.src = data.src;
+                container.appendChild(img);
+
+                ['top-left', 'top-right', 'bottom-left', 'bottom-right'].forEach(pos => {
+                    const handle = document.createElement('div');
+                    handle.className = `resize-handle ${pos}`;
+                    handle.id = pos;
+                    handle.setAttribute('aria-label', `Resize handle ${pos.replace('-', ' ')}`);
+                    container.appendChild(handle);
+                });
+
+                const widthMeasure = document.createElement('div');
+                widthMeasure.className = 'width-measurement';
+                container.appendChild(widthMeasure);
+
+                const heightMeasure = document.createElement('div');
+                heightMeasure.className = 'height-measurement';
+                container.appendChild(heightMeasure);
+
+                canvas.appendChild(container);
+                layers.push({
+                    type: 'image',
+                    element: container,
+                    width: data.width,
+                    height: data.height,
+                    rotation: data.rotation || 0,
+                    locked: data.locked || false,
+                    name: data.name || `Image ${layers.length + 1}`,
+                    effects: data.effects || {
+                        brightness: 100,
+                        contrast: 100,
+                        saturation: 100,
+                        blur: 0,
+                        opacity: 100
+                    }
+                });
+                addLayerEventListeners(container);
+            } else if (data.type === 'text') {
+                const textElement = document.createElement('div');
+                textElement.className = 'text-overlay';
+                textElement.textContent = data.content;
+                textElement.style.left = data.left + 'px';
+                textElement.style.top = data.top + 'px';
+                textElement.style.fontFamily = data.font || 'Arial';
+                textElement.style.fontSize = data.size + 'px';
+                textElement.style.color = data.color || '#000000';
+                textElement.style.zIndex = data.zIndex || layers.length + 1;
+                textElement.style.display = data.display || (data.content ? 'block' : 'none');
+                textElement.setAttribute('aria-label', data.name || 'Text overlay');
+                canvas.appendChild(textElement);
+                layers.push({
+                    type: 'text',
+                    element: textElement,
+                    locked: data.locked || false,
+                    name: data.name || `Text ${layers.length + 1}`,
+                    effects: data.effects || {
+                        brightness: 100,
+                        contrast: 100,
+                        saturation: 100,
+                        blur: 0,
+                        opacity: 100
+                    }
+                });
+                addLayerEventListeners(textElement);
+            }
+            updateMeasurements();
+        }
+
+        function addLayerEventListeners(element) {
+            element.addEventListener('mousedown', (e) => {
+                const layer = layers.find(l => l.element === element);
+                if (layer.locked) return;
+                if (e.target === element || (element.className.includes('image-container') && e.target.tagName === 'IMG')) {
+                    isDraggingLayer = true;
+                    activeLayer = element;
+                    element.classList.add('dragging');
+                    currentX = e.clientX - parseFloat(element.style.left || 0);
+                    currentY = e.clientY - parseFloat(element.style.top || 0);
+                    bringToFront(element);
+                    selectLayer(element);
+                    e.preventDefault();
+                }
+            });
+
+            element.addEventListener('touchstart', (e) => {
+                const layer = layers.find(l => l.element === element);
+                if (layer.locked) return;
+                if (e.target === element || (element.className.includes('image-container') && e.target.tagName === 'IMG')) {
+                    isDraggingLayer = true;
+                    activeLayer = element;
+                    element.classList.add('dragging');
+                    const touch = e.touches[0];
+                    currentX = touch.clientX - parseFloat(element.style.left || 0);
+                    currentY = touch.clientY - parseFloat(element.style.top || 0);
+                    bringToFront(element);
+                    selectLayer(element);
+                    e.preventDefault();
+                }
+            });
+
+            if (element.className.includes('image-container')) {
+                const handles = element.querySelectorAll('.resize-handle');
+                handles.forEach(handle => {
+                    handle.addEventListener('mousedown', (e) => {
+                        const layer = layers.find(l => l.element === element);
+                        if (layer.locked) return;
+                        isResizing = true;
+                        activeHandle = handle.id;
+                        activeLayer = element;
+                        currentX = e.clientX;
+                        currentY = e.clientY;
+                        bringToFront(element);
+                        selectLayer(element);
+                        e.preventDefault();
+                    });
+
+                    handle.addEventListener('touchstart', (e) => {
+                        const layer = layers.find(l => l.element === element);
+                        if (layer.locked) return;
+                        isResizing = true;
+                        activeHandle = handle.id;
+                        activeLayer = element;
+                        const touch = e.touches[0];
+                        currentX = touch.clientX;
+                        currentY = touch.clientY;
+                        bringToFront(element);
+                        selectLayer(element);
+                        e.preventDefault();
+                    });
+                });
+            }
+        }
+
+        function selectLayer(element) {
+            layers.forEach(layer => layer.element.classList.remove('selected'));
+            element.classList.add('selected');
+            activeLayer = element; // FIX: ensure activeLayer is set when selecting from Layers panel
+            updateLayerPanel();
+            const layer = layers.find(l => l.element === element);
+            if (layer.type === 'text') {
+                textInput.value = layer.element.textContent;
+                fontSelector.value = layer.element.style.fontFamily || 'Arial';
+                textSize.value = parseFloat(layer.element.style.fontSize || 20);
+                textColor.value = layer.element.style.color || '#000000';
+            } else {
+                textInput.value = '';
+            }
+            const rotation = layer.rotation || 0;
+            rotationInput.value = rotation;
+            rotationNumber.value = rotation;
+            // Update effect controls
+            updateEffectControls(layer);
+        }
+
+        function updateEffectControls(layer) {
+            if (!layer) {
+                // Reset to defaults when no layer is selected
+                brightnessInput.value = 100;
+                contrastInput.value = 100;
+                saturationInput.value = 100;
+                blurInput.value = 0;
+                opacityInput.value = 100;
+                updateEffectValues();
+                return;
+            }
+            
+            const effects = layer.effects || {
+                brightness: 100,
+                contrast: 100,
+                saturation: 100,
+                blur: 0,
+                opacity: 100
+            };
+            brightnessInput.value = effects.brightness;
+            contrastInput.value = effects.contrast;
+            saturationInput.value = effects.saturation;
+            blurInput.value = effects.blur;
+            opacityInput.value = effects.opacity;
+            updateEffectValues();
+        }
+
+        function updateEffectValues() {
+            brightnessInput.nextElementSibling.textContent = brightnessInput.value + '%';
+            contrastInput.nextElementSibling.textContent = contrastInput.value + '%';
+            saturationInput.nextElementSibling.textContent = saturationInput.value + '%';
+            blurInput.nextElementSibling.textContent = blurInput.value + 'px';
+            opacityInput.nextElementSibling.textContent = opacityInput.value + '%';
+        }
+
+        function applyEffects() {
+            if (!activeLayer) return;
+            const layer = layers.find(l => l.element === activeLayer);
+            if (!layer || layer.locked) return;
+
+            const effects = {
+                brightness: parseInt(brightnessInput.value),
+                contrast: parseInt(contrastInput.value),
+                saturation: parseInt(saturationInput.value),
+                blur: parseFloat(blurInput.value),
+                opacity: parseInt(opacityInput.value)
+            };
+
+            layer.effects = effects;
+
+            // Apply CSS filters - preserve drop-shadow for image layers
+            const baseFilter = `brightness(${effects.brightness}%) contrast(${effects.contrast}%) saturate(${effects.saturation}%) blur(${effects.blur}px)`;
+            const dropShadow = layer.type === 'image' ? 'drop-shadow(2px 2px 2px rgba(0,0,0,0.3))' : '';
+            const filter = `${baseFilter} ${dropShadow}`.trim();
+            
+            activeLayer.style.filter = filter;
+            activeLayer.style.opacity = effects.opacity / 100;
+
+            debouncedSave('Apply Effects');
+        }
+
+        function bringToFront(element) {
+            const maxZ = Math.max(...layers.map(layer => parseInt(layer.element.style.zIndex || 0)), 0) + 1;
+            element.style.zIndex = maxZ;
+            const layerIndex = layers.findIndex(layer => layer.element === element);
+            if (layerIndex !== -1) {
+                const [layer] = layers.splice(layerIndex, 1);
+                layers.push(layer);
+            }
+            updateLayerPanel();
+        }
+
+        function updateLayerPanel() {
+            layerList.innerHTML = '';
+            layers.slice().reverse().forEach((layer, index) => {
+                const originalIndex = layers.length - 1 - index;
+                const layerItem = document.createElement('div');
+                layerItem.className = `layer-item ${layer.element.classList.contains('selected') ? 'selected' : ''}`;
+                const name = layer.name || (layer.type === 'image' ? `Image ${originalIndex + 1}` : `Text: ${layer.element.textContent.substring(0, 10)}${layer.element.textContent.length > 10 ? '...' : ''}`);
+                layerItem.innerHTML = `
+                    <span class="layer-icon visibility" title="${layer.element.style.display === 'none' ? 'Show layer' : 'Hide layer'}">${layer.element.style.display === 'none' ? '👁️‍🗨️' : '👁️'}</span>
+                    <span class="layer-icon lock ${layer.locked ? 'locked' : ''}" title="${layer.locked ? 'Unlock layer' : 'Lock layer'}">${layer.locked ? '🔒' : '🔓'}</span>
+                    <input type="text" value="${name}" class="layer-name" ${layer.locked ? 'disabled' : ''} onchange="renameLayer(${originalIndex}, this.value)" aria-label="Layer name" title="Rename this layer">
+                    <div class="layer-controls">
+                        <button onclick="moveLayer(${originalIndex}, 'up')" aria-label="Move layer up" title="Move layer up">↑</button>
+                        <button onclick="moveLayer(${originalIndex}, 'down')" aria-label="Move layer down" title="Move layer down">↓</button>
+                        <button class="visibility" onclick="toggleLayer(${originalIndex})" aria-label="Toggle layer visibility" title="${layer.element.style.display === 'none' ? 'Show layer' : 'Hide layer'}">${layer.element.style.display === 'none' ? '👁️‍🗨️' : '👁️'}</button>
+                        <button onclick="deleteLayer(${originalIndex})" aria-label="Delete layer" title="Delete this layer">✖</button>
+                    </div>
+                `;
+                layerItem.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT' && !e.target.classList.contains('layer-icon')) {
+                        selectLayer(layer.element);
+                    }
+                });
+                layerItem.querySelector('.visibility:not(.layer-controls .visibility)').addEventListener('click', () => toggleLayer(originalIndex));
+                layerItem.querySelector('.lock').addEventListener('click', () => toggleLockLayer(originalIndex));
+                layerList.appendChild(layerItem);
+            });
+        }
+
+        function renameLayer(index, newName) {
+            layers[index].name = newName || (layers[index].type === 'image' ? `Image ${index + 1}` : `Text ${index + 1}`);
+            layers[index].element.setAttribute('aria-label', layers[index].name);
+            updateLayerPanel();
+            debouncedSave('Rename Layer');
+        }
+
+        function moveLayer(index, direction) {
+            const newIndex = direction === 'up' ? index - 1 : index + 1;
+            if (newIndex >= 0 && newIndex < layers.length) {
+                const tempZ = layers[index].element.style.zIndex;
+                layers[index].element.style.zIndex = layers[newIndex].element.style.zIndex;
+                layers[newIndex].element.style.zIndex = tempZ;
+                [layers[index], layers[newIndex]] = [layers[newIndex], layers[index]];
+                updateLayerPanel();
+                debouncedSave(`Move Layer ${direction}`);
+            }
+        }
+
+        function toggleLayer(index) {
+            layers[index].element.style.display = layers[index].element.style.display === 'none' ? 'block' : 'none';
+            updateLayerPanel();
+            debouncedSave('Toggle Layer Visibility');
+        }
+
+        function toggleLockLayer(index) {
+            layers[index].locked = !layers[index].locked;
+            layers[index].element.style.pointerEvents = layers[index].locked ? 'none' : 'auto';
+            updateLayerPanel();
+            debouncedSave('Toggle Layer Lock');
+        }
+
+        function deleteLayer(index) {
+            layers[index].element.remove();
+            layers.splice(index, 1);
+            updateLayerPanel();
+            activeLayer = null;
+            updateEffectControls(null); // Reset effect controls when no layer is selected
+            debouncedSave('Delete Layer');
+        }
+
+        // Remove old presetSelector logic
+        // Add new template logic
+        const templateCategory = document.getElementById('template-category');
+        const templateSide = document.getElementById('template-side');
+        // Map categories and sides to image paths
+        const templateImages = {
+            'tshirt': {
+                'front': 'mockup pictures/t-shirt/T-Shirt Front.png',
+                'back': 'mockup pictures/t-shirt/T-Shirt Back.png',
+            },
+            'longsleeve': {
+                'front': 'mockup pictures/t-shirt/Long-Sleeve Tee Front.png',
+                'back': 'mockup pictures/t-shirt/Long-Sleeve Tee Back.png',
+            },
+            'doublelongsleeve': {
+                'front': 'mockup pictures/t-shirt/Double-Layered Long-Sleeve Tee Front.png',
+                'back': 'mockup pictures/t-shirt/Double-Layered Long-Sleeve Tee Back.png',
+            },
+            'hoodie-washed': {
+                'front': 'mockup pictures/t-shirt/Washed Black Hoodie Front.png',
+                'back': 'mockup pictures/t-shirt/Washed Black Hoodie Back.png',
+            },
+            'hoodie-grey': {
+                'front': 'mockup pictures/t-shirt/Grey Fleece Hoodie Front.png',
+                'back': 'mockup pictures/t-shirt/Grey Fleece Hoodie Back.png',
+            },
+            'sweatpants-washed': {
+                'front': 'mockup pictures/t-shirt/Washed Black Sweatpants Front.png',
+                'back': 'mockup pictures/t-shirt/Washed Black Sweatpants Back.png',
+            },
+            'sweatpants-grey': {
+                'front': 'mockup pictures/t-shirt/Grey Fleece Sweatpants Front.png',
+                'back': 'mockup pictures/t-shirt/Grey Fleece Sweatpants Back.png',
+            },
+        };
+        function updateShirtImage() {
+            const cat = templateCategory.value;
+            const side = templateSide.value;
+            const img = templateImages[cat] && templateImages[cat][side];
+            if (img) {
+                shirtImage.src = img;
+            } else {
+                shirtImage.src = 'https://via.placeholder.com/600x600?text=Image+Not+Found';
+            }
+        }
+        templateCategory.addEventListener('change', updateShirtImage);
+        templateSide.addEventListener('change', updateShirtImage);
+        // Set initial image
+        updateShirtImage();
+
+        shirtImage.addEventListener('error', () => {
+            shirtImage.src = 'https://via.placeholder.com/600x600?text=Image+Not+Found';
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload an image file.');
+                    return;
+                }
+                if (file.size > maxFileSize) {
+                    alert('File size exceeds 5MB.');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        const compressedSrc = canvas.toDataURL('image/png', 0.8); // Changed to PNG to preserve transparency
+                        addLayer({
+                            type: 'image',
+                            src: compressedSrc,
+                            width: 100,
+                            height: 100,
+                            left: 250,
+                            top: 200,
+                            rotation: 0,
+                            locked: false,
+                            name: `Image ${layers.length + 1}`
+                        });
+                        updateLayerPanel();
+                        debouncedSave('Add Image Layer');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function updateRotation(value) {
+            if (activeLayer) {
+                const layerData = layers.find(layer => layer.element === activeLayer);
+                if (layerData.locked) return;
+                const rotation = parseInt(value);
+                layerData.rotation = rotation;
+                activeLayer.style.transform = `rotate(${rotation}deg)`;
+                rotationInput.value = rotation;
+                rotationNumber.value = rotation;
+                debouncedSave('Rotate Layer');
+            }
+        }
+
+        rotationInput.addEventListener('input', (e) => {
+            updateRotation(e.target.value);
+        });
+
+        rotationNumber.addEventListener('input', (e) => {
+            updateRotation(e.target.value);
+        });
+
+        rotationNumber.addEventListener('change', (e) => {
+            // Ensure value is within bounds
+            let value = parseInt(e.target.value);
+            if (isNaN(value)) value = 0;
+            value = Math.max(0, Math.min(360, value));
+            updateRotation(value);
+        });
+
+        textAdd.addEventListener('click', () => {
+            if (textInput.value.trim()) {
+                addLayer({
+                    type: 'text',
+                    content: textInput.value,
+                    left: 250,
+                    top: 200,
+                    font: fontSelector.value,
+                    size: parseInt(textSize.value),
+                    color: textColor.value,
+                    locked: false,
+                    name: `Text ${layers.length + 1}`
+                });
+                updateLayerPanel();
+                debouncedSave('Add Text Layer');
+            }
+        });
+
+        fontSelector.addEventListener('change', (e) => {
+            if (activeLayer && layers.find(layer => layer.element === activeLayer)?.type === 'text') {
+                const layer = layers.find(layer => layer.element === activeLayer);
+                if (layer.locked) return;
+                layer.element.style.fontFamily = e.target.value;
+                debouncedSave('Change Font');
+            }
+        });
+
+        textSize.addEventListener('input', (e) => {
+            if (activeLayer && layers.find(layer => layer.element === activeLayer)?.type === 'text') {
+                const layer = layers.find(layer => layer.element === activeLayer);
+                if (layer.locked) return;
+                layer.element.style.fontSize = e.target.value + 'px';
+                debouncedSave('Change Text Size');
+            }
+        });
+
+        textColor.addEventListener('change', (e) => {
+            if (activeLayer && layers.find(layer => layer.element === activeLayer)?.type === 'text') {
+                const layer = layers.find(layer => layer.element === activeLayer);
+                if (layer.locked) return;
+                layer.element.style.color = e.target.value;
+                debouncedSave('Change Text Color');
+            }
+        });
+
+        Object.keys(alignButtons).forEach(key => {
+            alignButtons[key].addEventListener('click', () => {
+                if (activeLayer) {
+                    const layerData = layers.find(layer => layer.element === activeLayer);
+                    if (layerData.locked) return;
+                    let newX = parseFloat(activeLayer.style.left || 0);
+                    let newY = parseFloat(activeLayer.style.top || 0);
+                    const canvasWidth = canvas.clientWidth;
+                    const canvasHeight = canvas.clientHeight;
+                    if (key === 'left') {
+                        newX = 0;
+                    } else if (key === 'center') {
+                        newX = (canvasWidth - (layerData.width || activeLayer.offsetWidth)) / 2;
+                    } else if (key === 'right') {
+                        newX = canvasWidth - (layerData.width || activeLayer.offsetWidth);
+                    } else if (key === 'top') {
+                        newY = 0;
+                    } else if (key === 'middle') {
+                        newY = (canvasHeight - (layerData.height || activeLayer.offsetHeight)) / 2;
+                    } else if (key === 'bottom') {
+                        newY = canvasHeight - (layerData.height || activeLayer.offsetHeight);
+                    }
+                    if (snapGrid.checked) {
+                        newX = Math.round(newX / gridSize) * gridSize;
+                        newY = Math.round(newY / gridSize) * gridSize;
+                    }
+                    activeLayer.style.left = newX + 'px';
+                    activeLayer.style.top = newY + 'px';
+                    layerData.left = newX;
+                    layerData.top = newY;
+                    updateMeasurements();
+                    debouncedSave(`Align Layer ${key}`);
+                }
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingLayer && activeLayer) {
+                const layerData = layers.find(layer => layer.element === activeLayer);
+                if (layerData.locked) return;
+                let newX = e.clientX - currentX;
+                let newY = e.clientY - currentY;
+                if (snapGrid.checked) {
+                    newX = Math.round(newX / gridSize) * gridSize;
+                    newY = Math.round(newY / gridSize) * gridSize;
+                }
+                newX = Math.max(0, Math.min(newX, 600 - activeLayer.offsetWidth));
+                newY = Math.max(0, Math.min(newY, 600 - activeLayer.offsetHeight));
+                activeLayer.style.left = newX + 'px';
+                activeLayer.style.top = newY + 'px';
+                showAlignmentGuides(newX, newY, activeLayer.offsetWidth, activeLayer.offsetHeight);
+                updateMeasurements();
+                debouncedSave('Move Layer');
+            } else if (isResizing && activeLayer) {
+                const layerData = layers.find(layer => layer.element === activeLayer);
+                if (layerData.type !== 'image' || layerData.locked) return;
+                let newWidth = layerData.width;
+                let newHeight = layerData.height;
+                let newX = parseFloat(activeLayer.style.left || 0);
+                let newY = parseFloat(activeLayer.style.top || 0);
+                const aspectRatio = activeLayer.querySelector('img').naturalWidth / activeLayer.querySelector('img').naturalHeight || 1;
+
+                if (activeHandle === 'top-left') {
+                    const dx = currentX - e.clientX;
+                    const dy = currentY - e.clientY;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : Math.max(minSize, layerData.height + dy);
+                    newX += Math.max(-(600 - newWidth), layerData.width - newWidth);
+                    newY += lockAspect.checked ? Math.max(-(600 - newHeight), layerData.height - newHeight) : dy;
+                } else if (activeHandle === 'top-right') {
+                    const dx = e.clientX - currentX;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : layerData.height;
+                    newY += lockAspect.checked ? Math.max(-(600 - newHeight), layerData.height - newHeight) : 0;
+                } else if (activeHandle === 'bottom-left') {
+                    const dx = currentX - e.clientX;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : layerData.height;
+                    newX += Math.max(-(600 - newWidth), layerData.width - newWidth);
+                } else if (activeHandle === 'bottom-right') {
+                    const dx = e.clientX - currentX;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : layerData.height;
+                }
+
+                newWidth = Math.min(newWidth, 600 - newX);
+                newHeight = Math.min(newHeight, 600 - newY);
+                newX = Math.max(0, newX);
+                newY = Math.max(0, newY);
+
+                activeLayer.style.width = newWidth + 'px';
+                activeLayer.style.height = newHeight + 'px';
+                activeLayer.style.left = newX + 'px';
+                activeLayer.style.top = newY + 'px';
+                layerData.width = newWidth;
+                layerData.height = newHeight;
+                updateMeasurements();
+                debouncedSave('Resize Layer');
+                currentX = e.clientX;
+                currentY = e.clientY;
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDraggingLayer && activeLayer) {
+                const layerData = layers.find(layer => layer.element === activeLayer);
+                if (layerData.locked) return;
+                const touch = e.touches[0];
+                let newX = touch.clientX - currentX;
+                let newY = touch.clientY - currentY;
+                if (snapGrid.checked) {
+                    newX = Math.round(newX / gridSize) * gridSize;
+                    newY = Math.round(newY / gridSize) * gridSize;
+                }
+                newX = Math.max(0, Math.min(newX, 600 - activeLayer.offsetWidth));
+                newY = Math.max(0, Math.min(newY, 600 - activeLayer.offsetHeight));
+                activeLayer.style.left = newX + 'px';
+                activeLayer.style.top = newY + 'px';
+                showAlignmentGuides(newX, newY, activeLayer.offsetWidth, activeLayer.offsetHeight);
+                updateMeasurements();
+                debouncedSave('Move Layer');
+            } else if (isResizing && activeLayer) {
+                const touch = e.touches[0];
+                const layerData = layers.find(layer => layer.element === activeLayer);
+                if (layerData.type !== 'image' || layerData.locked) return;
+                let newWidth = layerData.width;
+                let newHeight = layerData.height;
+                let newX = parseFloat(activeLayer.style.left || 0);
+                let newY = parseFloat(activeLayer.style.top || 0);
+                const aspectRatio = activeLayer.querySelector('img').naturalWidth / activeLayer.querySelector('img').naturalHeight || 1;
+
+                if (activeHandle === 'top-left') {
+                    const dx = currentX - touch.clientX;
+                    const dy = currentY - touch.clientY;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : Math.max(minSize, layerData.height + dy);
+                    newX += Math.max(-(600 - newWidth), layerData.width - newWidth);
+                    newY += lockAspect.checked ? Math.max(-(600 - newHeight), layerData.height - newHeight) : dy;
+                } else if (activeHandle === 'top-right') {
+                    const dx = touch.clientX - currentX;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : layerData.height;
+                    newY += lockAspect.checked ? Math.max(-(600 - newHeight), layerData.height - newHeight) : 0;
+                } else if (activeHandle === 'bottom-left') {
+                    const dx = currentX - touch.clientX;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : layerData.height;
+                    newX += Math.max(-(600 - newWidth), layerData.width - newWidth);
+                } else if (activeHandle === 'bottom-right') {
+                    const dx = touch.clientX - currentX;
+                    newWidth = Math.max(minSize, layerData.width + dx);
+                    newHeight = lockAspect.checked ? newWidth / aspectRatio : layerData.height;
+                }
+
+                newWidth = Math.min(newWidth, 600 - newX);
+                newHeight = Math.min(newHeight, 600 - newY);
+                newX = Math.max(0, newX);
+                newY = Math.max(0, newY);
+
+                activeLayer.style.width = newWidth + 'px';
+                activeLayer.style.height = newHeight + 'px';
+                activeLayer.style.left = newX + 'px';
+                activeLayer.style.top = newY + 'px';
+                layerData.width = newWidth;
+                layerData.height = newHeight;
+                updateMeasurements();
+                debouncedSave('Resize Layer');
+                currentX = touch.clientX;
+                currentY = touch.clientY;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (activeLayer) {
+                activeLayer.classList.remove('dragging');
+                alignmentGuides.innerHTML = '';
+            }
+            isDraggingLayer = false;
+            isResizing = false;
+            activeHandle = null;
+            activeLayer = null;
+            updateEffectControls(null); // Reset effect controls when no layer is selected
+        });
+
+        document.addEventListener('touchend', () => {
+            if (activeLayer) {
+                activeLayer.classList.remove('dragging');
+                alignmentGuides.innerHTML = '';
+            }
+            isDraggingLayer = false;
+            isResizing = false;
+            activeHandle = null;
+            activeLayer = null;
+            updateEffectControls(null); // Reset effect controls when no layer is selected
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (activeLayer && (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                const layerData = layers.find(layer => layer.element === activeLayer);
+                if (layerData.locked) return;
+                e.preventDefault();
+                let newX = parseFloat(activeLayer.style.left || 0);
+                let newY = parseFloat(activeLayer.style.top || 0);
+                const step = e.shiftKey ? 10 : 1;
+                if (e.key === 'ArrowUp') newY = Math.max(0, newY - step);
+                if (e.key === 'ArrowDown') newY = Math.min(600 - activeLayer.offsetHeight, newY + step);
+                if (e.key === 'ArrowLeft') newX = Math.max(0, newX - step);
+                if (e.key === 'ArrowRight') newX = Math.min(600 - activeLayer.offsetWidth, newX + step);
+                activeLayer.style.left = newX + 'px';
+                activeLayer.style.top = newY + 'px';
+                updateMeasurements();
+                debouncedSave('Move Layer');
+            }
+        });
+
+        function showAlignmentGuides(x, y, w, h) {
+            alignmentGuides.innerHTML = '';
+            const centerX = x + w / 2;
+            const centerY = y + h / 2;
+            const canvasCenterX = 300;
+            const canvasCenterY = 300;
+            if (Math.abs(centerX - canvasCenterX) < 5) {
+                const guide = document.createElement('div');
+                guide.className = 'guide-line vertical';
+                guide.style.left = canvasCenterX + 'px';
+                alignmentGuides.appendChild(guide);
+            }
+            if (Math.abs(centerY - canvasCenterY) < 5) {
+                const guide = document.createElement('div');
+                guide.className = 'guide-line horizontal';
+                guide.style.top = canvasCenterY + 'px';
+                alignmentGuides.appendChild(guide);
+            }
+        }
+
+        function updateMeasurements() {
+            layers.forEach(layer => {
+                if (layer.type === 'image') {
+                    const widthMeasure = layer.element.querySelector('.width-measurement');
+                    const heightMeasure = layer.element.querySelector('.height-measurement');
+                    const conversion = unitSelector.value === 'in' ? 1 : unitSelector.value === 'cm' ? 2.54 : pixelsPerInch;
+                    const unitLabel = unitSelector.value;
+                    const widthUnits = (layer.width / pixelsPerInch * (unitSelector.value === 'px' ? pixelsPerInch : 1) * (unitSelector.value === 'cm' ? 2.54 : 1)).toFixed(2);
+                    const heightUnits = (layer.height / pixelsPerInch * (unitSelector.value === 'px' ? pixelsPerInch : 1) * (unitSelector.value === 'cm' ? 2.54 : 1)).toFixed(2);
+                    widthMeasure.textContent = `W: ${widthUnits} ${unitLabel}`;
+                    heightMeasure.textContent = `H: ${heightUnits} ${unitLabel}`;
+                    const layerX = parseFloat(layer.element.style.left || 0);
+                    const layerY = parseFloat(layer.element.style.top || 0);
+                    widthMeasure.style.left = (layerX + (layer.width - widthMeasure.offsetWidth) / 2) + 'px';
+                    widthMeasure.style.top = (layerY + layer.height + 5) + 'px';
+                    heightMeasure.style.left = (layerX - heightMeasure.offsetWidth - 5) + 'px';
+                    heightMeasure.style.top = (layerY + (layer.height - heightMeasure.offsetHeight) / 2) + 'px';
+                    widthMeasure.style.display = previewToggle.checked ? 'none' : 'block';
+                    heightMeasure.style.display = previewToggle.checked ? 'none' : 'block';
+                    layer.element.querySelectorAll('.resize-handle').forEach(handle => {
+                        handle.style.display = previewToggle.checked ? 'none' : 'block';
+                    });
+                    // Hide/show blue dashed border in preview mode
+                    layer.element.style.border = previewToggle.checked ? 'none' : '1px dashed rgba(0, 122, 255, 0.5)';
+                }
+            });
+        }
+
+        unitSelector.addEventListener('change', () => {
+            updateMeasurements();
+            debouncedSave('Change Units');
+        });
+
+        previewToggle.addEventListener('change', () => {
+            updateMeasurements();
+            layers.forEach(layer => {
+                if (layer.type === 'text') {
+                    layer.element.style.pointerEvents = previewToggle.checked ? 'none' : 'auto';
+                }
+            });
+            debouncedSave('Toggle Preview Mode');
+        });
+
+        undoBtn.addEventListener('click', undo);
+        redoBtn.addEventListener('click', redo);
+
+        downloadBtn.addEventListener('click', async () => {
+            try {
+                // Check if html2canvas is loaded
+                if (typeof html2canvas === 'undefined') {
+                    throw new Error('html2canvas library not loaded. Please check your internet connection.');
+                }
+                
+                // Show loading state
+                downloadBtn.disabled = true;
+                downloadBtn.textContent = 'Generating...';
+                
+                // Store original states
+                const originalDisplay = layers.map(layer => ({
+                    element: layer.element,
+                    display: layer.element.style.display,
+                    border: layer.element.style.border
+                }));
+                
+                // Hide UI elements for clean export
+                layers.forEach(layer => {
+                    if (layer.type === 'image') {
+                        layer.element.querySelectorAll('.width-measurement, .height-measurement, .resize-handle').forEach(el => {
+                            el.style.display = 'none';
+                        });
+                        // Hide border
+                        layer.element.style.border = 'none';
+                    }
+                    if (layer.type === 'text') {
+                        layer.element.style.pointerEvents = 'none';
+                    }
+                });
+                
+                // Hide alignment guides
+                alignmentGuides.style.display = 'none';
+                
+                // Configure html2canvas options
+                const options = {
+                    backgroundColor: '#fff', // White background for print
+                    scale: 2, // Higher quality
+                    logging: false,
+                    useCORS: true, // Enable CORS for images
+                    allowTaint: true, // Allow cross-origin images
+                    foreignObjectRendering: true,
+                    imageTimeout: 15000, // 15 second timeout for images
+                    onclone: (clonedDoc) => {
+                        // Ensure cloned canvas has proper dimensions
+                        const clonedCanvas = clonedDoc.getElementById('canvas');
+                        if (clonedCanvas) {
+                            clonedCanvas.style.overflow = 'visible';
+                        }
+                    }
+                };
+                
+                // Try to generate canvas
+                let exportCanvas;
+                let dataURL;
+                
+                try {
+                    // First try html2canvas
+                    exportCanvas = await html2canvas(canvas, options);
+                    dataURL = exportCanvas.toDataURL('image/png', 1.0);
+                } catch (html2canvasError) {
+                    console.warn('html2canvas failed, trying fallback method:', html2canvasError);
+                    
+                    // Fallback: Create a new canvas and manually draw everything
+                    const fallbackCanvas = document.createElement('canvas');
+                    const ctx = fallbackCanvas.getContext('2d');
+                    
+                    // Set canvas size
+                    fallbackCanvas.width = canvas.offsetWidth * 2; // 2x for higher quality
+                    fallbackCanvas.height = canvas.offsetHeight * 2;
+                    ctx.scale(2, 2);
+                    
+                    // Draw the shirt image
+                    const shirtImg = new Image();
+                    shirtImg.crossOrigin = 'anonymous';
+                    
+                    await new Promise((resolve, reject) => {
+                        shirtImg.onload = resolve;
+                        shirtImg.onerror = reject;
+                        shirtImg.src = shirtImage.src;
+                    });
+                    
+                    ctx.drawImage(shirtImg, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
+                    
+                    // Draw each layer
+                    for (const layer of layers) {
+                        if (layer.element.style.display === 'none') continue;
+                        
+                        const x = parseInt(layer.element.style.left || 0);
+                        const y = parseInt(layer.element.style.top || 0);
+                        
+                        if (layer.type === 'image') {
+                            const img = layer.element.querySelector('img');
+                            if (img && img.complete) {
+                                ctx.save();
+                                
+                                // Apply rotation
+                                const centerX = x + layer.width / 2;
+                                const centerY = y + layer.height / 2;
+                                ctx.translate(centerX, centerY);
+                                ctx.rotate((layer.rotation || 0) * Math.PI / 180);
+                                ctx.translate(-centerX, -centerY);
+                                
+                                // Apply effects
+                                if (layer.effects) {
+                                    ctx.globalAlpha = (layer.effects.opacity || 100) / 100;
+                                    ctx.filter = `brightness(${layer.effects.brightness || 100}%) contrast(${layer.effects.contrast || 100}%) saturate(${layer.effects.saturation || 100}%) blur(${layer.effects.blur || 0}px)`;
+                                }
+                                
+                                ctx.drawImage(img, x, y, layer.width, layer.height);
+                                ctx.restore();
+                            }
+                        } else if (layer.type === 'text') {
+                            ctx.save();
+                            ctx.font = `${parseInt(layer.element.style.fontSize || 20)}px ${layer.element.style.fontFamily || 'Arial'}`;
+                            ctx.fillStyle = layer.element.style.color || '#000000';
+                            
+                            // Apply effects
+                            if (layer.effects) {
+                                ctx.globalAlpha = (layer.effects.opacity || 100) / 100;
+                                ctx.filter = `brightness(${layer.effects.brightness || 100}%) contrast(${layer.effects.contrast || 100}%) saturate(${layer.effects.saturation || 100}%) blur(${layer.effects.blur || 0}px)`;
+                            }
+                            
+                            ctx.fillText(layer.element.textContent, x, y + parseInt(layer.element.style.fontSize || 20));
+                            ctx.restore();
+                        }
+                    }
+                    
+                    dataURL = fallbackCanvas.toDataURL('image/png', 1.0);
+                }
+                
+                // Restore original states
+                originalDisplay.forEach(item => {
+                    item.element.style.display = item.display;
+                    if (item.border !== undefined) {
+                        item.element.style.border = item.border;
+                    }
+                });
+                alignmentGuides.style.display = '';
+                updateMeasurements();
+                
+                // Open in new tab for just the image
+                const win = window.open('', '_blank');
+                win.document.write(`<!DOCTYPE html><html><head><title>Mockup Export</title><style>body{background:#fff;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;}img{max-width:100vw;max-height:100vh;display:block;box-shadow:0 0 24px #0002;border-radius:12px;}</style></head><body><img src='${dataURL}' alt='Mockup'></body></html>`);
+                win.document.close();
+                
+                downloadBtn.textContent = 'Opened in New Tab!';
+                setTimeout(() => {
+                    downloadBtn.textContent = 'Download Mockup';
+                    downloadBtn.disabled = false;
+                }, 2000);
+                
+                debouncedSave('Export Canvas');
+                
+            } catch (error) {
+                console.error('Export failed:', error);
+                
+                // Show error message with helpful tips
+                const errorMsg = `Failed to export mockup. \n\nPossible solutions:\n1. If running locally, try using a local web server\n2. Make sure you're using Chrome or Firefox\n3. Check your internet connection (for loading libraries)\n4. Try refreshing the page\n\nError details: ${error.message}`;
+                alert(errorMsg);
+                
+                // Reset button
+                downloadBtn.textContent = 'Download Mockup';
+                downloadBtn.disabled = false;
+                
+                // Restore UI elements
+                updateMeasurements();
+            }
+        });
+
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navDrawer = document.getElementById('navDrawer');
+        const overlay = document.getElementById('overlay');
+        const closeBtn = document.getElementById('closeBtn');
+        hamburger.addEventListener('click', () => {
+            navDrawer.classList.add('active');
+            overlay.classList.add('active');
+        });
+        overlay.addEventListener('click', () => {
+            navDrawer.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        closeBtn.addEventListener('click', () => {
+            navDrawer.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Collapsible history panel
+        const historyToggle = document.getElementById('history-toggle');
+        const historyChevron = document.getElementById('history-chevron');
+        let historyCollapsed = false;
+        if (historyToggle) {
+            historyToggle.addEventListener('click', () => {
+                historyCollapsed = !historyCollapsed;
+                if (historyCollapsed) {
+                    historyList.style.maxHeight = '0px';
+                    historyList.style.opacity = '0';
+                    historyChevron.style.transform = 'rotate(-90deg)';
+                } else {
+                    historyList.style.maxHeight = '300px';
+                    historyList.style.opacity = '1';
+                    historyChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+        
+        // Submenu toggle function
+        function toggleSubmenu(button) {
+            const submenu = button.parentElement.nextElementSibling;
+            const isActive = submenu.classList.contains('active');
+            
+            // Close all other submenus
+            document.querySelectorAll('.hamb-nav-submenu').forEach(menu => {
+                menu.classList.remove('active');
+            });
+            document.querySelectorAll('.hamb-nav-submenu-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+            
+            // Toggle current submenu
+            if (!isActive) {
+                submenu.classList.add('active');
+                button.classList.add('active');
+            }
+        }
+        
+        // Timezone display
+        function updateTimezoneDisplay() {
+            const tzSpan = document.getElementById('timezoneDisplay');
+            if (tzSpan) {
+                const now = new Date();
+                // Format time as HH:MM AM/PM
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                // Get timezone abbreviation (best effort)
+                let tzAbbr = '';
+                try {
+                    // This works in most modern browsers
+                    const parts = now.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+                    tzAbbr = parts[parts.length - 1];
+                    // If abbreviation is numeric (e.g. +03:00), fallback to region name
+                    if (/^[\d\+\-:]+$/.test(tzAbbr)) {
+                        tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    }
+                } catch (e) {
+                    tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                }
+                tzSpan.textContent = `${timeString} (${tzAbbr})`;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimezoneDisplay();
+            setInterval(updateTimezoneDisplay, 1000);
+        });
+
+        loadSavedState();
+        
+        // Initialize effect controls
+        updateEffectControls(null);
+        
+        // Check if html2canvas loaded
+        window.addEventListener('load', () => {
+            if (typeof html2canvas === 'undefined') {
+                console.warn('html2canvas library failed to load');
+                // Update download button to show warning
+                downloadBtn.title = 'Export might have limited functionality. Try refreshing the page.';
+            }
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            // Check if clicking on canvas but not on any layer
+            if (e.target === canvas || e.target === shirtImage) {
+                previewToggle.checked = true;
+                updateMeasurements();
+                layers.forEach(layer => {
+                    if (layer.type === 'text') {
+                        layer.element.style.pointerEvents = 'none';
+                    }
+                });
+                debouncedSave('Auto Preview Mode');
+            } else if (e.target.closest('.image-container') || e.target.closest('.text-overlay')) {
+                // Turn off preview mode when clicking on any graphic layer
+                previewToggle.checked = false;
+                updateMeasurements();
+                layers.forEach(layer => {
+                    if (layer.type === 'text') {
+                        layer.element.style.pointerEvents = 'auto';
+                    }
+                });
+                debouncedSave('Auto Edit Mode');
+            }
+        });
+
+        // Effect controls event listeners
+        brightnessInput.addEventListener('input', () => {
+            updateEffectValues();
+            applyEffects();
+        });
+
+        contrastInput.addEventListener('input', () => {
+            updateEffectValues();
+            applyEffects();
+        });
+
+        saturationInput.addEventListener('input', () => {
+            updateEffectValues();
+            applyEffects();
+        });
+
+        blurInput.addEventListener('input', () => {
+            updateEffectValues();
+            applyEffects();
+        });
+
+        opacityInput.addEventListener('input', () => {
+            updateEffectValues();
+            applyEffects();
+        });
+
+        resetEffectsBtn.addEventListener('click', () => {
+            if (!activeLayer) return;
+            brightnessInput.value = 100;
+            contrastInput.value = 100;
+            saturationInput.value = 100;
+            blurInput.value = 0;
+            opacityInput.value = 100;
+            updateEffectValues();
+            applyEffects();
+        });
+
+        autoAdjustBtn.addEventListener('click', () => {
+            if (!activeLayer) return;
+            // Simple auto-adjust: increase contrast and brightness slightly
+            brightnessInput.value = 110;
+            contrastInput.value = 120;
+            saturationInput.value = 105;
+            updateEffectValues();
+            applyEffects();
+        });
+    </script>
+</body>
+</html>
