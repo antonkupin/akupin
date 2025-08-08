@@ -1740,6 +1740,9 @@ body::before {
 }
 
 @media (max-width: 768px) {
+    .footer-social {
+        justify-content: center;
+    }
     .hamburger {
         display: flex;
     }
