@@ -132,8 +132,8 @@ body {
 .hamb-header-center {
     flex: 2 1 0;
     display: flex;
-    justify-content: end;
-    align-items: end;
+    justify-content: center;
+    align-items: center;
 }
 
 .hamb-header-right {

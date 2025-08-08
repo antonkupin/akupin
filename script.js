@@ -1,7 +1,12 @@
 // Generate Navigation HTML
 function generateNavigation() {
     const navigationElement = document.querySelector('navigation');
-    if (!navigationElement) return;
+    if (!navigationElement) {
+        console.error('Navigation element not found');
+        return;
+    }
+    
+    console.log('Generating navigation...');
     
     const navigationHTML = `
         <header class="hamb-header">
@@ -28,10 +33,12 @@ function generateNavigation() {
     `;
     
     navigationElement.innerHTML = navigationHTML;
+    console.log('Navigation generated successfully');
 }
 
 // Initialize navigation on DOM load
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing navigation...');
     generateNavigation();
     initializeNavigation();
 });
