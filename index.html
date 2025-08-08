@@ -1,50 +1,33 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anton Kupin - Portfolio Gallery</title>
+    <title>Anton Kupin - Creative Developer & Brand Tools Specialist</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="#home">AKUPIN</a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <navigation></navigation>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">Anton Kupin</h1>
-                <p class="hero-subtitle">Creative Developer & Brand Tools Specialist</p>
-                <p class="hero-description">Crafting innovative digital solutions and brand tools that transform ideas into reality</p>
+                <p class="hero-subtitle">Creative Direction and Development</p>
+                <p class="hero-description">Fashion Design, Brand Development, Web Coding, Visual Storytelling, and Creative Direction</p>
                 <div class="hero-buttons">
                     <a href="#portfolio" class="btn btn-primary">View Portfolio</a>
                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>
                 </div>
             </div>
             <div class="hero-image">
-                <div class="hero-graphic">
-                    <i class="fas fa-palette"></i>
-                </div>
+         
             </div>
         </div>
     </section>
@@ -60,118 +43,17 @@
             <!-- Filter Buttons -->
             <div class="portfolio-filters">
                 <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="brand-tools">Brand Tools</button>
+                
                 <button class="filter-btn" data-filter="web-design">Web Design</button>
-                <button class="filter-btn" data-filter="mockups">Mockups</button>
-                <button class="filter-btn" data-filter="generators">Generators</button>
+                
+                
                 <button class="filter-btn" data-filter="photography">Photography</button>
             </div>
 
             <!-- Portfolio Grid -->
             <div class="portfolio-grid">
                 <!-- Brand Tools Projects -->
-                <div class="portfolio-item" data-category="brand-tools">
-                    <div class="portfolio-card">
-                        <div class="portfolio-image">
-                            <img src="assets/bitmappery-preview.svg" alt="Bitmappery - Image Editor">
-                        </div>
-                        <div class="portfolio-content">
-                            <h3>Bitmappery - Advanced Image Editor</h3>
-                            <div class="portfolio-tags">
-                                <span class="tag">Vue.js</span>
-                                <span class="tag">Canvas API</span>
-                                <span class="tag">WebAssembly</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item" data-category="mockups">
-                    <div class="portfolio-card">
-                        <div class="portfolio-image">
-                            <img src="assets/clothing-mockup-preview.svg" alt="Clothing Mockup Generator">
-                        </div>
-                        <div class="portfolio-content">
-                            <h3>Clothing Mockup Generator</h3>
-                            <div class="portfolio-tags">
-                                <span class="tag">HTML5</span>
-                                <span class="tag">CSS3</span>
-                                <span class="tag">JavaScript</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item" data-category="generators">
-                    <div class="portfolio-card">
-                        <div class="portfolio-image">
-                            <img src="assets/drop-projection-preview.svg" alt="Drop Projection Generator">
-                        </div>
-                        <div class="portfolio-content">
-                            <h3>Drop Projection Generator</h3>
-                            <div class="portfolio-tags">
-                                <span class="tag">Canvas</span>
-                                <span class="tag">Image Processing</span>
-                                <span class="tag">Real-time</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item" data-category="generators">
-                    <div class="portfolio-card">
-                        <div class="portfolio-image">
-                            <img src="assets/size-chart-preview.svg" alt="Size Chart Generator">
-                        </div>
-                        <div class="portfolio-content">
-                            <h3>Size Chart Generator</h3>
-                            <div class="portfolio-tags">
-                                <span class="tag">React</span>
-                                <span class="tag">PDF Generation</span>
-                                <span class="tag">Templates</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item" data-category="web-design">
-                    <div class="portfolio-card">
-                        <div class="portfolio-image">
-                            <img src="assets/drop-university-preview.svg" alt="Drop University Landing">
-                        </div>
-                        <div class="portfolio-content">
-                            <h3>Drop University Landing Page</h3>
-                            <div class="portfolio-tags">
-                                <span class="tag">HTML5</span>
-                                <span class="tag">CSS3</span>
-                                <span class="tag">Responsive</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item" data-category="brand-tools">
-                    <div class="portfolio-card">
-                        <div class="portfolio-image">
-                            <img src="assets/techpack-preview.svg" alt="Techpack Generator">
-                            <div class="portfolio-overlay">
-                                <div class="portfolio-links">
-                                    <a href="#" class="portfolio-link"><i class="fas fa-external-link-alt"></i></a>
-                                    <a href="#" class="portfolio-link"><i class="fas fa-github"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="portfolio-content">
-                            <h3>Techpack Generator</h3>
-                            <p>Comprehensive technical specification generator for fashion design with detailed measurement and specification tools.</p>
-                            <div class="portfolio-tags">
-                                <span class="tag">Vue.js</span>
-                                <span class="tag">PDF Export</span>
-                                <span class="tag">Fashion Tech</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
                                 <div class="portfolio-item" data-category="photography">
                     <div class="portfolio-card tiypn-card" onclick="window.open('tiypn-photoshoot.html', '_blank')" style="cursor: pointer;">
@@ -179,7 +61,7 @@
                             <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140&width=600" alt="TIYPN SS25">
                         </div>
                         <div class="portfolio-content tiypn-content">
-                            <h3>TIYPN SS25</h3>
+                            <h3>Tiypn SS25</h3>
                             <div class="portfolio-tags">
                                 <span class="tag">Photography</span>
                                 <span class="tag">Creative Direction</span>
@@ -195,7 +77,7 @@
                             <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/6.png?v=1728073755&width=600" alt="TIYPN FW24">
                         </div>
                         <div class="portfolio-content tiypn-fw24-content">
-                            <h3>TIYPN FW24</h3>
+                            <h3>Tiypn FW24</h3>
                             <div class="portfolio-tags">
                                 <span class="tag">Photography</span>
                                 <span class="tag">Creative Direction</span>
@@ -205,8 +87,112 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="portfolio-item" data-category="photography">
+                    <div class="portfolio-card tiypn-ss24-card" onclick="window.open('tiypn-ss24-photoshoot.html', '_blank')" style="cursor: pointer;">
+                        <div class="portfolio-image tiypn-ss24-image">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_fb985d95-e67e-46ab-a0ff-ac13c632534e.png?v=1754598234&width=600" alt="TIYPN SS24">
+                        </div>
+                        <div class="portfolio-content tiypn-ss24-content">
+                            <h3>Tiypn SS24</h3>
+                            <div class="portfolio-tags">
+                                <span class="tag">Photography</span>
+                                <span class="tag">Creative Direction</span>
+                                <span class="tag">Fashion</span>
+                                <span class="tag">Brand Storytelling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="photography">
+                    <div class="portfolio-card tiypn-ss24-film-card" onclick="window.open('tiypn-ss24-short-film.html', '_blank')" style="cursor: pointer;">
+                        <div class="portfolio-image tiypn-ss24-film-image">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/preview_images/bfd244a05b364f589173e6f523e6e48d.thumbnail.0000000000_800x800.jpg?v=1754599701" style="object-fit: cover;"alt="TIYPN SS24 Short Film">
+                        </div>
+                        <div class="portfolio-content tiypn-ss24-film-content">
+                            <h3>Tiypn SS24 Short Film</h3>
+                            <div class="portfolio-tags">
+                                <span class="tag">Video Direction</span>
+                                <span class="tag">Cinematography</span>
+                                <span class="tag">Creative Direction</span>
+                                <span class="tag">Post-Production</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="photography">
+                    <div class="portfolio-card tiypn-winter23-film-card" onclick="window.open('tiypn-winter23-short-film.html', '_blank')" style="cursor: pointer;">
+                        <div class="portfolio-image tiypn-winter23-film-image">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/preview_images/801b45fa4b854bc687314d99ed7b0e7d.thumbnail.0000000000_800x800.jpg?v=1754599701" style="object-fit: cover;"alt="TIYPN Winter '23 Short Film">
+                        </div>
+                        <div class="portfolio-content tiypn-winter23-film-content">
+                            <h3>Tiypn Winter '23 Short Film</h3>
+                            <div class="portfolio-tags">
+                                <span class="tag">Video Direction</span>
+                                <span class="tag">Cinematography</span>
+                                <span class="tag">Creative Direction</span>
+                                <span class="tag">Post-Production</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="photography">
+                    <div class="portfolio-card tiypn-winter23-card" onclick="window.open('tiypn-winter23-photoshoot.html', '_blank')" style="cursor: pointer;">
+                        <div class="portfolio-image tiypn-winter23-image">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_ec15c2ea-60fb-4ab9-923c-39028069adbf.png?v=1754601075" alt="TIYPN Winter '23 Collection">
+                        </div>
+                        <div class="portfolio-content tiypn-winter23-content">
+                            <h3>Tiypn Winter '23</h3>
+                            <div class="portfolio-tags">
+                                <span class="tag">Photography</span>
+                                <span class="tag">Creative Direction</span>
+                                <span class="tag">Fashion</span>
+                                <span class="tag">Brand Storytelling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="photography">
+                    <div class="portfolio-card tiypn-fall23-card" onclick="window.open('tiypn-fall23-photoshoot.html', '_blank')" style="cursor: pointer;">
+                        <div class="portfolio-image tiypn-fall23-image">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_545c9365-18cd-4ad7-914b-883e092756d2.png?v=1754601732" alt="TIYPN Fall '23 Collection">
+                        </div>
+                        <div class="portfolio-content tiypn-fall23-content">
+                            <h3>Tiypn Fall '23</h3>
+                            <div class="portfolio-tags">
+                                <span class="tag">Photography</span>
+                                <span class="tag">Creative Direction</span>
+                                <span class="tag">Fashion</span>
+                                <span class="tag">Brand Storytelling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="photography">
+                    <div class="portfolio-card tiypn-ss23-card" onclick="window.open('tiypn-ss23-photoshoot.html', '_blank')" style="cursor: pointer;">
+                        <div class="portfolio-image tiypn-ss23-image">
+                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/black.png?v=1754602911" alt="TIYPN SS23 Collection">
+                        </div>
+                        <div class="portfolio-content tiypn-ss23-content">
+                            <h3>Tiypn SS23</h3>
+                            <div class="portfolio-tags">
+                                <span class="tag">Photography</span>
+                                <span class="tag">Creative Direction</span>
+                                <span class="tag">Fashion</span>
+                                <span class="tag">Brand Storytelling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        
     </section>
 
     <!-- About Section -->
@@ -215,13 +201,13 @@
             <div class="about-content">
                 <div class="about-text">
                     <h2>About Me</h2>
-                    <p>I'm a passionate creative developer specializing in brand tools and digital solutions. With expertise in modern web technologies, I create innovative tools that help brands and designers bring their visions to life.</p>
+                    <p>I'm a passionate creative developer specializing in brand development and digital solutions. Im skilled in web development, photography, and creative direction. I create innovative tools that help brands and designers bring their visions to life.</p>
                     <p>My focus areas include:</p>
                     <ul class="skills-list">
-                        <li><i class="fas fa-check"></i> Advanced Image Editing Tools</li>
-                        <li><i class="fas fa-check"></i> Fashion & Brand Mockup Generators</li>
-                        <li><i class="fas fa-check"></i> Interactive Web Applications</li>
-                        <li><i class="fas fa-check"></i> Real-time Design Tools</li>
+                        <li><i class="fas fa-check"></i> Web Development</li>
+                        <li><i class="fas fa-check"></i> Photography</li>
+                        <li><i class="fas fa-check"></i> Creative Direction</li>
+                        <li><i class="fas fa-check"></i> Brand Development</li>
                     </ul>
                 </div>
                 <div class="about-stats">
@@ -255,7 +241,7 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h3>Email</h3>
-                            <p>hello@akupin.com</p>
+                            <p>akupin.contact@gmail.com</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -274,18 +260,18 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form>
+                    <form id="contactForm">
                         <div class="form-group">
-                            <input type="text" placeholder="Your Name" required>
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" placeholder="Your Email" required>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" placeholder="Subject" required>
+                            <input type="text" id="subject" name="subject" placeholder="Subject" required>
                         </div>
                         <div class="form-group">
-                            <textarea placeholder="Your Message" rows="5" required></textarea>
+                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
@@ -299,8 +285,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <h3>AKUPIN</h3>
-                    <p>Creative Developer & Brand Tools Specialist</p>
+                    <h3>Anton Kupin</h3>
+                    <p>Creative Direction and Development</p>
                 </div>
                 <div class="footer-links">
                     <a href="#home">Home</a>
@@ -309,10 +295,9 @@
                     <a href="#contact">Contact</a>
                 </div>
                 <div class="footer-social">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/antonvkupin/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/anthony-kupin-7104622b0/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.tiktok.com/@antonvkupin" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -326,3 +311,34 @@
     <script src="script.js"></script>
 </body>
 </html> 
+
+<script>
+  // Timezone display
+  function updateTimezoneDisplay() {
+    const tzSpan = document.getElementById('timezoneDisplay');
+    if (tzSpan) {
+      const now = new Date();
+      // Format time as HH:MM AM/PM
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+      // Get timezone abbreviation (best effort)
+      let tzAbbr = '';
+      try {
+        // This works in most modern browsers
+        const parts = now.toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ');
+        tzAbbr = parts[parts.length - 1];
+        // If abbreviation is numeric (e.g. +03:00), fallback to region name
+        if (/^[\d\+\-:]+$/.test(tzAbbr)) {
+          tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+      } catch (e) {
+        tzAbbr = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      }
+      tzSpan.textContent = `${timeString} (${tzAbbr})`;
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    updateTimezoneDisplay();
+    setInterval(updateTimezoneDisplay, 1000);
+  });
+</script>

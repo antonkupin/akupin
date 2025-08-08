@@ -23,6 +23,60 @@
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    
+    /* Hamburger menu variables */
+    --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    --background-color: transparent;
+    --gradient-1: rgba(0, 0, 0, 0.6);
+    --gradient-2: rgba(0, 0, 0, 0.4);
+    --text-color: #fff;
+    --header-bg: rgba(26, 26, 26, 0.75);
+    --header-border: rgba(255, 255, 255, 0.18);
+    --nav-drawer-bg: rgba(30, 30, 30, 0.25);
+    --nav-drawer-border: rgba(255, 255, 255, 0.18);
+    --nav-link-hover: rgba(255, 255, 255, 0.1);
+    --overlay-bg: rgba(0, 0, 0, 0.5);
+    --form-bg: rgba(255, 255, 255, 0.15);
+    --input-bg: rgba(255, 255, 255, 0.15);
+    --input-border: rgba(255, 255, 255, 0.3);
+    --input-focus: #007AFF;
+    --input-focus-shadow: rgba(0, 122, 255, 0.3);
+    --button-bg: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+    --button-hover: linear-gradient(135deg, #0056CC 0%, #004499 100%);
+    --button-shadow: rgba(0, 122, 255, 0.3);
+    --clear-btn-bg: rgba(255, 97, 87, 0.8);
+    --clear-btn-hover: rgba(255, 97, 87, 1);
+    --clear-btn-shadow: rgba(255, 97, 87, 0.2);
+    --export-btn-bg: rgba(255, 255, 255, 0.2);
+    --export-btn-hover: rgba(255, 255, 255, 0.3);
+    --export-btn-border: rgba(255, 255, 255, 0.2);
+    --export-btn-shadow: rgba(255, 255, 255, 0.1);
+    --remove-btn-border: #ff6157;
+    --remove-btn-color: #ff6157;
+    --edit-btn-border: #007AFF;
+    --edit-btn-color: #007AFF;
+    --remove-btn-hover-bg: #ff6157;
+    --edit-btn-hover-bg: #007AFF;
+    --remove-btn-hover-shadow: rgba(255, 97, 87, 0.2);
+    --edit-btn-hover-shadow: rgba(0, 122, 255, 0.2);
+    --product-card-bg: rgba(255, 255, 255, 0.15);
+    --table-bg: rgba(255, 255, 255, 0.15);
+    --table-header-bg: rgba(255, 255, 255, 0.1);
+    --table-border: rgba(255, 255, 255, 0.2);
+    --table-cell-border: rgba(255, 255, 255, 0.1);
+    --table-hover: rgba(0, 122, 255, 0.1);
+    --table-footer-bg: rgba(0, 122, 255, 0.1);
+    --summary-table-bg: rgba(255, 255, 255, 0.15);
+    --highlight-profit: #34C759;
+    --highlight-profit-bg: rgba(52, 199, 89, 0.1);
+    --highlight-profit-border: rgba(52, 199, 89, 0.2);
+    --storage-status-bg: rgba(255, 255, 255, 0.15);
+    --storage-status-success: #34C759;
+    --storage-status-success-border: rgba(52, 199, 89, 0.2);
+    --storage-status-error: #ff6157;
+    --storage-status-error-border: rgba(255, 97, 87, 0.2);
+    --file-upload-bg: #007AFF;
+    --file-upload-border: #0056CC;
 }
 
 /* Reset and Base Styles */
@@ -41,6 +95,264 @@ body {
     background: var(--tahoe-bg);
     overflow-x: hidden;
     position: relative;
+}
+
+/* Hamburger Menu Styles */
+.hamb-header {
+    height: 44px !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    padding: 0 16px !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    align-items: center !important;
+    background: rgba(10, 10, 10, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+}
+
+.hamb-header-container {
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.hamb-header-left {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    min-width: 44px;
+}
+
+.hamb-header-center {
+    flex: 2 1 0;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.hamb-header-right {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 120px;
+}
+
+.hamb-logo {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hamb-hamburger {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.3s ease;
+}
+
+.hamb-hamburger:hover,
+.hamb-hamburger:focus {
+    opacity: 0.7;
+    outline: none;
+}
+
+/* Glass-Themed Navigation Drawer */
+.hamb-nav-drawer {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    height: 100%;
+    background: var(--nav-drawer-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-right: 1.5px solid var(--nav-drawer-border);
+    box-shadow: 2px 0 24px rgba(31,38,135,0.12);
+    padding: 16px;
+    transition: left 0.3s ease;
+    z-index: 10019;
+}
+
+.hamb-nav-drawer.active {
+    left: 0;
+}
+
+.hamb-nav-list {
+    list-style: none;
+    padding: 60px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hamb-nav-list li {
+    border-bottom: 1px solid var(--nav-drawer-border);
+    padding-bottom: 12px;
+}
+
+.hamb-nav-list li a {
+    display: block;
+    padding: 8px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.hamb-nav-list li a:hover {
+    background: var(--nav-link-hover);
+}
+
+.scroll-link {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scroll-link:hover {
+    color: #007AFF;
+}
+
+/* Submenu styles */
+.hamb-nav-submenu {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 8px;
+    display: none;
+    border-left: 1px solid var(--nav-drawer-border);
+    margin-left: 8px;
+}
+
+.hamb-nav-submenu.active {
+    display: block;
+}
+
+.hamb-nav-submenu li {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.hamb-nav-submenu li a {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+    opacity: 0.9;
+}
+
+.hamb-nav-item-with-submenu > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.hamb-nav-submenu-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+.hamb-nav-submenu-toggle.active {
+    transform: rotate(90deg);
+}
+
+.hamb-nav-submenu li {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 8px;
+}
+
+.hamb-nav-submenu li a {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.hamb-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    z-index: 9999;
+}
+
+.hamb-overlay.active {
+    display: block;
+}
+
+.hamb-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--remove-btn-border);
+    border: none;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.hamb-close-btn:hover {
+    opacity: 0.7;
+}
+
+.hamb-button {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.hamb-button:hover,
+.hamb-button:focus {
+    background: #005bb5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 95, 163, 0.4);
+    transform: translateY(-2px);
+}
+
+.portfolio-content {
+    background: transparent !important; 
+    backdrop-filter: none !important;
+    border: none !important;
+}
+
+.portfolio-content h3 {
+    background: transparent !important; 
+    backdrop-filter: none !important;
+    border: none !important;
+    font-size: 1.2rem !important;
+}
+
+.tag {
+    font-size: 0.6rem !important;
 }
 
 body::before {
@@ -65,71 +377,10 @@ body::before {
 }
 
 /* Navigation */
-.navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(10, 10, 10, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--tahoe-border);
-    z-index: 1000;
-    padding: 1rem 0;
-    transition: all 0.3s ease;
-}
 
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
-.nav-logo a {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--tahoe-primary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
 
-.nav-logo a:hover {
-    color: var(--tahoe-primary-hover);
-}
 
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-}
-
-.nav-link {
-    color: var(--tahoe-text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    position: relative;
-    padding: 8px 16px;
-    border-radius: var(--tahoe-radius);
-}
-
-.nav-link:hover {
-    color: var(--tahoe-text-primary);
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-}
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: var(--tahoe-radius);
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-}
 
 .bar {
     width: 25px;
@@ -155,13 +406,14 @@ body::before {
     margin: 0 auto;
     padding: 0 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    
     gap: 4rem;
     align-items: center;
 }
 
 .hero-content {
     animation: fadeInUp 1s ease-out;
+    text-align: center;
 }
 
 .hero-title {
@@ -192,6 +444,7 @@ body::before {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .btn {
@@ -504,6 +757,334 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(10px);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* TIYPN Winter '23 Card Specific Styles */
+.tiypn-winter23-card {
+    position: relative;
+    background: transparent;
+    border: none;
+    overflow: hidden;
+    height: 400px;
+}
+
+.tiypn-winter23-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.tiypn-winter23-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-winter23-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.tiypn-winter23-card:hover .tiypn-winter23-image img {
+    transform: scale(1.05);
+}
+
+.tiypn-winter23-card:hover .tiypn-winter23-content {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.tiypn-winter23-content h3 {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tiypn-winter23-content .tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* TIYPN Fall '23 Card Specific Styles */
+.tiypn-fall23-card {
+    position: relative;
+    background: transparent;
+    border: none;
+    overflow: hidden;
+    height: 400px;
+}
+
+.tiypn-fall23-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.tiypn-fall23-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-fall23-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.tiypn-fall23-card:hover .tiypn-fall23-image img {
+    transform: scale(1.05);
+}
+
+.tiypn-fall23-card:hover .tiypn-fall23-content {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.tiypn-fall23-content h3 {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tiypn-fall23-content .tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* TIYPN SS23 Card Specific Styles */
+.tiypn-ss23-card {
+    position: relative;
+    background: transparent;
+    border: none;
+    overflow: hidden;
+    height: 400px;
+}
+
+.tiypn-ss23-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.tiypn-ss23-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-ss23-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.tiypn-ss23-card:hover .tiypn-ss23-image img {
+    transform: scale(1.05);
+}
+
+.tiypn-ss23-card:hover .tiypn-ss23-content {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.tiypn-ss23-content h3 {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tiypn-ss23-content .tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* TIYPN SS24 Card Specific Styles */
+.tiypn-ss24-card {
+    position: relative;
+    background: transparent;
+    border: none;
+    overflow: hidden;
+    height: 400px;
+}
+
+.tiypn-ss24-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.tiypn-ss24-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-ss24-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+    z-index: 2;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.tiypn-ss24-card:hover .tiypn-ss24-image img {
+    transform: scale(1.05);
+}
+
+.tiypn-ss24-card:hover .tiypn-ss24-content {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.tiypn-ss24-content h3 {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tiypn-ss24-content .tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* TIYPN SS24 Film Card Specific Styles */
+.tiypn-ss24-film-card {
+    /* Uses standard portfolio card styling */
+}
+
+.tiypn-ss24-film-image {
+    /* Uses standard portfolio image styling */
+}
+
+.tiypn-ss24-film-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-ss24-film-content {
+    /* Uses standard portfolio content styling */
+}
+
+.tiypn-ss24-film-card:hover .tiypn-ss24-film-image img {
+    transform: scale(1.1);
+}
+
+.tiypn-ss24-film-card:hover .tiypn-ss24-film-content {
+    /* Uses standard hover styling */
+}
+
+.tiypn-ss24-film-content h3 {
+    /* Uses standard portfolio content h3 styling */
+}
+
+.tiypn-ss24-film-content .tag {
+    /* Uses standard tag styling */
+}
+
+/* TIYPN Winter '23 Film Card Specific Styles */
+.tiypn-winter23-film-card {
+    /* Uses standard portfolio card styling */
+}
+
+.tiypn-winter23-film-image {
+    /* Uses standard portfolio image styling */
+}
+
+.tiypn-winter23-film-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-winter23-film-content {
+    /* Uses standard portfolio content styling */
+}
+
+.tiypn-winter23-film-card:hover .tiypn-winter23-film-image img {
+    transform: scale(1.1);
+}
+
+.tiypn-winter23-film-card:hover .tiypn-winter23-film-content {
+    /* Uses standard hover styling */
+}
+
+.tiypn-winter23-film-content h3 {
+    /* Uses standard portfolio content h3 styling */
+}
+
+.tiypn-winter23-film-content .tag {
+    /* Uses standard tag styling */
 }
 
 /* Project Header Styles */

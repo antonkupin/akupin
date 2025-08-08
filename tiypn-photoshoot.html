@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TIYPN SS25 - Anton Kupin</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* macOS Tahoe 26 Dark Theme with Glass Morphism */
@@ -33,6 +32,7 @@
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
         }
         
         body {
@@ -59,59 +59,10 @@
             pointer-events: none;
             z-index: -1;
         }
-        
-        .navbar {
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--tahoe-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-        }
-        
-        .nav-logo a {
-            color: var(--tahoe-primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .nav-link {
-            color: var(--tahoe-text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            padding: 8px 16px;
-            border-radius: var(--tahoe-radius);
-        }
-        
-        .nav-link:hover {
-            color: var(--tahoe-text-primary);
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-        }
+     
         
         .project-content {
-            padding: 40px 0;
+            padding: 150px 0;
             background: transparent;
         }
         
@@ -122,9 +73,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
         }
-        
+        .project-info p {
+            font-size: 0.8rem;
+        }
         .project-info {
-            max-width: 800px;
+            max-width: 400px;
             margin: 0 auto 60px;
             text-align: center;
             background: var(--glass-bg);
@@ -133,21 +86,18 @@
             box-shadow: var(--tahoe-shadow);
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(20px);
+            height: fit-content;
+            
         }
         
         .project-info h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--tahoe-text-primary);
             margin-bottom: 1rem;
             font-weight: 600;
         }
         
-        .project-info p {
-            color: var(--tahoe-text-secondary);
-            line-height: 1.7;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
+       
         
         .project-tags {
             display: flex;
@@ -157,40 +107,16 @@
             margin-bottom: 2rem;
         }
         
-        .tag {
-            background: var(--tahoe-primary);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
+   
         
-        .instagram-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--tahoe-primary);
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: var(--tahoe-radius);
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: var(--tahoe-shadow);
-        }
-        
+   
         
         
         
         
         
      
-        .instagram-link:hover {
-            background: var(--tahoe-primary-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--tahoe-shadow-lg);
-        }
+      
         
         .project-gallery {
             max-width: 1200px;
@@ -241,6 +167,22 @@
         
         .gallery-item:hover .gallery-caption {
             transform: translateY(0);
+        }
+        
+        /* Gallery Layout Styles */
+        .gallery-layout {
+            display: grid;
+            grid-template-columns: 120px 550px;
+            gap: 2rem;
+            align-items: start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .gallery-thumbnails-column {
+            position: relative;
+            top: 2rem;
+            margin-left:auto;
         }
         
         /* Gallery Navigation Styles */
@@ -389,16 +331,17 @@
         
         .gallery-thumbnails {
             display: flex;
+            flex-direction: column;
             gap: 1rem;
-            overflow-x: auto;
+            overflow-y: auto;
             padding: 1rem 0;
-            max-width: 600px;
+            max-height: 400px;
             scrollbar-width: thin;
             scrollbar-color: var(--tahoe-primary) transparent;
         }
         
         .gallery-thumbnails::-webkit-scrollbar {
-            height: 6px;
+            width: 6px;
         }
         
         .gallery-thumbnails::-webkit-scrollbar-track {
@@ -429,13 +372,13 @@
         
         .thumbnail-item.active {
             border-color: var(--tahoe-primary);
-            transform: scale(1.05);
+            transform: scale(1.00);
             box-shadow: var(--tahoe-shadow-lg);
         }
         
         .thumbnail-item:hover {
             border-color: var(--tahoe-primary);
-            transform: scale(1.05);
+            transform: scale(1.00);
         }
         
         .thumbnail-item img {
@@ -551,7 +494,15 @@
             color: var(--tahoe-text-tertiary);
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 1100px) and (min-width: 980px){
+            .gallery-layout {
+                grid-template-columns: 120px 450px;
+            }
+            .project-info p {
+                font-size: 0.6rem;
+            }
+        }
+        @media (max-width: 980px) {
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -559,19 +510,38 @@
             display: grid;
             grid-template-columns: 1fr;
         }
-        
+        .project-info {
+            margin-top: 3rem;
+            max-width: 100%;
+        }
             .project-hero h1 {
                 font-size: 2rem;
             }
             
+            .gallery-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .gallery-thumbnails-column {
+                position: relative;
+                order: 2;
+                top: 0;
+                margin: 0;
+            }
+            
             .gallery-navigation {
-                
                 gap: 1rem;
             }
             
             .gallery-thumbnails {
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: visible;
                 max-width: 100%;
+                max-height: none;
                 justify-content: center;
+                padding: 0.5rem 0;
             }
             
             #main-gallery-image {
@@ -585,72 +555,66 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="index.html">AKUPIN</a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html#home" class="nav-link">Home</a></li>
-                <li><a href="index.html#portfolio" class="nav-link">Portfolio</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <navigation></navigation>
 
     <!-- Project Content -->
     <section class="project-content">
         <div class="container">
             <div class="project-gallery">
-                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--tahoe-text-primary); font-weight: 600;">Photoshoot Gallery</h2>
                 
-                <!-- Main Gallery Image -->
-                <div class="gallery-main">
-                    <div class="gallery-image-container">
-                        <img id="main-gallery-image" src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140" alt="TIYPN SS25 - Collection Detail">
-                        <button class="fullscreen-btn" id="fullscreen-btn">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                        <div class="gallery-caption-main">
-                            <h3 id="main-gallery-title">Collection Detail</h3>
-                            <p id="main-gallery-description">Showcasing fabric textures and design elements</p>
-                        </div>
-                    </div>
-                </div>
                 
-                <!-- Gallery Navigation -->
-                <div class="gallery-navigation">
-                    <button class="gallery-nav-btn" id="gallery-prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    
-                    <div class="gallery-thumbnails">
-                        <div class="thumbnail-item active" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140" data-title="Collection Detail" data-description="Showcasing fabric textures and design elements">
-                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140&width=200" alt="Collection Detail" loading="lazy">
-                        </div>
-                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_708fe570-7c31-4057-83bc-dabb492856bf.png?v=1750720140" data-title="Model Shot" data-description="Highlighting the fit and silhouette">
-                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_708fe570-7c31-4057-83bc-dabb492856bf.png?v=1750720140&width=200" alt="Model Shot" loading="lazy">
-                        </div>
-                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_f9fa6f68-ede2-49fc-9873-56deffc26d83.png?v=1750720139" data-title="Lifestyle Shot" data-description="Capturing the brand's lifestyle aesthetic">
-                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_f9fa6f68-ede2-49fc-9873-56deffc26d83.png?v=1750720139&width=200" alt="Lifestyle Shot" loading="lazy">
-                        </div>
-                        <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/2_9d87e9de-ddae-4b3f-980d-168156a5ee88.png?v=1750720139" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
-                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/2_9d87e9de-ddae-4b3f-980d-168156a5ee88.png?v=1750720139&width=200" alt="Detail Shot" loading="lazy">
+                <!-- Gallery Layout -->
+                <div class="gallery-layout">
+                    <!-- Thumbnails Column -->
+                    <div class="gallery-thumbnails-column">
+                        <div class="gallery-thumbnails">
+                            <div class="thumbnail-item active" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140" data-title="Collection Detail" data-description="Showcasing fabric textures and design elements">
+                                <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140&width=200" alt="Collection Detail" loading="lazy">
+                            </div>
+                            <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_708fe570-7c31-4057-83bc-dabb492856bf.png?v=1750720140" data-title="Model Shot" data-description="Highlighting the fit and silhouette">
+                                <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/3_708fe570-7c31-4057-83bc-dabb492856bf.png?v=1750720140&width=200" alt="Model Shot" loading="lazy">
+                            </div>
+                            <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_f9fa6f68-ede2-49fc-9873-56deffc26d83.png?v=1750720139" data-title="Lifestyle Shot" data-description="Capturing the brand's lifestyle aesthetic">
+                                <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/1_f9fa6f68-ede2-49fc-9873-56deffc26d83.png?v=1750720139&width=200" alt="Lifestyle Shot" loading="lazy">
+                            </div>
+                            <div class="thumbnail-item" data-src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/2_9d87e9de-ddae-4b3f-980d-168156a5ee88.png?v=1750720139" data-title="Detail Shot" data-description="Focusing on craftsmanship and quality">
+                                <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/2_9d87e9de-ddae-4b3f-980d-168156a5ee88.png?v=1750720139&width=200" alt="Detail Shot" loading="lazy">
+                            </div>
                         </div>
                     </div>
                     
-                    <button class="gallery-nav-btn" id="gallery-next">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <!-- Main Gallery Image -->
+                    <div class="gallery-main">
+                        <div class="gallery-image-container">
+                            <img id="main-gallery-image" src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140" alt="TIYPN SS25 - Collection Detail">
+                            <button class="fullscreen-btn" id="fullscreen-btn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <div class="gallery-caption-main">
+                                <h3 id="main-gallery-title">Collection Detail</h3>
+                                <p id="main-gallery-description">Showcasing fabric textures and design elements</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Gallery Navigation -->
+                        <div class="gallery-navigation" style="display: none;">
+                            <button class="gallery-nav-btn" id="gallery-prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="gallery-nav-btn" id="gallery-next">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div class="project-info">
                 <h2>TIYPN SS25 Collection</h2>
                 <p>I led the entire collection photoshoot for TIYPN's Spring/Summer 2025 collection, taking full creative direction from concept development to final execution. This comprehensive project involved location scouting, model casting, styling coordination, photography, and post-production editing. The shoot captured the brand's surf and skate aesthetic while showcasing the innovative designs and quality craftsmanship of the SS25 collection, including surf & skate pieces, camo long sleeves, and camo pants. Every aspect of the creative process was carefully orchestrated to tell the TIYPN story and bring the collection to life through compelling visual storytelling.</p>
-                
+             
+                <div class="project-info-content">
+                    <div class="product-info-wrapper">
                 <div class="project-tags">
                     <span class="tag">Photography</span>
                     <span class="tag">Creative Direction</span>
@@ -663,6 +627,8 @@
                     <i class="fab fa-instagram"></i>
                     View on Instagram
                 </a>
+                </div>
+                </div>
             </div>
         </div>
     </section>
@@ -682,8 +648,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <h3>AKUPIN</h3>
-                    <p>Creative Developer & Brand Tools Specialist</p>
+                    <h3>Anton Kupin</h3>
+                    <p>Creative Direction and Development</p>
                 </div>
                 <div class="footer-links">
                     <a href="index.html#home">Home</a>
@@ -692,10 +658,9 @@
                     <a href="index.html#contact">Contact</a>
                 </div>
                 <div class="footer-social">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/antonvkupin/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/anthony-kupin-7104622b0/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.tiktok.com/@antonvkupin" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -817,5 +782,7 @@
             });
         });
     </script>
+
+<script src="script.js"></script>
 </body>
 </html> 

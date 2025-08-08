@@ -1,17 +1,99 @@
-// Mobile Navigation Toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
+// Generate Navigation HTML
+function generateNavigation() {
+    const navigationElement = document.querySelector('navigation');
+    if (!navigationElement) return;
+    
+    const navigationHTML = `
+        <header class="hamb-header">
+            <div class="hamb-header-container">
+                <div class="hamb-header-left">
+                    <button class="hamb-hamburger" id="hamburger">☰</button>
+                </div>
+                <div class="hamb-header-center">
+                    <a href="index.html" class="hamb-logo">Anton Kupin</a>
+                </div>
+            </div>
+        </header>
+        <nav class="hamb-nav-drawer" id="navDrawer">
+            <button class="hamb-close-btn" id="closeBtn"></button>
+            <ul class="hamb-nav-list" id="navList">
+                <li><a href="index.html#home" class="scroll-link">Home</a></li>
+                <li><a href="index.html#portfolio" class="scroll-link">Portfolio</a></li>
+                <li><a href="index.html#about" class="scroll-link">About</a></li>
+                <li><a href="index.html#contact" class="scroll-link">Contact</a></li>
+            </ul>
+            <div class="hamb-nav-footer"></div>
+        </nav>
+        <div class="hamb-overlay" id="overlay"></div>
+    `;
+    
+    navigationElement.innerHTML = navigationHTML;
+}
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
+// Initialize navigation on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+    generateNavigation();
+    initializeNavigation();
 });
 
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
-}));
+// Navigation functionality
+function initializeNavigation() {
+    const hamburger = document.getElementById('hamburger');
+    const navDrawer = document.getElementById('navDrawer');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('closeBtn');
+    
+    if (!hamburger || !navDrawer || !overlay || !closeBtn) return;
+    
+    hamburger.addEventListener('click', () => {
+        navDrawer.classList.add('active');
+        overlay.classList.add('active');
+    });
+    
+    overlay.addEventListener('click', () => {
+        navDrawer.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        navDrawer.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+    
+    // Setup smooth scrolling for navigation links
+    const scrollLinks = document.querySelectorAll('.scroll-link');
+    scrollLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            
+            // Check if it's an external link (contains index.html)
+            if (href.includes('index.html')) {
+                // Close hamburger menu if open
+                navDrawer.classList.remove('active');
+                overlay.classList.remove('active');
+                
+                // Navigate to the external page
+                window.location.href = href;
+            } else {
+                // Handle internal scrolling
+                const targetSection = document.querySelector(href);
+                
+                if (targetSection) {
+                    // Close hamburger menu if open
+                    navDrawer.classList.remove('active');
+                    overlay.classList.remove('active');
+                    
+                    // Smooth scroll to target section
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+}
 
 // Portfolio Filtering
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -86,17 +168,16 @@ document.querySelectorAll('.portfolio-item, .stat-item, .contact-item').forEach(
 });
 
 // Contact Form Handling
-const contactForm = document.querySelector('.contact-form form');
+const contactForm = document.querySelector('#contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // Get form data
-        const formData = new FormData(this);
-        const name = this.querySelector('input[type="text"]').value;
-        const email = this.querySelector('input[type="email"]').value;
-        const subject = this.querySelector('input[placeholder="Subject"]').value;
-        const message = this.querySelector('textarea').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
         
         // Basic validation
         if (!name || !email || !subject || !message) {
@@ -109,8 +190,14 @@ if (contactForm) {
             return;
         }
         
-        // Simulate form submission
-        showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+        // Create mailto link
+        const mailtoLink = `mailto:akupin.contact@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+        
+        // Open default email client
+        window.location.href = mailtoLink;
+        
+        // Show success message and reset form
+        showNotification('Opening your email client...', 'success');
         this.reset();
     });
 }
@@ -223,9 +310,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add keyboard navigation support
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        // Close mobile menu
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
+        // Close hamburger drawer if open
+        const navDrawer = document.getElementById('navDrawer');
+        const overlay = document.getElementById('overlay');
+        if (navDrawer && navDrawer.classList.contains('active')) {
+            navDrawer.classList.remove('active');
+            overlay.classList.remove('active');
+        }
         
         // Close any open notifications
         const notifications = document.querySelectorAll('.notification');

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIYPN Winter '23 Short Film - Anton Kupin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* macOS Tahoe 26 Dark Theme with Glass Morphism */
+        :root {
+            --tahoe-bg: #0a0a0a;
+            --tahoe-surface: rgba(255, 255, 255, 0.05);
+            --tahoe-surface-hover: rgba(255, 255, 255, 0.1);
+            --tahoe-primary: #007aff;
+            --tahoe-primary-hover: #0056cc;
+            --tahoe-secondary: #5856d6;
+            --tahoe-success: #34c759;
+            --tahoe-warning: #ff9500;
+            --tahoe-danger: #ff3b30;
+            --tahoe-text-primary: #ffffff;
+            --tahoe-text-secondary: #a1a1a6;
+            --tahoe-text-tertiary: #6e6e73;
+            --tahoe-border: rgba(255, 255, 255, 0.1);
+            --tahoe-border-hover: rgba(255, 255, 255, 0.2);
+            --tahoe-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --tahoe-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --tahoe-shadow-xl: 0 12px 60px rgba(0, 0, 0, 0.5);
+            --tahoe-radius: 12px;
+            --tahoe-radius-lg: 20px;
+            --tahoe-radius-xl: 28px;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+        }
+        
+        body {
+            background: var(--tahoe-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--tahoe-text-primary);
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(88, 86, 214, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(52, 199, 89, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+     
+        
+        .project-content {
+            padding: 150px 0;
+            background: transparent;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .project-info p {
+            font-size: 0.8rem;
+        }
+        .project-info {
+            max-width: 400px;
+            margin: 0 auto 60px;
+            text-align: center;
+            background: var(--glass-bg);
+            padding: 40px;
+            border-radius: var(--tahoe-radius-lg);
+            box-shadow: var(--tahoe-shadow);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            height: fit-content;
+            
+        }
+        
+        .project-info h2 {
+            font-size: 1.8rem;
+            color: var(--tahoe-text-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+       
+        
+        .project-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+   
+        
+   
+        
+        
+        
+        
+      
+      
+        
+        .project-gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            border-radius: var(--tahoe-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--tahoe-shadow-lg);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+        
+        .video-wrapper video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--tahoe-radius-lg);
+        }
+        
+        .footer {
+            background: var(--glass-bg);
+            border-top: 1px solid var(--glass-border);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo h3 {
+            color: var(--tahoe-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-logo p {
+            color: var(--tahoe-text-secondary);
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--tahoe-primary);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .footer-social a {
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--tahoe-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer-social a:hover {
+            color: var(--tahoe-primary);
+            border-color: var(--tahoe-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--tahoe-shadow);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px 0;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--tahoe-text-tertiary);
+        }
+        
+        @media (max-width: 1100px) and (min-width: 980px){
+            .project-info p {
+                font-size: 0.6rem;
+            }
+        }
+        @media (max-width: 980px) {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+        .project-info {
+            margin-top: 3rem;
+            max-width: 100%;
+        }
+            .project-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <navigation></navigation>
+
+    <!-- Project Content -->
+    <section class="project-content">
+        <div class="container">
+            <div class="project-gallery">
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <video id="main-video" poster="" controls>
+                            <source src="https://cdn.shopify.com/videos/c/o/v/801b45fa4b854bc687314d99ed7b0e7d.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-info">
+                <h2>TIYPN Winter '23 Short Film</h2>
+                <p>I directed and produced this cinematic short film for TIYPN's Winter 2023 collection, capturing the brand's essence through dynamic storytelling and visual artistry. This project involved comprehensive creative direction, from concept development and storyboarding to cinematography, editing, and post-production. The film showcases the Winter '23 collection in motion, highlighting the innovative designs and quality craftsmanship while telling the TIYPN story through compelling visual narrative. Every frame was carefully crafted to embody the brand's surf and skate aesthetic while demonstrating the versatility and style of the collection pieces.</p>
+             
+                <div class="project-info-content">
+                    <div class="product-info-wrapper">
+                <div class="project-tags">
+                    <span class="tag">Video Direction</span>
+                    <span class="tag">Cinematography</span>
+                    <span class="tag">Creative Direction</span>
+                    <span class="tag">Post-Production</span>
+                    <span class="tag">Brand Storytelling</span>
+                </div>
+                
+                <a href="https://www.instagram.com/p/DL-nvZsxUsV/?img_index=1" target="_blank" class="instagram-link">
+                    <i class="fab fa-instagram"></i>
+                    View on Instagram
+                </a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Anton Kupin</h3>
+                    <p>Creative Direction and Development</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html#home">Home</a>
+                    <a href="index.html#portfolio">Portfolio</a>
+                    <a href="index.html#about">About</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/antonvkupin/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/anthony-kupin-7104622b0/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.tiktok.com/@antonvkupin" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Anton Kupin. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+<script src="script.js"></script>
+</body>
+</html> 

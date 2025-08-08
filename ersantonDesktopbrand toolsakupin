@@ -1,0 +1,138 @@
+[1mdiff --git a/index.html b/index.html[m
+[1mindex a0ed9cb..d19ca75 100644[m
+[1m--- a/index.html[m
+[1m+++ b/index.html[m
+[36m@@ -1,50 +1,33 @@[m
+[32m+[m
+[32m+[m
+ <!DOCTYPE html>[m
+ <html lang="en">[m
+ <head>[m
+     <meta charset="UTF-8">[m
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
+[31m-    <title>Anton Kupin - Portfolio Gallery</title>[m
+[32m+[m[32m    <title>Anton Kupin - Creative Developer & Brand Tools Specialist</title>[m
+     <link rel="stylesheet" href="styles.css">[m
+[31m-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">[m
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">[m
+[32m+[m
+ </head>[m
+ <body>[m
+     <!-- Navigation -->[m
+[31m-    <nav class="navbar">[m
+[31m-        <div class="nav-container">[m
+[31m-            <div class="nav-logo">[m
+[31m-                <a href="#home">AKUPIN</a>[m
+[31m-            </div>[m
+[31m-            <ul class="nav-menu">[m
+[31m-                <li><a href="#home" class="nav-link">Home</a></li>[m
+[31m-                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>[m
+[31m-                <li><a href="#about" class="nav-link">About</a></li>[m
+[31m-                <li><a href="#contact" class="nav-link">Contact</a></li>[m
+[31m-            </ul>[m
+[31m-            <div class="hamburger">[m
+[31m-                <span class="bar"></span>[m
+[31m-                <span class="bar"></span>[m
+[31m-                <span class="bar"></span>[m
+[31m-            </div>[m
+[31m-        </div>[m
+[31m-    </nav>[m
+[32m+[m[32m    <navigation></navigation>[m
+ [m
+     <!-- Hero Section -->[m
+     <section id="home" class="hero">[m
+         <div class="hero-container">[m
+             <div class="hero-content">[m
+                 <h1 class="hero-title">Anton Kupin</h1>[m
+[31m-                <p class="hero-subtitle">Creative Developer & Brand Tools Specialist</p>[m
+[31m-                <p class="hero-description">Crafting innovative digital solutions and brand tools that transform ideas into reality</p>[m
+[32m+[m[32m                <p class="hero-subtitle">Creative Direction and Development</p>[m
+[32m+[m[32m                <p class="hero-description">Fashion Design, Brand Development, Web Coding, Visual Storytelling, and Creative Direction</p>[m
+                 <div class="hero-buttons">[m
+                     <a href="#portfolio" class="btn btn-primary">View Portfolio</a>[m
+                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>[m
+                 </div>[m
+             </div>[m
+             <div class="hero-image">[m
+[31m-                <div class="hero-graphic">[m
+[31m-                    <i class="fas fa-palette"></i>[m
+[31m-                </div>[m
+[32m+[m[41m         [m
+             </div>[m
+         </div>[m
+     </section>[m
+[36m@@ -60,153 +43,156 @@[m
+             <!-- Filter Buttons -->[m
+             <div class="portfolio-filters">[m
+                 <button class="filter-btn active" data-filter="all">All</button>[m
+[31m-                <button class="filter-btn" data-filter="brand-tools">Brand Tools</button>[m
+[32m+[m[41m                [m
+                 <button class="filter-btn" data-filter="web-design">Web Design</button>[m
+[31m-                <button class="filter-btn" data-filter="mockups">Mockups</button>[m
+[31m-                <button class="filter-btn" data-filter="generators">Generators</button>[m
+[32m+[m[41m                [m
+[32m+[m[41m                [m
+                 <button class="filter-btn" data-filter="photography">Photography</button>[m
+             </div>[m
+ [m
+             <!-- Portfolio Grid -->[m
+             <div class="portfolio-grid">[m
+                 <!-- Brand Tools Projects -->[m
+[31m-                <div class="portfolio-item" data-category="brand-tools">[m
+[31m-                    <div class="portfolio-card">[m
+[31m-                        <div class="portfolio-image">[m
+[31m-                            <img src="assets/bitmappery-preview.svg" alt="Bitmappery - Image Editor">[m
+[32m+[m[41m                [m
+[32m+[m
+[32m+[m[32m                                <div class="portfolio-item" data-category="photography">[m
+[32m+[m[32m                    <div class="portfolio-card tiypn-card" onclick="window.open('tiypn-photoshoot.html', '_blank')" style="cursor: pointer;">[m
+[32m+[m[32m                        <div class="portfolio-image tiypn-image">[m
+[32m+[m[32m                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/4_26780d14-db27-418d-b56c-f404e52d9276.png?v=1750720140&width=600" alt="TIYPN SS25">[m
+                         </div>[m
+[31m-                        <div class="portfolio-content">[m
+[31m-                            <h3>Bitmappery - Advanced Image Editor</h3>[m
+[32m+[m[32m                        <div class="portfolio-content tiypn-content">[m
+[32m+[m[32m                            <h3>Tiypn SS25</h3>[m
+                             <div class="portfolio-tags">[m
+[31m-                                <span class="tag">Vue.js</span>[m
+[31m-                                <span class="tag">Canvas API</span>[m
+[31m-                                <span class="tag">WebAssembly</span>[m
+[32m+[m[32m                                <span class="tag">Photography</span>[m
+[32m+[m[32m                                <span class="tag">Creative Direction</span>[m
+[32m+[m[32m                                <span class="tag">Fashion</span>[m
+                             </div>[m
+                         </div>[m
+                     </div>[m
+                 </div>[m
+ [m
+[31m-                <div class="portfolio-item" data-category="mockups">[m
+[31m-                    <div class="portfolio-card">[m
+[31m-                        <div class="portfolio-image">[m
+[31m-                            <img src="assets/clothing-mockup-preview.svg" alt="Clothing Mockup Generator">[m
+[32m+[m[32m                <div class="portfolio-item" data-category="photography">[m
+[32m+[m[32m                    <div class="portfolio-card tiypn-fw24-card" onclick="window.open('tiypn-fw24-photoshoot.html', '_blank')" style="cursor: pointer;">[m
+[32m+[m[32m                        <div class="portfolio-image tiypn-fw24-image">[m
+[32m+[m[32m                            <img src="https://cdn.shopify.com/s/files/1/0633/1095/4722/files/6.png?v=1728073755&width=600" alt="TIYPN FW24">[m
+                         </div>[m
+[31m-                        <div class="portfolio-content">[m
+[31m-                            <h3>Clothing Mockup Generator</h3>[m
+[32m+[m[32m                        <div class="portfolio-content tiypn-fw24-content">[m
+[32m+[m[32m                            <h3>Tiypn FW24</h3>[m
+                             <div class="portfolio-tags">[m
+[31m-                                <span class="tag">HTML5</span>[m
+[31m-                                <span class="tag">CSS3</span>[m
+[31m-                                <span class="tag">JavaScript</span>[m
+[32m+[m[32m                                <span class="tag">Photography</span>[m
+[32m+[m[32m                                <span class="tag">Creative Direction</span>[m
+[32m+[m[32m                                <span class="tag">Product Development</span>[m
+[32m+[m[32m                                <span class="tag">Styling</span>[m
+                             </div>[m
+                         </div>[m
+                     </div>[m
+                 </div>[m
+ [m
+[31m-                <div class="portfolio-item" data-category="generators">[m
+[31m-                    <div class="portfolio-card">[m
+[31m-                        <div class="portfolio-image">[m
+[31m-                            <img src="assets/drop-projection-preview.svg" alt="Drop Projection Generator">[m
+[32m+[m[32m                <div class="portfolio-item" data-category="p
