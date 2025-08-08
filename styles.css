@@ -575,13 +575,16 @@ body::before {
     background: transparent;
 }
 
-/* TIYPN Web Design Card Styles */
+/* TIYPN Web Design Card Styles - Same as SS25 */
 .tiypn-web-card {
     position: relative;
-    background: transparent;
-    border: none;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
     overflow: hidden;
     height: 400px;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
 }
 
 .tiypn-web-image {
@@ -609,6 +612,12 @@ body::before {
     padding: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
+}
+
+.tiypn-web-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
 }
 
 .tiypn-web-card:hover .tiypn-web-image img {
