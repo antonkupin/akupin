@@ -87,6 +87,15 @@
 }
 
 
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid
+;
+    grid-template-columns: auto !important;
+    gap: 2rem;
+}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -573,7 +582,7 @@ body::before {
 
 .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 }
 
@@ -1680,6 +1689,13 @@ body::before {
 }
 
 /* Responsive Design */
+@media (max-width: 992px) and (min-width: 769px) {
+    .portfolio-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
@@ -1718,6 +1734,7 @@ body::before {
 
     .portfolio-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .about-content {
@@ -1774,6 +1791,10 @@ body::before {
     .filter-btn {
         width: 100%;
         max-width: 200px;
+    }
+
+    .portfolio-grid {
+        gap: 1rem;
     }
 
     .footer {
