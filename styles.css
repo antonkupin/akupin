@@ -577,22 +577,63 @@ body::before {
 
 /* TIYPN Web Design Card Styles */
 .tiypn-web-card {
-    border: 2px solid var(--tahoe-primary);
-    background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(0, 122, 255, 0.05) 100%);
-}
-
-.tiypn-web-card:hover {
-    border-color: var(--tahoe-secondary);
-    box-shadow: 0 20px 60px rgba(0, 122, 255, 0.2);
+    position: relative;
+    background: transparent;
+    border: none;
+    overflow: hidden;
+    height: 400px;
 }
 
 .tiypn-web-image {
-    background: linear-gradient(135deg, var(--tahoe-primary) 0%, var(--tahoe-secondary) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tiypn-web-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tiypn-web-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.tiypn-web-card:hover .tiypn-web-image img {
+    transform: scale(1.05);
+}
+
+.tiypn-web-card:hover .tiypn-web-content {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
 }
 
 .tiypn-web-content h3 {
-    color: var(--tahoe-primary);
-    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tiypn-web-content .tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .section-header {
